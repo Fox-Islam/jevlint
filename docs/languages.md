@@ -14,7 +14,7 @@ English, and `C` or `POSIX` names no language and is read as none.
 
 ## Adding one
 
-A locale is one PHP file returning a map of key to pattern, named for the tag:
+A locale is one file of key to pattern, named for the tag. In the PHP package it is PHP:
 
 ```php
 <?php // fr.php
@@ -25,14 +25,26 @@ return [
 ];
 ```
 
-Put it in `php/lang/`, or anywhere and point `JEVLINT_LANG_DIR` at the directory. That
-directory is read before the shipped one and does not replace it, so a file holding only
-`fr.php` is a translation and English is still found behind it. **A locale needs only the
-keys it translates**; anything absent is read from English, so a part-finished file prints
-English and never a key. `php/lang/en.php` is the list to work from.
+In the JavaScript package it is JSON, because a file dropped into a directory at run time
+cannot be a module the build compiled:
+
+```json
+{
+  "report.nothing_to_report": "Rien à signaler.",
+  "skipped.jev_not_asked": "Jev n'a pas été interrogé, donc {count, plural, one {# vérification n'a} other {# vérifications n'ont}} pas été exécutée{count, plural, one {} other {s}}."
+}
+```
+
+Point `JEVLINT_LANG_DIR` at the directory holding it; the PHP package also reads
+`php/lang/`, where English ships. That directory is read before the shipped messages and does
+not replace them, so a directory holding only `fr.php` is a translation and English is still
+found behind it. **A locale needs only the keys it
+translates**; anything absent is read from English, so a part-finished file prints English and
+never a key. `php/lang/en.php` and `js/src/lang/en.ts` are the list to work from, and they
+hold the same keys and the same patterns.
 
 Patterns are [ICU MessageFormat](https://unicode-org.github.io/icu/userguide/format_parse/messages/),
-so a plural is chosen by the locale's own CLDR rules instead of by a rule written in PHP.
+so a plural is chosen by the locale's own CLDR rules instead of by a rule written in code.
 English takes two forms and Polish four, and the pattern names which:
 
 ```php
@@ -44,14 +56,16 @@ A literal `{` or `}` is quoted with apostrophes, and a run of them is quoted tog
 middle, which ICU reads as a literal apostrophe. A lone apostrophe before an ordinary
 letter is already literal, so `the SDK's` needs nothing.
 
-Two tests hold the file to its job: every pattern has to parse and leave no argument
-unfilled, and every key the source asks for has to exist.
+Two tests in each package hold the file to its job: every pattern has to parse and leave no
+argument unfilled, and every key the source asks for has to exist. A third compares the two
+formatters against each other over every shipped pattern, because a plural chosen one way in
+one implementation and another way in the other is two tools with one name.
 
 ## What a check reports about your query
 
-A check's `title`, `message`, `hint` and `suggest` live in the catalogue, not in
-`php/lang/`, because the catalogue is not PHP and an implementation in another language
-reads the same file. They are translated in `checks/lang/<locale>.json`, keyed by check id:
+A check's `title`, `message`, `hint` and `suggest` live in the catalogue, not in a language
+directory, because the catalogue is not PHP and not JavaScript and both implementations read
+the same file. They are translated in `checks/lang/<locale>.json`, keyed by check id:
 
 ```json
 {
@@ -88,6 +102,5 @@ With `words.fallback_labels` translated, it clears.
 **The locale's list and English are both read.** A query written in French can still name
 its options in English, and a check given only the French list would stop finding those.
 
-Instructions are normalised with `\p{L}` and `mb_strtolower` instead of `[a-z]` and
-`strtolower`, so an accented word survives instead of being cut into the pieces between
-its accents.
+Instructions are normalised with `\p{L}` and a Unicode-aware lower-case instead of `[a-z]`,
+so an accented word survives instead of being cut into the pieces between its accents.

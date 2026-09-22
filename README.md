@@ -25,13 +25,14 @@ defect in each, the report, and the same query rewritten.
 **Beyond this page:** [docs/evidence.md](docs/evidence.md), how good each check is ·
 [docs/output.md](docs/output.md), reading the output from a program ·
 [docs/library.md](docs/library.md), calling it from PHP ·
+[docs/javascript.md](docs/javascript.md), calling it from JavaScript ·
 [docs/languages.md](docs/languages.md), how to add a language ·
 [docs/behaviour.md](docs/behaviour.md), what the tool does on itself
 
 ## Quickstart
 
 ```sh
-composer install
+composer install                                          # or: npm install
 ./jevlint check examples/broken-triage.json --static-only
 ```
 
@@ -48,27 +49,21 @@ To check your own query, point it at the request body you would send:
 The second needs `TYPESAFE_API_KEY` in the environment or in a `.env` in the working directory,
 and costs two calls per question plus two for the query. `./jevlint help` lists the rest.
 
-Or from PHP, where `Phox\JevLint\Lint\Linter` hands back a `Report` instead of printing one:
-
-```php
-$report = Linter::fromEnvironment()->check(Query::fromFile('your-query.json'));
-
-foreach ($report->findings() as $finding) {
-    printf("%s %s %s\n", $finding->severity->value, $finding->checkId, $finding->message);
-}
-```
-
-`Linter::rulesOnly()` is the `--static-only` path and needs no key.
-[docs/library.md](docs/library.md) has the narrowings, what a `Report` gives you, and the
-conditions to gate on.
+Called as a library, `Linter` hands the report back instead of printing it:
+[from PHP](docs/library.md), [from JavaScript](docs/javascript.md).
 
 ## Install
 
-As a dependency, which puts `jevlint` on your `PATH` through Composer:
+As a dependency, which puts `jevlint` on your `PATH`:
 
 ```sh
-composer require --dev phox/jevlint
+composer require --dev phox/jevlint    # PHP 8.3+
 ./vendor/bin/jevlint help
+```
+
+```sh
+npm install --save-dev @phox-js/jevlint  # Node 20.19+
+npx jevlint help
 ```
 
 Or from a clone, where `./jevlint` at the root runs it from anywhere:
@@ -79,8 +74,8 @@ composer install
 ```
 
 The commands below are written from the repository root, where `examples/` sits. The PHP source
-is under `php/`, and `checks/` sits beside it because an implementation in another language
-reads the same catalogue.
+is under `php/` and the JavaScript under `js/`; `checks/` sits beside them because both read the
+same catalogue.
 
 Put `TYPESAFE_API_KEY` in the environment or in a `.env` in the working directory, or pass
 `--env-file`. `check --static-only` needs no key and makes no calls. `--openrouter` sends the
@@ -453,8 +448,11 @@ exit 2 and `asked: 0`         it ran and asked nothing
 ## The catalogue is not PHP
 
 `checks/catalogue.json` holds every check: its id, severity, which primitives it applies to,
-and for a model check the Jev question that decides it. It mentions no language, so an
-implementation in another language reads the same file and writes no checks of its own.
+and for a model check the Jev question that decides it. It mentions no language, so both
+implementations read the same file and neither writes checks of its own. A harness runs every
+command through each and diffs what comes back, so the report, the text and the exit code are
+one document; [docs/javascript.md](docs/javascript.md) names where the platform's own wording
+shows through.
 
 ## What this cannot tell you
 

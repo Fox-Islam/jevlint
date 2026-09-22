@@ -1,0 +1,60 @@
+{
+  "name": "@phox-js/jevlint",
+  "version": "1.0.0",
+  "description": "A linting tool combining static analysis and Jev queries, to improve Jev queries",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://fox-islam.github.io/jevlint/",
+  "bugs": "https://github.com/Fox-Islam/jevlint/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fox-Islam/jevlint.git"
+  },
+  "keywords": [
+    "typesafe",
+    "jev",
+    "linter",
+    "prompt",
+    "system-one"
+  ],
+  "author": "Fox Islam <foxislam@outlook.com>",
+  "bin": {
+    "jevlint": "js/dist/bin/jevlint.js"
+  },
+  "main": "./js/dist/src/index.js",
+  "types": "./js/dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./js/dist/src/index.d.ts",
+      "default": "./js/dist/src/index.js"
+    }
+  },
+  "files": [
+    "js/dist/src",
+    "js/dist/bin",
+    "checks",
+    "spec",
+    "docs",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.19"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test \"js/dist/test/**/*.test.js\"",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@typesafe-ai/sdk": "^0.6.0"
+  }
+}

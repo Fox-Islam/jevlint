@@ -7,9 +7,11 @@
 # the test suite, the tooling config or the corpus the checks were measured with.
 /local           export-ignore
 /php/tests       export-ignore
+/js/test         export-ignore
 /corpus          export-ignore
 /phpunit.xml     export-ignore
 /phpstan.neon    export-ignore
+/tsconfig.json   export-ignore
 /.gitattributes  export-ignore
 /.github         export-ignore
 /site            export-ignore
