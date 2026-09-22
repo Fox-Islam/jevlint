@@ -1,0 +1,230 @@
+{
+  "sample": [
+    {
+      "id": "imdb/test/23098",
+      "label": true,
+      "state": "Another one that slipped by the radar of most anyone. This little B produced gem is so full of new ideas in an old genre and so absolutely refreshing and inventive, that a dreadful feeling about the lack of cojones in today's cinema slowly overtakes your body. The final set piece is so innovative in its setting and style that it prefigures everyone from Tarantino to John Woo. Oh, and if you think \"dying lines\" are all cliche, wait for the dying line of FF. A piece of dialogue that could have torn you with laughter will take your heart. A true pleasure. Seek it and see it. You won't be sorry.",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/23015",
+      "label": true,
+      "state": "I first saw this movie at a video store and, being the Bam Margera fan I am, had to rent it to see what it was all about. Since I have a huge and stupid (note the word stupid) sense of humor, I found this movie absolutely hilarious. Some of the parts are pointless and random, but that's what makes them so amusing. You'll need to think things like getting slapped in the face and bashed on the head with a watermelon are funny in order to appreciate this movie. I was really impressed. I was also surprised at the acting. These people actually did a good job. Nothing Oscar worthy, but well enough to get past the amateur level. Teens and young adults would probably find this more entertaining because of the modern slang and situations used. I wouldn't suggest watching this with your parents and vice versa. All in all, the acting was great, the script was hilarious, and the story is really something you can relate to.",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/11830",
+      "label": false,
+      "state": {
+        "document": "**********SPOILER ALERT*************** If you happen to like JURASSIC PARK 1, 2, or 3: If you happen to appreciate really bad movies for their sheer entertainment value if not for their quality (case in point-John Carpenter's DARK STAR-highly recommended) If you happen to like movies about dinosaurs in general- THEN STAY AWAY FROM THIS CINEMATIC CRAPSTERPIECE! The shameless use of stock footage from CARNOSAUR 1 & 2 make up most of this miserable attempt at a dino/slasher flick- Take the scene, for instance, where the security guard meets his doom at the jaws of the Alpha T-Rex. For some reason, he drops about 50 pounds and appears 10 years younger. Why is that? Simply because this scene was lifted directly from CARNOSAUR, which was a crummy flick to begin with. The ending was a carbon copy of CARNOSAUR 2, for those unfortunate enough to have sat through that straight-to-video loser. Again, we see Mr. Rex do battle against a bulldozer-which alternates as a forklift truck-through the miracle of -ta-daa!- stock footage from the aforementioned CARNOSAUR 1 & 2. Of course, the ending is exactly the same-the beast falls to his death just as the complex goes up in flames. A real insult to anyone's intelligence. But it's still better than watching the ROSIE O' DONNEL SHOW. Rating: 1/2* out of *****"
+      },
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/19159",
+      "label": true,
+      "state": "I play this game exactly after I watch the trailer in old magazine advertise CD... The is very interesting and dark atmospheric (missing in nowadays games/movies). The game is set somewhere in the middle of the '90 in the spooky mysterious mansion. You play as Adam Randell and your quest is to free the soul of your death trapped father. The look of the game is doom-like, but very different type of game. A lot of a action, various puzzles, quests, mazes and many more interesting locations and characters are presented in this old classic game. The game will run only on Windows 98 and there is no patch for Windows XP.",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/5132",
+      "label": false,
+      "state": {
+        "document": "After the lush, inspiring aerial shot in fast motion in the opening of the movie, this slipped into utter boredom and a one tone note right till the end. Where to begin, well I'll start with the characters. I really enjoyed them in the book, here they all were types and one dimensional morons that either had \"Victim\" or \"Asshole\" written on their foreheads from the get go. How any one didn't see through the store owner Lealand Gaunt (in a hammy and out of place performance by Sydrow)is beyond me. This film lacks in thrills, suspense, and in some sense yes, entertaining values. It stretches itself for far too long with not a lot of pay off. Why introduce too many annoying should-die-quick type of characters and then forget about half of them half way through? In the book practically everyone that went into the store met a grisly fate. Here, besides one of the only decent scenes that translated well from the novel (the fight between Wilma and Nettie), was a letdown and didn't have much balls. I'm sorry but after, one off screen death,a boring shoot off, and some bickering and then a couple explosions just didn't do it for me. The brutality and mean spiritedness from the book was sadly missing. The explosion of the church"
+      },
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/17819",
+      "label": true,
+      "state": "Hayao Miyazaki's magic continues with this absolute crowd pleaser Ponyo on the Cliff by the Sea, his latest animated film, which turns on the usual sweetness to charm your socks off. I thought that the trailer featured its song which was quietly hypnotic, and I didn't have to wait for an invite to make sure I got my ticket for the sneak preview of the movie, scheduled to open here next week. For fans of Studio Ghibli films, you'll probably know what you're in for, as Miyazaki has yet another winner in his filmography, that will win new fans over. I'm embarrassed to say the least that I've so far watched only My Neighbour Totoro (eyes that pile of Ghibli DVDs) and love it to bits, but I guess this would serve as a final push for me not to continue missing what would likely be animated films that I would enjoy. Ponyo (voiced by Nara Yuria) is a magic goldfish that yearns to know what is life beyond the sea, with her constant forays in a bubble to the surface of the water to sneak a peek. Nonetheless these ambitions do not bode well with her humanoid dad Fujimoto (Tokoro Joji), who harbours some hatred toward the human race for pollution, and briefly touching a subplot on environmental protection",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/3317",
+      "label": false,
+      "state": "Now this is a real turkey by the overrated director Franco, who gave us such classics as \"Las Vampiras/Vampyros Lesbos\". Yes, I think that bad films can be great fun. I adore the hilarious howlers of Doris Wishman, Dwain Esper and Ed Wood jr., but this one proved to be too much for me. It is the first film I rated 1. Where should I start? The screenplay is idiotic to the utmost. The dialogue is unbelievably bad. The directing seems to be nonexistent. The best music cue (used repeatedly in this film) was taken directly from the movie \"Der Hexer\" (1964). And it's BORING! Poor Shirley Eaton and George Sanders! In one shot Sanders reads a Popeye comic while his henchman torture a girl (this aspect is probably the intellectual highlight of this movie). The only thing that baffled me was that Franco promptly showed female nudity whenever I thought the movie would gain from it - this is real directing skill! Still, I'm afraid that a movie in which actors pretend to shoot with machine guns by shaking them is not really worthwhile.",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/4800",
+      "label": false,
+      "state": "The bipolarity of this movie is maddening. One moment it's making fun of Latin Americans, American tourists and banana republics in general, the other it wants to be touching, with burned villages and orphans. Even the serious revolutionary hero, becomes a parody of a revolutionary at one point. But the comedy parts aren't even funny, because it's so obviously stolen from Star Wars. Yes, Star Wars, the \"hero\" is basically a rogue with a heart of gold. Add to this stereotypical sounds effects, Latin Americans who speak English with one another, and a villain that just disappears from the story. And whats the point? It's basically revolution propaganda with no resolution, and no planning (because, there is just no way these people can lead a country). The US government are bad guys, but who'll make money producing this? Not some poor farmer, that's for sure.",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/18132",
+      "label": true,
+      "state": {
+        "ticket": {
+          "channel": "email",
+          "body": "iv been a fan of Rik Mayall and Ade Edmednson ever since i can remember weather its young ones or bottom. and i just have to say i have never laughed so much in all my life!!! guest house paradiso is bloody brilliant! i know its not going to be everyones cup of tea (with the vomiting,slapstick comedy, violence and foul language) but then just don't watch it if it ain't yours. its not like no one knows what sick and twisted things Rik and Ade come up with when they're working with one another!! i think its unfair that this film received such a slatting from critics because,and i don't think I'm the only one to think this, this film is 10 out of 10! : )"
+        }
+      },
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/23558",
+      "label": true,
+      "state": "My father has worked with top secret information in the DIA before and he is the one who mentioned this movie to me. When I was a kid I would always ask him what would happen if he gave away secrets and he recommended this movie. In the movie it really puts 2, almost completely different FRIENDS! in a tangle they never really knew what the outcome would really be. The snowman, Daulton really cracked me up because the movie portrayed him as just some drug pusher that did not know what he was arguing about, and in the movie it seemed like he got the worst of everything. The falcon, Chris is just a guy that wanted to express his feelings on U.S government in a very radical view. For movie lovers this is a must see!!!",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/19633",
+      "label": true,
+      "state": {
+        "ticket": {
+          "channel": "chat",
+          "body": "I think One True Thing is one of Meryl Streeps finest movies to date. Her depiction of a dying woman is perfect. I have recently lived this movie, and it touched me on more levels than I could have imagined. Meryl is truely the greatest actress to have ever walked the earth!!!!!"
+        }
+      },
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/21806",
+      "label": true,
+      "state": [
+        {
+          "role": "customer",
+          "content": "***SPOILERS*** ***SPOILERS*** Well, seeing as I am a major H:LOTS fan, maybe I liked the movie more than normal people would. However, this movie is still excellent. It had tons of surprises, and it gave some more closure to the series. While I was sad that Bayliss turned into a murderer, the overall feeling I felt was satisfied."
+        }
+      ],
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/18570",
+      "label": true,
+      "state": "TEP is like a long cool drink of water after crawling across the Sahara to classic film buffs who have been too long deprived of that certain cinematic magic! Not only is it beautifully photographed, but the characters are perfectly portrayed. If you're looking for the film to be a mirror of the book, you will be seriously disappointed. Instead, it is an excellent \"companion\" to the book, and I think that is what Anthony Minghella intended. Ralph Fiennes is probably the most beautiful man in the world; not to mention a brilliant actor. Juliette Binoche is the posterchild for vulnerability and childlike enthusiasm. And, of course, I'll go see any film in which Kristin Scott Thomas is featured. She simply must be THE best actress since the likes of Deborah Kerr. So much was promised with this film, and so much is delivered!",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/1987",
+      "label": false,
+      "state": {
+        "ticket": {
+          "channel": "chat",
+          "body": "I was giddy with girlish-glee when I found out about this movie shortly after seeing Spirits Within. After years of anticipation, they gave November 2005 release date. Well, November came. And went. Followed by December. Oh, look, today's January 31, 2006. No US release as of yet. Oh well, I'm so glad I had a friend with a bootlegged subtitled copy. ;D Well, the cg was great. Not as good as expected, but near perfect. I cringed, however, at the unnatural movements made by the children throughout the movie. I had thought that we were passed this by now. Also, I didn't really care for the anime look given to their faces. I was under the impression that they were shooting for a realistic look to the film, and yet most of the characters have larger-than-norm eyes, especially the girl characters. They had personality, though, I'll give them that. Even though I'm not a big fan of anime, I do have to say I was impressed with the wild fight scenes. They were animated beautifully and had me hanging onto the edge of my seat. For about the first two. And there-in lies Advent Children's biggest flaw. It's mostly just a bunch of hyper-stylized fight scenes. A FF7 sequel of epic proportions had been promised for years. Instead, they gave"
+        }
+      },
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/19549",
+      "label": true,
+      "state": "I saw Forgiving the Franklins at a Paramount screening and loved it I have to be honest I really didn't want to go and I had become quite jaded about the movies being made today I have to tell you Forgiving The Franklins was fresh and wonderfully put together I laughed my ass off it was great story telling I could not believe two guys shot this and put the whole thing together. I thought if these guys can do a movie like this with this budget imagine what they could do with big money behind them. And then I thought be the jaded guy Iam the studios would probably f...it up anyway. That being said thanks guys I got lost and in your film and that's why I go to the movies to forget the world for a couple of hours.",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/4433",
+      "label": false,
+      "state": "jeez, when i heard this movie was a NATIONAL LAMPOONS i thought it was going to be awesome, but i really got a say it was a rather disappointment. I have seen the most movies they've made, from Christmas vacation to van wilder, and this movie is the worst movie in their name,, really bad actors and a to much intense movie. this movie is probably good to watch if you are watching it with a crowd of worked up people and the ability to laugh at it, but if you are into good comedy's like i am, i do not suggest this movie, i would much rather watch van wilder a second or third time, than to watch this movie... you have been warned.",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/9694",
+      "label": false,
+      "state": "Strained and humorless (especially in light of its rather dubious psychology), but well-paced and comfortably lurid, this genteel body count movie highlights the unusually hypnotic presence of Angharad Rees as a young woman periodically possessed by Jack the Ripper, thus allowing for some nasty gore effects amidst the Edwardian propriety. It's all pretty standard stuff for Hammer, but is handled with a good deal of visual elan, even if the central relationship, between psychoanalyst Porter and Rees, drives the narrative without ever being satisfactorily explained.",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/6111",
+      "label": false,
+      "state": "Just saw it....the story, the plot, the script makes absolute no sense!! Its Samvise the brave part 2(without the RING), its characters showing up out of the blue(for no reason),its Hercules hated by everyone(no one knows why), its Leelee Sobiesky showing her true talents(two of them), its crappy special effects, its a few good actors wasting their talents(did I mention Leelee's two talents??)... do I have to say more??? ITS JUST AWFUL, even for NBC-TV standards!!! Its just the lowest....what a waste! by the way: how can you people give this mini-series so many stars????? Its beyond me!.... Shame on you! Have to make 10 lines, so this is my final word: AVOID, AVOID, if u are considering buying it!",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/22004",
+      "label": true,
+      "state": {
+        "document": "Well in to 2002 I've got some catching up to do. And looking back on a lacklustre year, Best In Show shone. No great storyline. Little action. Just a cavalcade of magnificent characters. Particular reference to Fred Willard and Jim Piddock as a rattling pair of TV commentators. Well done. Well worth the effort. Ron (Viewed 24Mar2001)"
+      },
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    },
+    {
+      "id": "imdb/test/8075",
+      "label": false,
+      "state": "Red spectacles I loved Avalon, I think This director has made some awesome demented visions of the future. This film however was boring pretentious crap. The opening scene showed great promise for what the cover art and description promise a surreal live action amimae style future noir. I feel I got that with Avalon. With Red Spectacles I was only driven to feel a uncomfortable to desire to what the hell the point was. The film barely made sense to me and I could not care less about the people in it. This would all be ok if the film was effective art. While the opening scene looked interesting and the scene with the giant robot-suit person holding the giant machine gun in the rain looked cool, it did not watch the film worth watching. Thumbs down.",
+      "instructions": "Is this movie review positive?",
+      "criteria": {
+        "true": "The reviewer liked the film overall",
+        "false": "The reviewer disliked the film overall"
+      }
+    }
+  ]
+}

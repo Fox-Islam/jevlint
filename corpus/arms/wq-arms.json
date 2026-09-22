@@ -1,0 +1,22 @@
+{
+  "Is this return request within the policy window?": {
+    "double_negative": "Is it not the case that this return request is not within the policy window?",
+    "negated": "Is this return request not outside the policy window?",
+    "indirection": "Is the return request the case refers to within the policy window?",
+    "double_negative_repaired": "Is this return request within the policy window?",
+    "negated_repaired": "Is this return request within the policy window?",
+    "indirection_repaired": "Is this return request within the policy window?",
+    "compound": "Is this return request within the policy window and does it involve a customer returning a previously purchased item?",
+    "compound_repaired": "Is this return request within the policy window?"
+  },
+  "Is the applicant eligible?": {
+    "double_negative": "Is it not the case that the applicant is not eligible?",
+    "negated": "Is the applicant not ineligible?",
+    "indirection": "Is the applicant the case refers to eligible?",
+    "double_negative_repaired": "Is the applicant eligible?",
+    "negated_repaired": "Is the applicant eligible?",
+    "indirection_repaired": "Is this applicant eligible?",
+    "compound": "Is the applicant eligible and is this individual seeking employment?",
+    "compound_repaired": "Is the applicant eligible?"
+  }
+}

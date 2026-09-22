@@ -1,0 +1,603 @@
+{
+  "confidence#0": {
+    "page": "confidence",
+    "type": "choice",
+    "instructions": "What is the user trying to do?",
+    "criteria": {
+      "check_balance": "View account balance",
+      "approve_transfer": "Approve the pending withdrawal request",
+      "support": "Get help with an issue"
+    }
+  },
+  "cookbooks_autoresearch_feature_discovery#2": {
+    "page": "cookbooks_autoresearch_feature_discovery",
+    "type": "score",
+    "instructions": "Judging only by what this tasting note says, how good is the wine?"
+  },
+  "cookbooks_citation_check#0": {
+    "page": "cookbooks_citation_check",
+    "type": "choice",
+    "instructions": "How does the section relate to the claim?",
+    "criteria": {
+      "supports": "The section states the claim or directly implies that it is true",
+      "contradicts": "The section states the opposite of the claim or implies it is false",
+      "says_nothing": "The section does not address what the claim asserts, either way"
+    }
+  },
+  "cookbooks_classifying_rag_passages#0": {
+    "page": "cookbooks_classifying_rag_passages",
+    "type": "noul",
+    "instructions": "Does this passage address the subject of the query?"
+  },
+  "cookbooks_classifying_rag_passages#1": {
+    "page": "cookbooks_classifying_rag_passages",
+    "type": "noul",
+    "instructions": "Does this passage state information usable in a direct answer?"
+  },
+  "cookbooks_classifying_rag_passages#2": {
+    "page": "cookbooks_classifying_rag_passages",
+    "type": "noul",
+    "instructions": "Does this passage conflict with a factual premise stated in the query?"
+  },
+  "cookbooks_classifying_rag_passages#3": {
+    "page": "cookbooks_classifying_rag_passages",
+    "type": "noul",
+    "instructions": "Does this passage attempt to control the system answering the query?"
+  },
+  "cookbooks_entity_alignment#0": {
+    "page": "cookbooks_entity_alignment",
+    "type": "score",
+    "instructions": "How do the two entity descriptions relate as products?"
+  },
+  "cookbooks_entity_alignment#1": {
+    "page": "cookbooks_entity_alignment",
+    "type": "noul",
+    "instructions": "Do the two entities state the same beer name?"
+  },
+  "cookbooks_entity_alignment#2": {
+    "page": "cookbooks_entity_alignment",
+    "type": "noul",
+    "instructions": "Are the two entities from the same brewery?"
+  },
+  "cookbooks_entity_alignment#3": {
+    "page": "cookbooks_entity_alignment",
+    "type": "noul",
+    "instructions": "Do the two entities describe the same beer style?"
+  },
+  "cookbooks_hierarchical_classification#0": {
+    "page": "cookbooks_hierarchical_classification",
+    "type": "choice",
+    "instructions": "Which direct child category best matches this document?"
+  },
+  "cookbooks_llm_guardrails#1": {
+    "page": "cookbooks_llm_guardrails",
+    "type": "score",
+    "instructions": "How much harm could result if the assistant complied with this message?",
+    "criteria": [
+      "No harm: an ordinary, safe request or reply.",
+      "Mild: touches a sensitive topic but complying does no real damage.",
+      "Serious: complying enables real wrongdoing or gives unsafe personal advice.",
+      "Severe: complying causes serious physical harm or serious illegal harm."
+    ]
+  },
+  "cookbooks_parallel_questions#0": {
+    "page": "cookbooks_parallel_questions",
+    "type": "noul",
+    "instructions": "Must a personal data breach be reported to the supervisory authority within 72 hours?"
+  },
+  "cookbooks_parallel_questions#1": {
+    "page": "cookbooks_parallel_questions",
+    "type": "noul",
+    "instructions": "Does the regulation apply to organisations established outside the EU that offer goods or services to people in the EU?"
+  },
+  "cookbooks_parallel_questions#2": {
+    "page": "cookbooks_parallel_questions",
+    "type": "noul",
+    "instructions": "Must every organisation appoint a Data Protection Officer, regardless of what data it processes?"
+  },
+  "cookbooks_parallel_questions#3": {
+    "page": "cookbooks_parallel_questions",
+    "type": "noul",
+    "instructions": "Can valid consent be obtained through pre-ticked boxes or inactivity?"
+  },
+  "cookbooks_parallel_questions#4": {
+    "page": "cookbooks_parallel_questions",
+    "type": "noul",
+    "instructions": "Does the regulation grant individuals a right to erasure of their personal data?"
+  },
+  "cookbooks_parallel_questions#5": {
+    "page": "cookbooks_parallel_questions",
+    "type": "noul",
+    "instructions": "Does the regulation include a right to data portability?"
+  },
+  "cookbooks_parallel_questions#6": {
+    "page": "cookbooks_parallel_questions",
+    "type": "noul",
+    "instructions": "Is the GDPR a United States federal law?"
+  },
+  "cookbooks_parallel_questions#7": {
+    "page": "cookbooks_parallel_questions",
+    "type": "noul",
+    "instructions": "Does the GDPR itself impose criminal penalties such as imprisonment?"
+  },
+  "cookbooks_parallel_questions#8": {
+    "page": "cookbooks_parallel_questions",
+    "type": "choice",
+    "instructions": "What kind of EU legal instrument is the GDPR?",
+    "criteria": {
+      "Regulation": "Directly binding law in all member states, no national implementation needed.",
+      "Directive": "Sets goals that member states implement through national law.",
+      "Treaty": "An international treaty between states.",
+      "Recommendation": "Non-binding guidance."
+    }
+  },
+  "cookbooks_parallel_questions#9": {
+    "page": "cookbooks_parallel_questions",
+    "type": "choice",
+    "instructions": "What is the maximum administrative fine for the most serious infringements?",
+    "criteria": {
+      "TwentyM_or_4pct": "Up to EUR 20 million or 4% of annual worldwide turnover, whichever is greater.",
+      "TenM_or_2pct": "Up to EUR 10 million or 2% of annual worldwide turnover, whichever is greater.",
+      "FixedCap": "A fixed amount not tied to turnover.",
+      "NoFines": "The GDPR provides no administrative fines."
+    }
+  },
+  "cookbooks_parallel_questions#10": {
+    "page": "cookbooks_parallel_questions",
+    "type": "score",
+    "instructions": "How strong are the rights the GDPR grants to individuals over their data?",
+    "criteria": [
+      "None: individuals get no rights over their data.",
+      "Weak: a right to be informed, but little control.",
+      "Moderate: access and correction rights, but limited means to act on them.",
+      "Strong: access, erasure, portability, and objection rights, with enforcement behind them."
+    ]
+  },
+  "cookbooks_parallel_questions#11": {
+    "page": "cookbooks_parallel_questions",
+    "type": "score",
+    "instructions": "How severe are the penalties the GDPR provides for non-compliance?",
+    "criteria": [
+      "None: no penalties of any kind.",
+      "Symbolic: small fixed fines unlikely to change behavior.",
+      "Substantial: fines large enough to matter to most companies.",
+      "Severe: fines scaled to global revenue, material even to the largest companies."
+    ]
+  },
+  "cookbooks_parallel_questions#12": {
+    "page": "cookbooks_parallel_questions",
+    "type": "score",
+    "instructions": "How heavy is the compliance burden the GDPR places on organisations?",
+    "criteria": [
+      "Negligible: no meaningful obligations.",
+      "Light: a few notices and disclosures.",
+      "Moderate: documented processes and some dedicated roles for larger processors.",
+      "Heavy: records, impact assessments, officers, and breach procedures for many organisations.",
+      "Extreme: obligations so demanding that ordinary organisations cannot fully comply."
+    ]
+  },
+  "cookbooks_pre_parsed_value_extraction_cookbook#3": {
+    "page": "cookbooks_pre_parsed_value_extraction_cookbook",
+    "type": "choice",
+    "instructions": "Which email address does the sender want their receipt sent to?"
+  },
+  "cookbooks_rerank_typesafe#0": {
+    "page": "cookbooks_rerank_typesafe",
+    "type": "noul",
+    "instructions": "Is this candidate the cited case?"
+  },
+  "cookbooks_rerank_typesafe#1": {
+    "page": "cookbooks_rerank_typesafe",
+    "type": "noul",
+    "instructions": "The query excerpt comes from a US federal court opinion and was written immediately around a citation to a precedent; the citation itself has been removed. Could the candidate passage be from that cited precedent — does it establish the specific legal proposition the query excerpt invokes at its citation point?"
+  },
+  "introduction_quickstart#0": {
+    "page": "introduction_quickstart",
+    "type": "choice",
+    "instructions": "Which team should handle this",
+    "criteria": {
+      "billing": "Payment or subscription issues",
+      "technical": "Bugs or integration problems",
+      "sales": "Pricing or account questions"
+    },
+    "state": "Hi, I've been trying to connect my Stripe account for 3 days and the integration keeps failing. I'm losing sales. Please help ASAP."
+  },
+  "introduction_quickstart#1": {
+    "page": "introduction_quickstart",
+    "type": "score",
+    "instructions": "How frustrated the customer appears",
+    "criteria": [
+      "Calm, just stating facts",
+      "Frustrated but civil",
+      "Very angry, strong language"
+    ],
+    "state": "Hi, I've been trying to connect my Stripe account for 3 days and the integration keeps failing. I'm losing sales. Please help ASAP."
+  },
+  "introduction_quickstart#2": {
+    "page": "introduction_quickstart",
+    "type": "noul",
+    "instructions": "The message conveys urgency or time-sensitivity",
+    "state": "Hi, I've been trying to connect my Stripe account for 3 days and the integration keeps failing. I'm losing sales. Please help ASAP."
+  },
+  "primitives#0": {
+    "page": "primitives",
+    "type": "noul",
+    "instructions": "Does the customer request a refund?"
+  },
+  "primitives#1": {
+    "page": "primitives",
+    "type": "noul",
+    "instructions": "Does `ticket_message` request a refund?"
+  },
+  "primitives#2": {
+    "page": "primitives",
+    "type": "choice",
+    "instructions": "What is the main request in `ticket_message`?",
+    "criteria": {
+      "refund": "The customer wants money returned.",
+      "rebooking": "The customer wants a replacement flight.",
+      "information": "The customer is asking for information only."
+    }
+  },
+  "primitives#3": {
+    "page": "primitives",
+    "type": "score",
+    "instructions": "How frustrated does the customer appear in `ticket_message`?",
+    "criteria": [
+      "Calm and neutral.",
+      "Concerned but civil.",
+      "Very angry or using strong language."
+    ]
+  },
+  "primitives_choice#0": {
+    "page": "primitives_choice",
+    "type": "choice",
+    "instructions": "Which team should handle this?",
+    "criteria": {
+      "returns": "Exchanges, wrong or damaged items",
+      "shipping": "Delivery status, delays, lost packages",
+      "billing": "Charges, invoices, payment problems"
+    },
+    "state": "My running shoes arrived in the wrong size. Can I swap them for a size 10?"
+  },
+  "primitives_choice#1": {
+    "page": "primitives_choice",
+    "type": "choice",
+    "instructions": "Which team should handle this?",
+    "criteria": {
+      "returns": "Exchanges, wrong or damaged items",
+      "shipping": "Delivery status, delays, lost packages",
+      "billing": "Charges, invoices, payment problems"
+    },
+    "state": "My running shoes arrived in the wrong size. Can I swap them for a size 10?"
+  },
+  "primitives_choice#2": {
+    "page": "primitives_choice",
+    "type": "choice",
+    "instructions": "If the customer wants to return something, why?",
+    "criteria": {
+      "wrong_size": "The item doesn't fit",
+      "wrong_item": "A different product was delivered",
+      "damaged": "The item arrived broken or faulty",
+      "changed_mind": "The item is fine, the customer no longer wants it",
+      "other": "A return reason that fits none of the above"
+    },
+    "state": "Shoes arrived two weeks late and in the wrong size. Also I see two charges of $120 on my card. What are you going to do about this?"
+  },
+  "primitives_choice#3": {
+    "page": "primitives_choice",
+    "type": "choice",
+    "instructions": "If this is a shipping problem, which kind is it?",
+    "criteria": {
+      "not_delivered": "The package never arrived",
+      "delayed": "The package is late but still on its way",
+      "wrong_address": "The package went to the wrong place",
+      "damaged_in_transit": "The package arrived damaged",
+      "other": "A shipping problem that fits none of the above"
+    },
+    "state": "Shoes arrived two weeks late and in the wrong size. Also I see two charges of $120 on my card. What are you going to do about this?"
+  },
+  "primitives_choice#4": {
+    "page": "primitives_choice",
+    "type": "choice",
+    "instructions": "What does the customer want to happen?",
+    "criteria": {
+      "exchange": "Swap the item for a different one",
+      "refund": "Money back",
+      "replacement": "The same item sent again",
+      "information": "Just an answer, no action needed"
+    },
+    "state": "Shoes arrived two weeks late and in the wrong size. Also I see two charges of $120 on my card. What are you going to do about this?"
+  },
+  "primitives_choice#5": {
+    "page": "primitives_choice",
+    "type": "choice",
+    "instructions": "What is the customer's tone?",
+    "criteria": {
+      "calm": null,
+      "frustrated": null,
+      "angry": null
+    },
+    "state": "Shoes arrived two weeks late and in the wrong size. Also I see two charges of $120 on my card. What are you going to do about this?"
+  },
+  "primitives_noul#0": {
+    "page": "primitives_noul",
+    "type": "noul",
+    "instructions": "Is the customer asking for a human agent?",
+    "state": "I have asked three times now. Can I please just talk to a real person?"
+  },
+  "primitives_noul#1": {
+    "page": "primitives_noul",
+    "type": "noul",
+    "instructions": "Has the customer contacted support about this before?",
+    "state": "I have asked three times now. Can I please just talk to a real person?"
+  },
+  "primitives_noul#2": {
+    "page": "primitives_noul",
+    "type": "noul",
+    "instructions": "Is the customer asking for a human agent?",
+    "state": "I have asked three times now. Can I please just talk to a real person?"
+  },
+  "primitives_noul#3": {
+    "page": "primitives_noul",
+    "type": "noul",
+    "instructions": "Has the customer contacted support about this before?",
+    "state": "I have asked three times now. Can I please just talk to a real person?"
+  },
+  "primitives_score#0": {
+    "page": "primitives_score",
+    "type": "score",
+    "instructions": "How severe is the reported issue?",
+    "criteria": [
+      "Cosmetic; no impact to functionality",
+      "Broken or degraded feature, but workaround exists",
+      "Blocking issue; no workaround exists"
+    ],
+    "state": "The export button crashes the settings page in Safari. It works in Chrome, but a few of our customers only use Safari."
+  },
+  "primitives_score#1": {
+    "page": "primitives_score",
+    "type": "score",
+    "instructions": "How severe is the reported issue?",
+    "criteria": [
+      "Cosmetic; no impact to functionality",
+      "Broken or degraded feature, but workaround exists",
+      "Blocking issue; no workaround exists"
+    ],
+    "state": "The export button crashes the settings page in Safari. It works in Chrome, but a few of our customers only use Safari."
+  },
+  "primitives_score#2": {
+    "page": "primitives_score",
+    "type": "score",
+    "instructions": "How frustrated is the customer?",
+    "criteria": [
+      "Calm, just stating facts",
+      "Frustrated but civil",
+      "Very angry, strong language or threatening to leave"
+    ],
+    "state": "Export to PDF fails with a spinner that never finishes. Some of our team say CSV export still works for them, others say it fails too. This is the third time I'm writing in and honestly I'm done. Steps: open any report, click Export, choose PDF. Chrome 128 on macOS."
+  },
+  "primitives_score#3": {
+    "page": "primitives_score",
+    "type": "score",
+    "instructions": "How much does the report give an engineer to work with?",
+    "criteria": [
+      "No detail; just says something is broken",
+      "Names the feature but no steps or environment",
+      "Steps to reproduce or environment, but not both",
+      "Steps to reproduce and environment"
+    ],
+    "state": "Export to PDF fails with a spinner that never finishes. Some of our team say CSV export still works for them, others say it fails too. This is the third time I'm writing in and honestly I'm done. Steps: open any report, click Export, choose PDF. Chrome 128 on macOS."
+  },
+  "sdk_python#0": {
+    "page": "sdk_python",
+    "type": "noul",
+    "instructions": "Is this ticket about billing?",
+    "state": {
+      "document": "I was charged twice. Please fix this ASAP."
+    }
+  },
+  "sdk_python#1": {
+    "page": "sdk_python",
+    "type": "choice",
+    "instructions": "What is the customer's tone?",
+    "criteria": {
+      "calm": null,
+      "frustrated": null,
+      "angry": null
+    },
+    "state": {
+      "document": "I was charged twice. Please fix this ASAP."
+    }
+  },
+  "sdk_python#2": {
+    "page": "sdk_python",
+    "type": "score",
+    "instructions": "How urgent is this ticket?",
+    "criteria": [
+      "can wait",
+      "this week",
+      "today"
+    ],
+    "state": {
+      "document": "I was charged twice. Please fix this ASAP."
+    }
+  },
+  "sdk_python#3": {
+    "page": "sdk_python",
+    "type": "noul",
+    "instructions": "Is this ticket about billing?",
+    "state": {
+      "document": "I was charged twice. Please fix this ASAP."
+    }
+  },
+  "sdk_python#4": {
+    "page": "sdk_python",
+    "type": "choice",
+    "instructions": "What is the customer's tone?",
+    "criteria": {
+      "calm": null,
+      "frustrated": null,
+      "angry": null
+    },
+    "state": {
+      "document": "I was charged twice. Please fix this ASAP."
+    }
+  },
+  "sdk_python#5": {
+    "page": "sdk_python",
+    "type": "score",
+    "instructions": "How urgent is this ticket?",
+    "criteria": [
+      "can wait",
+      "this week",
+      "today"
+    ],
+    "state": {
+      "document": "I was charged twice. Please fix this ASAP."
+    }
+  },
+  "sdk_python_api_clients_async#0": {
+    "page": "sdk_python_api_clients_async",
+    "type": "noul",
+    "instructions": "Is this about billing?",
+    "state": "I was charged twice. Please help."
+  },
+  "sdk_python_api_clients_async#1": {
+    "page": "sdk_python_api_clients_async",
+    "type": "choice",
+    "instructions": "What is the tone?",
+    "criteria": {
+      "calm": null,
+      "angry": null
+    },
+    "state": "I was charged twice. Please help."
+  },
+  "sdk_python_api_clients_async#2": {
+    "page": "sdk_python_api_clients_async",
+    "type": "noul",
+    "instructions": "Is this about billing?",
+    "state": "I was charged twice. Please help."
+  },
+  "sdk_python_api_clients_async#3": {
+    "page": "sdk_python_api_clients_async",
+    "type": "choice",
+    "instructions": "What is the tone?",
+    "criteria": {
+      "calm": null,
+      "angry": null
+    },
+    "state": "I was charged twice. Please help."
+  },
+  "sdk_python_api_clients_sync#0": {
+    "page": "sdk_python_api_clients_sync",
+    "type": "noul",
+    "instructions": "Is this about billing?",
+    "state": "I was charged twice. Please help."
+  },
+  "sdk_python_api_clients_sync#1": {
+    "page": "sdk_python_api_clients_sync",
+    "type": "choice",
+    "instructions": "What is the tone?",
+    "criteria": {
+      "calm": null,
+      "angry": null
+    },
+    "state": "I was charged twice. Please help."
+  },
+  "sdk_python_api_clients_sync#2": {
+    "page": "sdk_python_api_clients_sync",
+    "type": "noul",
+    "instructions": "Is this about billing?",
+    "state": "I was charged twice. Please help."
+  },
+  "sdk_python_api_clients_sync#3": {
+    "page": "sdk_python_api_clients_sync",
+    "type": "choice",
+    "instructions": "What is the tone?",
+    "criteria": {
+      "calm": null,
+      "angry": null
+    },
+    "state": "I was charged twice. Please help."
+  },
+  "sdk_python_usage#0": {
+    "page": "sdk_python_usage",
+    "type": "noul",
+    "instructions": "Is this about billing?"
+  },
+  "sdk_python_usage#1": {
+    "page": "sdk_python_usage",
+    "type": "choice",
+    "instructions": "What is the tone?",
+    "criteria": {
+      "calm": null,
+      "angry": null
+    }
+  },
+  "sdk_python_usage#2": {
+    "page": "sdk_python_usage",
+    "type": "score",
+    "instructions": "How urgent is this?",
+    "criteria": [
+      "low",
+      "medium",
+      "high"
+    ]
+  },
+  "sdk_python_usage#3": {
+    "page": "sdk_python_usage",
+    "type": "noul",
+    "instructions": "Is this about billing?"
+  },
+  "sdk_python_usage#4": {
+    "page": "sdk_python_usage",
+    "type": "choice",
+    "instructions": "What is the tone?",
+    "criteria": {
+      "calm": null,
+      "angry": null
+    }
+  },
+  "sdk_python_usage#5": {
+    "page": "sdk_python_usage",
+    "type": "score",
+    "instructions": "How urgent is this?",
+    "criteria": [
+      "low",
+      "medium",
+      "high"
+    ]
+  },
+  "sdk_python_usage#6": {
+    "page": "sdk_python_usage",
+    "type": "noul",
+    "instructions": "Is this about billing?"
+  },
+  "sdk_python_usage#7": {
+    "page": "sdk_python_usage",
+    "type": "noul",
+    "instructions": "Is this about billing?"
+  },
+  "sdk_python_usage#8": {
+    "page": "sdk_python_usage",
+    "type": "noul",
+    "instructions": "Is this about billing?"
+  },
+  "sdk_python_usage#9": {
+    "page": "sdk_python_usage",
+    "type": "noul",
+    "instructions": "Is this about billing?"
+  },
+  "sdk_python_usage#10": {
+    "page": "sdk_python_usage",
+    "type": "noul",
+    "instructions": "About billing?",
+    "state": "I was charged twice. Please help ASAP."
+  },
+  "sdk_python_usage#11": {
+    "page": "sdk_python_usage",
+    "type": "noul",
+    "instructions": "Is this about billing?"
+  }
+}

@@ -1,0 +1,314 @@
+{
+  "sample": [
+    {
+      "id": "sst5/test/180",
+      "source": "sst5",
+      "label": 1,
+      "state": "no. .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/1481",
+      "source": "sst5",
+      "label": 4,
+      "state": "it 's almost impossible not to be moved by the movie 's depiction of sacrifice and its stirring epilogue in post-soviet russia .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/1283",
+      "source": "sst5",
+      "label": 2,
+      "state": "just pound away .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/72",
+      "source": "sst5",
+      "label": 1,
+      "state": "the plot is straight off the shelf , the performances are television - caliber and the message of providing solace through deception is a little creepy .",
+      "instructions": {
+        "question": "What is the sentiment of this review sentence?",
+        "focus": "Use only the information given."
+      },
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/1817",
+      "source": "sst5",
+      "label": 1,
+      "state": "the movie feels like it 's going to be great , and it carries on feeling that way for a long time , but takeoff just never happens .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/1410",
+      "source": "sst5",
+      "label": 1,
+      "state": {
+        "document": "proof that a thriller can be sleekly shot , expertly cast , paced with crisp professionalism ... and still be a letdown if its twists and turns hold no more surprise than yesterday 's weather report ."
+      },
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/1632",
+      "source": "sst5",
+      "label": 3,
+      "state": "from the big giant titles of the opening credits to elmer bernstein 's perfectly melodic score , haynes gets just about everything right .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/2043",
+      "source": "sst5",
+      "label": 3,
+      "state": [
+        {
+          "role": "customer",
+          "content": "sound the trumpets : for the first time since desperately seeking susan , madonna does n't suck as an actress ."
+        }
+      ],
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/97",
+      "source": "sst5",
+      "label": 1,
+      "state": "about as satisfying and predictable as the fare at your local drive through .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/1658",
+      "source": "sst5",
+      "label": 3,
+      "state": {
+        "document": "a potent allegorical love story ."
+      },
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/1329",
+      "source": "sst5",
+      "label": 2,
+      "state": [
+        {
+          "role": "customer",
+          "content": "i wonder what the reaction of israelis will be to this supposedly evenhanded presentation ."
+        }
+      ],
+      "instructions": {
+        "question": "What is the sentiment of this review sentence?",
+        "focus": "Pick the single best fit."
+      },
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/1065",
+      "source": "sst5",
+      "label": 2,
+      "state": {
+        "document": "this is an hour and a half of daydreaming ."
+      },
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/804",
+      "source": "sst5",
+      "label": 0,
+      "state": "had anyone here done anything remotely intelligent , we all could have stopped watching long ago .",
+      "instructions": {
+        "question": "What is the sentiment of this review sentence?",
+        "focus": "Pick the single best fit."
+      },
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/655",
+      "source": "sst5",
+      "label": 4,
+      "state": "visits spy-movie territory like a novel you ca n't put down , examines a footnote to history seldom brought to light on the screen , and keeps you guessing from first frame to last .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/355",
+      "source": "sst5",
+      "label": 3,
+      "state": "makmalbaf follows a resolutely realistic path in this uncompromising insight into the harsh existence of the kurdish refugees of iran 's borderlands .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/1893",
+      "source": "sst5",
+      "label": 1,
+      "state": "instead , we just get messy anger , a movie as personal therapy .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/1700",
+      "source": "sst5",
+      "label": 2,
+      "state": "a trite psychological thriller designed to keep the audience guessing and guessing -- which is not to be confused with suspecting -- until it comes time to wrap things up and send the viewers home .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/198",
+      "source": "sst5",
+      "label": 3,
+      "state": "a thoughtful , moving piece that faces difficult issues with honesty and beauty .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/836",
+      "source": "sst5",
+      "label": 4,
+      "state": {
+        "document": "whether seen on a 10-inch television screen or at your local multiplex , the edge-of-your-seat , educational antics of steve irwin are priceless entertainment ."
+      },
+      "instructions": {
+        "question": "What is the sentiment of this review sentence?",
+        "focus": "Use only the information given."
+      },
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    },
+    {
+      "id": "sst5/test/784",
+      "source": "sst5",
+      "label": 1,
+      "state": "so clich\u00e9d that , at one point , they literally upset an apple cart .",
+      "instructions": "What is the sentiment of this review sentence?",
+      "criteria": [
+        "very negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very positive"
+      ]
+    }
+  ]
+}

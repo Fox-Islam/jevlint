@@ -1,0 +1,204 @@
+{
+  "sample": [
+    {
+      "id": "contrastive/age_eligibility/20260919-eval-age_eligibility-0009/a",
+      "family": "age_eligibility",
+      "label": true,
+      "state": {
+        "policy": "Applicants must be at least 21 years old to be eligible for the rental agreement.",
+        "case": "Jonas is 29 years old. The application form was complete and signed. Jonas applied to join the rental agreement."
+      },
+      "question": "Is the applicant eligible?"
+    },
+    {
+      "id": "contrastive/age_eligibility/20260919-eval-age_eligibility-0003/a",
+      "family": "age_eligibility",
+      "label": true,
+      "state": {
+        "policy": "Applicants must be at least 21 years old to be eligible for the volunteer driver program.",
+        "case": "The application form was complete and signed. Kofi applied to join the volunteer driver program. Kofi is 23 years old."
+      },
+      "question": "Is the applicant eligible?"
+    },
+    {
+      "id": "contrastive/return_window/20260919-eval-return_window-0029/b",
+      "family": "return_window",
+      "label": false,
+      "state": {
+        "policy": "Returns are accepted only if the return request is submitted within 60 days of the purchase date.",
+        "case": "The order was paid by card and shipped to Ravi's home address. The return request was submitted on May 22, 2026. Ravi bought a coffee grinder on March 3, 2026."
+      },
+      "question": "Is this return request within the policy window?"
+    },
+    {
+      "id": "contrastive/return_window/20260919-eval-return_window-0021/b",
+      "family": "return_window",
+      "label": false,
+      "state": {
+        "policy": "Returns are accepted only if the return request is submitted within 30 days of the purchase date.",
+        "case": "The order was paid by card and shipped to Aiko's home address. Aiko bought a backpack on April 3, 2026. The return request was submitted on May 27, 2026."
+      },
+      "question": "Is this return request within the policy window?"
+    },
+    {
+      "id": "contrastive/age_eligibility/20260919-eval-age_eligibility-0009/b",
+      "family": "age_eligibility",
+      "label": false,
+      "state": {
+        "policy": "Applicants must be at least 21 years old to be eligible for the rental agreement.",
+        "case": "The application form was complete and signed. Jonas is 19 years old. Jonas applied to join the rental agreement."
+      },
+      "question": "Is the applicant eligible?"
+    },
+    {
+      "id": "contrastive/age_eligibility/20260919-eval-age_eligibility-0033/b",
+      "family": "age_eligibility",
+      "label": false,
+      "state": {
+        "policy": "Applicants must be at least 21 years old to be eligible for the night-shift roster.",
+        "case": "Omar applied to join the night-shift roster. The application form was complete and signed. Omar is 20 years old."
+      },
+      "question": "Is the applicant eligible?"
+    },
+    {
+      "id": "contrastive/return_window/20260919-eval-return_window-0037/a",
+      "family": "return_window",
+      "label": true,
+      "state": {
+        "policy": "Returns are accepted only if the return request is submitted within 14 days of the purchase date.",
+        "case": "Ravi bought a backpack on July 22, 2026. The order was paid by card and shipped to Ravi's home address. The return request was submitted on July 25, 2026."
+      },
+      "question": "Is this return request within the policy window?"
+    },
+    {
+      "id": "contrastive/age_eligibility/20260919-eval-age_eligibility-0031/a",
+      "family": "age_eligibility",
+      "label": true,
+      "state": {
+        "policy": "Applicants must be at least 21 years old to be eligible for the apprenticeship.",
+        "case": "Tomas applied to join the apprenticeship. Tomas is 22 years old. The application form was complete and signed."
+      },
+      "question": "Is the applicant eligible?"
+    },
+    {
+      "id": "contrastive/return_window/20260919-eval-return_window-0035/b",
+      "family": "return_window",
+      "label": false,
+      "state": {
+        "policy": "Returns are accepted only if the return request is submitted within 60 days of the purchase date.",
+        "case": "The return request was submitted on July 8, 2026. The order was paid by card and shipped to Tomas's home address. Tomas bought a rain jacket on April 14, 2026."
+      },
+      "question": "Is this return request within the policy window?"
+    },
+    {
+      "id": "contrastive/age_eligibility/20260919-eval-age_eligibility-0035/b",
+      "family": "age_eligibility",
+      "label": false,
+      "state": {
+        "policy": "Applicants must be at least 18 years old to be eligible for the apprenticeship.",
+        "case": "Elin is 13 years old. The application form was complete and signed. Elin applied to join the apprenticeship."
+      },
+      "question": "Is the applicant eligible?"
+    },
+    {
+      "id": "contrastive/return_window/20260919-eval-return_window-0001/b",
+      "family": "return_window",
+      "label": false,
+      "state": {
+        "policy": "Returns are accepted only if the return request is submitted within 30 days of the purchase date.",
+        "case": "The order was paid by card and shipped to Mira's home address. The return request was submitted on April 9, 2026. Mira bought a backpack on February 18, 2026."
+      },
+      "question": "Is this return request within the policy window?"
+    },
+    {
+      "id": "contrastive/return_window/20260919-eval-return_window-0031/b",
+      "family": "return_window",
+      "label": false,
+      "state": {
+        "policy": "Returns are accepted only if the return request is submitted within 30 days of the purchase date.",
+        "case": "The order was paid by card and shipped to Ravi's home address. Ravi bought a coffee grinder on May 3, 2026. The return request was submitted on June 22, 2026."
+      },
+      "question": "Is this return request within the policy window?"
+    },
+    {
+      "id": "contrastive/return_window/20260919-eval-return_window-0003/a",
+      "family": "return_window",
+      "label": true,
+      "state": {
+        "policy": "Returns are accepted only if the return request is submitted within 30 days of the purchase date.",
+        "case": "The return request was submitted on September 11, 2026. Omar bought a backpack on August 23, 2026. The order was paid by card and shipped to Omar's home address."
+      },
+      "question": "Is this return request within the policy window?"
+    },
+    {
+      "id": "contrastive/age_eligibility/20260919-eval-age_eligibility-0017/a",
+      "family": "age_eligibility",
+      "label": true,
+      "state": {
+        "policy": "Applicants must be at least 21 years old to be eligible for the night-shift roster.",
+        "case": "The application form was complete and signed. Priya applied to join the night-shift roster. Priya is 33 years old."
+      },
+      "question": "Is the applicant eligible?"
+    },
+    {
+      "id": "contrastive/return_window/20260919-eval-return_window-0019/b",
+      "family": "return_window",
+      "label": false,
+      "state": {
+        "policy": "Returns are accepted only if the return request is submitted within 45 days of the purchase date.",
+        "case": "The order was paid by card and shipped to Mira's home address. The return request was submitted on October 3, 2026. Mira bought a pair of running shoes on July 28, 2026."
+      },
+      "question": "Is this return request within the policy window?"
+    },
+    {
+      "id": "contrastive/age_eligibility/20260919-eval-age_eligibility-0025/b",
+      "family": "age_eligibility",
+      "label": false,
+      "state": {
+        "policy": "Applicants must be at least 25 years old to be eligible for the apprenticeship.",
+        "case": "Sana applied to join the apprenticeship. Sana is 20 years old. The application form was complete and signed."
+      },
+      "question": "Is the applicant eligible?"
+    },
+    {
+      "id": "contrastive/age_eligibility/20260919-eval-age_eligibility-0001/a",
+      "family": "age_eligibility",
+      "label": true,
+      "state": {
+        "policy": "Applicants must be at least 16 years old to be eligible for the rental agreement.",
+        "case": "The application form was complete and signed. Tomas applied to join the rental agreement. Tomas is 21 years old."
+      },
+      "question": "Is the applicant eligible?"
+    },
+    {
+      "id": "contrastive/return_window/20260919-eval-return_window-0011/a",
+      "family": "return_window",
+      "label": true,
+      "state": {
+        "policy": "Returns are accepted only if the return request is submitted within 60 days of the purchase date.",
+        "case": "The order was paid by card and shipped to Kofi's home address. Kofi bought a pair of running shoes on April 21, 2026. The return request was submitted on June 19, 2026."
+      },
+      "question": "Is this return request within the policy window?"
+    },
+    {
+      "id": "contrastive/return_window/20260919-eval-return_window-0017/a",
+      "family": "return_window",
+      "label": true,
+      "state": {
+        "policy": "Returns are accepted only if the return request is submitted within 14 days of the purchase date.",
+        "case": "The return request was submitted on July 8, 2026. Elin bought a rain jacket on June 25, 2026. The order was paid by card and shipped to Elin's home address."
+      },
+      "question": "Is this return request within the policy window?"
+    },
+    {
+      "id": "contrastive/age_eligibility/20260919-eval-age_eligibility-0001/b",
+      "family": "age_eligibility",
+      "label": false,
+      "state": {
+        "policy": "Applicants must be at least 16 years old to be eligible for the rental agreement.",
+        "case": "The application form was complete and signed. Tomas is 13 years old. Tomas applied to join the rental agreement."
+      },
+      "question": "Is the applicant eligible?"
+    }
+  ]
+}

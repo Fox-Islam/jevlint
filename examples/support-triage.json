@@ -1,0 +1,46 @@
+{
+  "state": {
+    "ticket": {
+      "subject": "Charged twice this month",
+      "body": "I was charged twice for order A-104 on the same day. Please refund the duplicate. I cannot place another order until this is sorted."
+    },
+    "plan": "pro"
+  },
+  "questions": {
+    "refund_requested": {
+      "type": "noul",
+      "instructions": "Does the customer ask for a refund?",
+      "criteria": {
+        "true": "The customer asks for money back, a refund, or a charge to be reversed.",
+        "false": "The customer reports a problem without asking for money back."
+      }
+    },
+    "blocked": {
+      "type": "noul",
+      "instructions": "Does the customer say they cannot carry on using the product?",
+      "criteria": {
+        "true": "The customer states they are unable to do something they need to do.",
+        "false": "The customer can still use the product, even if something is inconvenient."
+      }
+    },
+    "category": {
+      "type": "choice",
+      "instructions": "What is this ticket about?",
+      "criteria": {
+        "billing": "Charges, invoices, refunds and payment methods",
+        "technical": "Something in the product is broken or behaving wrongly",
+        "account": "Access, passwords, seats and permissions",
+        "other": "Anything the other options do not cover"
+      }
+    },
+    "urgency": {
+      "type": "score",
+      "instructions": "How urgent is this ticket?",
+      "criteria": [
+        "Nothing is blocked and it can wait until next week",
+        "Something is inconvenient and should be handled today",
+        "The customer cannot carry on until somebody acts"
+      ]
+    }
+  }
+}

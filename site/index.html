@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jevlint</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><nav><a href="index.html" aria-current="page">Home</a><a href="examples.html">Examples</a><a href="evidence.html">Evidence</a><a href="output.html">Output</a><a href="library.html">From PHP</a><a href="languages.html">Languages</a><a href="behaviour.html">Behaviour</a><a href="corpus.html">Corpus</a></nav></header>
+<main>
+<div class="title-row"><h1 id="jevlint">jevlint</h1><a class="gh" href="https://github.com/Fox-Islam/jevlint" aria-label="jevlint on GitHub"><svg viewBox="0 0 16 16" width="26" height="26" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a></div>
+<p>A linter for <a href="https://docs.typesafe.ai">Jev</a> queries. It takes the request you would send
+to System One - a state and the questions asked about it - and reports where the query is
+written in a way the model is documented to handle badly.</p>
+<p><strong>Start:</strong> <a href="#quickstart">Quickstart</a> · <a href="#install">Install</a> ·
+<a href="#what-a-query-file-looks-like">What a query file looks like</a> · <a href="#what-it-checks">What it checks</a></p>
+<p><strong>Reading the output:</strong> <a href="#is-it-any-good">Is it any good?</a> ·
+<a href="#severity-and-probability-say-different-things">Severity and probability</a> ·
+<a href="#reading-a-finding">Reading a finding</a> · <a href="#exit-codes">Exit codes</a> ·
+<a href="#for-a-program-reading-the-output">For a program reading the output</a> ·
+<a href="#what-this-cannot-tell-you">What this cannot tell you</a></p>
+<p><strong>Going further:</strong> <a href="#the-probe">The probe</a> · <a href="#accepting-a-finding">Accepting a finding</a> ·
+<a href="#which-jev-build-the-rules-are-for">Which Jev build the rules are for</a> ·
+<a href="#the-catalogue-is-not-php">The catalogue is not PHP</a></p>
+<p><strong>Beyond this page:</strong> <a href="evidence.html">Evidence</a>, how good each check is ·
+<a href="output.html">Output</a>, reading the output from a program ·
+<a href="library.html">From PHP</a>, calling it from PHP ·
+<a href="languages.html">Languages</a>, how to add a language ·
+<a href="behaviour.html">Behaviour</a>, what the tool does on itself</p>
+<h2 id="quickstart">Quickstart</h2>
+<pre><code class="language-sh">composer install
+./jevlint check examples/broken-triage.json --static-only
+</code></pre>
+<p>That reads a query written to be bad, costs nothing and makes no calls. It reports one error,
+two warnings and three advisories, each naming the defect, where it is and what to change.</p>
+<p>To check your own query, point it at the request body you would send:</p>
+<pre><code class="language-sh">./jevlint check your-query.json --static-only    # the rules that need no key
+./jevlint check your-query.json                  # and the ones that ask Jev
+</code></pre>
+<p>The second needs <code>TYPESAFE_API_KEY</code> in the environment or in a <code>.env</code> in the working directory,
+and costs two calls per question plus two for the query. <code>./jevlint help</code> lists the rest.</p>
+<p>Or from PHP, where <code>Phox\JevLint\Lint\Linter</code> hands back a <code>Report</code> instead of printing one:</p>
+<pre><code class="language-php">$report = Linter::fromEnvironment()-&gt;check(Query::fromFile('your-query.json'));
+
+foreach ($report-&gt;findings() as $finding) {
+    printf(&quot;%s %s %s\n&quot;, $finding-&gt;severity-&gt;value, $finding-&gt;checkId, $finding-&gt;message);
+}
+</code></pre>
+<p><code>Linter::rulesOnly()</code> is the <code>--static-only</code> path and needs no key.
+<a href="library.html">From PHP</a> has the narrowings, what a <code>Report</code> gives you, and the
+conditions to gate on.</p>
+<h2 id="install">Install</h2>
+<p>As a dependency, which puts <code>jevlint</code> on your <code>PATH</code> through Composer:</p>
+<pre><code class="language-sh">composer require --dev phox/jevlint
+./vendor/bin/jevlint help
+</code></pre>
+<p>Or from a clone, where <code>./jevlint</code> at the root runs it from anywhere:</p>
+<pre><code class="language-sh">composer install
+./jevlint help
+</code></pre>
+<p>The commands below are written from the repository root, where <code>examples/</code> sits. The PHP source
+is under <code>php/</code>, and <code>checks/</code> sits beside it because an implementation in another language
+reads the same catalogue.</p>
+<p>Put <code>TYPESAFE_API_KEY</code> in the environment or in a <code>.env</code> in the working directory, or pass
+<code>--env-file</code>. <code>check --static-only</code> needs no key and makes no calls. <code>--openrouter</code> sends the
+checks through OpenRouter instead and reads <code>OPENROUTER_API_KEY</code>.</p>
+<h2 id="what-a-query-file-looks-like">What a query file looks like</h2>
+<p>The request body, so what you already send is what you check:</p>
+<pre><code class="language-json">{
+  &quot;state&quot;: {&quot;ticket&quot;: {&quot;body&quot;: &quot;I was charged twice for order A-104. Please refund the duplicate.&quot;}},
+  &quot;questions&quot;: {
+    &quot;refund_requested&quot;: {
+      &quot;type&quot;: &quot;noul&quot;,
+      &quot;instructions&quot;: &quot;Does the customer ask for a refund?&quot;,
+      &quot;criteria&quot;: {
+        &quot;true&quot;: &quot;The customer asks for money back, a refund, or a charge to be reversed.&quot;,
+        &quot;false&quot;: &quot;The customer reports a problem without asking for money back.&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<p>Jev answers three kinds of question, and the checks differ by kind:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>noul</code></td>
+<td>yes or no, answered with the probability of yes. Its <code>criteria</code> describe what a yes and a no mean</td>
+</tr>
+<tr>
+<td><code>choice</code></td>
+<td>one of a set of labels with no order between them. Its <code>criteria</code> map each label to a description</td>
+</tr>
+<tr>
+<td><code>score</code></td>
+<td>a position on an ordered rubric. Its <code>criteria</code> are the levels, in order, each describing a situation</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>examples/</code> has a query written well and one written badly. <code>spec/query.schema.json</code> is the
+schema.</p>
+<h2 id="what-it-checks">What it checks</h2>
+<p>Two kinds of check, both reported the same way.</p>
+<p><strong>Static checks</strong> run in code and cost nothing. They catch the shapes the API rejects - a
+Choice whose criteria are a list, a Score whose criteria are a map, the two 422s that are
+exactly inverse - and the structural defects: a rubric made of bare numbers, a Choice with
+nowhere to put an input the options do not cover, an instruction that says no more than the
+question id does.</p>
+<p><strong>Model checks</strong> put the question under review to Jev as state, and ask one calibrated
+question per documented failure mode. Every check is phrased so that a high probability
+means the defect is present, and the probability is reported with the finding. What enforces
+the direction is <code>self-test</code>: a check written backwards scores high on its clean example and
+low on its broken one, which is the <code>inverted</code> verdict, and the run fails.</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>Failure mode</th>
+<th>Checks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13#literal-reading">Literal reading</a></td>
+<td><code>question/undefined-boundary</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13#math-and-numbers">Math and numbers</a></td>
+<td><code>question/arithmetic</code>, <code>question/numeric-representation</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13#date-and-time-comparison">Date and time</a></td>
+<td><code>question/date-comparison</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13#indirection">Indirection</a></td>
+<td><code>question/indirection</code>, <code>question/double-negative</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13#large-state-full-of-irrelevant-detail">Large state</a></td>
+<td><code>state/irrelevant-field</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13#adversarial-content">Adversarial content</a></td>
+<td><code>state/adversarial-content</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13#contradictory-instructions-and-criteria">Contradictory criteria</a></td>
+<td><code>question/criteria-contradiction</code>, <code>question/criteria-off-topic</code>, <code>noul/negated-phrasing</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13#generation">Generation</a></td>
+<td><code>question/generation</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/primitives#ask-for-one-snap-judgment-per-question">One snap judgment per question</a></td>
+<td><code>question/compound-judgment</code>, <code>score/multi-dimension</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/primitives/score#writing-good-levels">Writing good levels</a></td>
+<td><code>score/degree-levels</code>, <code>score/overlapping-levels</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/primitives#choose-a-question-type">Choosing a question type</a></td>
+<td><code>choice/overlapping-options</code>, <code>question/type-mismatch</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/concepts/state">The state has to hold the answer</a></td>
+<td><code>state/answer-absent</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/primitives#ask-multiple-questions-together">Ask multiple questions together</a></td>
+<td><code>query/overlapping-questions</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Some checks are asked more than one way. A catalogue entry with <code>questions</code> instead of
+<code>question</code> carries several wordings that mean the same thing; they go in the same call, the
+mean is the finding's probability, and the spread between them is printed with it. A criterion
+held by one sentence is held by that sentence's accidents as much as by its meaning, and where
+two wordings of the same check disagree, the finding reports both instead of picking one.</p>
+<p><strong><code>jevlint checks</code> is the fastest way to learn what a good query looks like.</strong> Every check
+carries the failure, the fix, the measurement behind its severity and the case where accepting
+it is right, so the catalogue reads as a guide to writing queries and not only as a list of
+rules. It lists the whole catalogue, including the static rules this table leaves out.
+<code>jevlint checks &lt;id&gt;</code> prints one check in full: its trigger, what it reads, and the Jev
+question it asks. A test pins every model check named above to one that exists, and every model
+check in the catalogue to a mention here.</p>
+<p>A question costs two calls: one carrying every check that reads the question itself, and one
+carrying the checks that read your state. Two more calls are spent on the query as a whole: one
+for the checks that read the state on its own, and one for the checks that compare questions
+against each other. Each call holds a dozen or so questions, because a call costs its round trip
+and not its question count. So a four-question query with a state is ten calls, and <code>--no-state</code>
+drops the per-question state call and the state-only call.</p>
+<p>That figure is a floor, and two things move it. A query with one question, or with more than a
+dozen, has no pair to compare, so the pair call is not made and a <code>skipped</code> note says so. And a
+question-scoped check whose reading lands within 0.05 of its trigger is asked again in a
+follow-up call, so a run with borderline readings costs up to twice the per-question calls:
+between <code>2n + 2</code> and <code>4n + 2</code>. The checks that read your state are not re-asked; they carry
+<code>near_trigger</code> and nothing more. <code>summary.calls</code> is what the run spent, including calls that
+failed.</p>
+<p>A check that compares questions, such as <code>query/overlapping-questions</code>, has no single question
+to blame, so it names both and its finding is attached to the second.</p>
+<h2 id="is-it-any-good">Is it any good?</h2>
+<p>Measured, and the measurements are in the repository. The short version:</p>
+<ul>
+<li><strong>The checks separate a well-written question from a badly written one.</strong> Each ships two
+example sets in unrelated domains; taking whichever it does worse on, the clean example
+scores a median 0.08 and the broken one 0.90.</li>
+<li><strong>Every defect the TypeSafe documentation gives an example for is caught</strong>, 14 of 14. On
+material the documentation publishes as correct, firing rates run from 0 to 8%.</li>
+<li><strong>Severity is what the defect costs, measured.</strong> Joining a second condition to a question
+that every case already satisfies takes the answers from 15 of 20 to 11 of 20 and doubles the
+Brier score, so <code>question/compound-judgment</code> is an error. Three checks are advice because
+their defect was detected and cost nothing on the hardest material to hand.</li>
+<li><strong>Acting on a finding can be worth more than the finding.</strong> Following
+<code>question/date-comparison</code> - extract the date parts as a Choice over enumerated options and
+subtract in code - took a returns-window query from 21 of 40 correct to 40 of 40 on held-out
+labelled cases.</li>
+</ul>
+<p>And what it cannot tell you:</p>
+<ul>
+<li>A check passing does not mean your question is right. It means the ways this tool knows how to
+be wrong were not found.</li>
+<li>One check, <code>score/multi-dimension</code>, cannot separate its clean and defective readings at all.
+It says so in its own output rather than leaving you to find out.</li>
+<li>The corpus tests firing rates, not correctness. A check that fires on 0 of 52 published
+examples may still be wrong about yours.</li>
+</ul>
+<p>Read a model finding as an argument with a number attached, not as a verdict. <code>jevlint self-test</code> shows each check separates its own examples, which catches a wording change that
+breaks a check and proves nothing about whether the check is right; that takes material
+somebody else labelled, which is what <code>corpus/</code> holds.</p>
+<p><a href="evidence.html">Evidence</a> has the per-check measurements and the material behind them.
+<a href="behaviour.html">Behaviour</a> has what the tool does on itself: cost, repeatability, and
+what it reports on a query written to be bad.</p>
+<h2 id="severity-and-probability-say-different-things">Severity and probability say different things</h2>
+<p><strong>Severity is what the defect costs if it is real. Probability is how sure the check is that it
+is.</strong> They move independently, and the report shows both because neither answers for the other.</p>
+<p><code>question/type-mismatch</code> can report <code>advice</code> at a probability of 1.00: the check is certain the
+answers would fit a Score better, and the query works either way, so the cost of ignoring it is
+small. <code>question/arithmetic</code> is an <code>error</code> at 0.97 because a question that asks Jev to count
+returns a wrong number.</p>
+<p>This matters for <code>--min</code>. Filtering to <code>warning</code> hides advice whatever its probability, so a
+run gated that way can pass while carrying the most confident finding in the report.</p>
+<h2 id="reading-a-finding">Reading a finding</h2>
+<pre><code>  error    Score levels are bare numbers
+           score/numeric-levels
+           The levels are bare numbers, so there is nothing in the state for the model to
+           match them against.
+           Likelihood  certain, because this rule either matches or does not
+           Found       Levels: 0, 1, 2.
+           Suggested   Replace each number with the situation it stands for. For example, a
+                       three-level severity rubric becomes &quot;Cosmetic, and nobody's work is
+                       affected&quot;, &quot;Broken or degraded, but a workaround exists&quot;, &quot;No
+                       workaround, and the work has stopped&quot;.
+           Why         The model never sees a level's number or its neighbours, so a bare
+                       number gives it nothing to match against. The documented example
+                       scores 0.55 at confidence 0.33 with numeric levels and 0.0 at
+                       confidence 1.0 with described ones.
+           Docs        https://docs.typesafe.ai/primitives/score#writing-good-levels
+</code></pre>
+<p>The first line says what is wrong without needing to know the catalogue. The second names the
+check, which you can look up with <code>jevlint checks &lt;id&gt;</code>, grep for, or narrow a run to with
+<code>--only</code>. <code>Likelihood</code> is how the finding was reached: a static rule is certain, and a model
+check carries the probability that produced it and the trigger it cleared. <code>Found</code> quotes your
+file, <code>Suggested</code> is the change to make, and <code>Why</code> is what goes wrong if you do not.</p>
+<p>Where the defect is purely a shape, the finding also carries a <code>Patch</code>: the exact change, built
+from your own file, ready to apply.</p>
+<pre><code>           Patch       lossless · replace /questions/urgency/criteria = [&quot;Can wait until next
+                       week&quot;,&quot;The customer is blocked right now&quot;]
+</code></pre>
+<p>In JSON that is <code>{&quot;op&quot;: &quot;replace&quot;, &quot;path&quot;: ..., &quot;value&quot;: [...]}</code>, which a program can apply
+without reading the file, and <code>safety</code> says whether it can be applied unattended. A patch is
+offered only where it keeps every word you wrote, so a reshape that would drop something ships
+the advice alone. <strong>Re-run after applying one:</strong> a reshape can raise a finding the old shape hid.
+<a href="output.html">Output</a> lists which checks emit patches and when they withhold them.</p>
+<p>Everywhere else <code>Suggested</code> is guidance. A model check has read your instruction, not your
+subject, so its suggestion holds for any query the check fires on, and any example in it is
+marked as one.</p>
+<p>A model check's probability reads in one direction: it is how strongly the check reads the
+defect as present, so higher is worse. The report says so once at the top, and each finding
+puts the number in words - <code>0.97, almost certain</code>, <code>0.67, likely</code> - because a bare 0.67 does
+not say which way it points.</p>
+<p><code>--brief</code> collapses each finding to its id, its message and the suggestion.</p>
+<h2 id="the-probe">The probe</h2>
+<p><code>check</code> can tell you a question is vague. Only <code>probe</code> can tell you that your question,
+against your state, answers 0.72 one way and 0.87 the other.</p>
+<p><strong>Point it at the inputs you are least sure about.</strong> <code>check</code> reads the state you gave it and
+nothing else, so a question the material cannot settle looks fine against a state that happens to
+settle it. <code>probe --state=hard-case.json</code> runs the same query against another state, and a
+question with nothing to answer from shows up as one that moves when you reword it. That is the
+failure worth finding, and <code>check</code> on a comfortable state will not find it.</p>
+<p>It sends the query unchanged several times, and the spread of those repeats is what counts
+as movement. Then it sends rewrites:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>What changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>criteria-stripped</code></td>
+<td>the instructions alone, with the criteria removed</td>
+</tr>
+<tr>
+<td><code>asked-as-choice</code></td>
+<td>the same yes/no question as a two-option Choice</td>
+</tr>
+<tr>
+<td><code>options-reversed</code></td>
+<td>the same Choice options in the opposite order</td>
+</tr>
+<tr>
+<td><code>levels-reversed</code></td>
+<td>the same Score levels in the opposite order, read back flipped</td>
+</tr>
+<tr>
+<td>your own</td>
+<td><code>--variants=file.json</code>, holding <code>{&quot;name&quot;: {&quot;question_id&quot;: &quot;the rewording&quot;}}</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Every built-in variant is mechanical. Nothing generates a paraphrase, because a generated
+one moves the wording and whatever the generator decided the question meant at the same
+time, and the spread cannot then be attributed to either. That is what <code>--variants</code> is for:
+a rewording you wrote, so that when the answer moves, the disagreement is between you and
+the model.</p>
+<p>Movement is reported in multiples of the repeat spread, and counted when it clears both three
+times that spread and 0.05. The spread is the sample deviation of the repeats, or 0.0085 where
+that is smaller. The repeats are sent back to back, which understates the variability of requests
+spread out over time, so the figure is a floor.</p>
+<p><strong>A probe is not a gate.</strong> The unchanged query is sent <code>--repeats</code> times; every rewrite is sent
+once. So a variant's reading is one draw compared against a mean, and the bar it has to clear is
+three times a deviation estimated from five. Both move between runs, and a variant sitting near
+the bar is starred on some runs and not others - on a query measured ten times, the same rewrite
+was reported as moving eight times and not moving twice. Read the size of the move and the
+readings behind it. <code>--strict</code> is for a rewrite that moves far more than the bar, not for one
+near it, and a CI job that fails on <code>probe --strict</code> will fail intermittently.</p>
+<h2 id="exit-codes">Exit codes</h2>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>code</th>
+<th><code>check</code></th>
+<th><code>probe</code></th>
+<th><code>self-test</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>no findings at error severity</td>
+<td>ran, whether or not anything moved</td>
+<td>every check separated its examples</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>an error, or <code>--strict</code> with any finding</td>
+<td><code>--strict</code> and something moved</td>
+<td>a check failed its own examples</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>could not run</td>
+<td>could not run</td>
+<td>could not run</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>no errors, but a check could not decide</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong><code>0</code> does not mean no findings.</strong> Warnings and advice exit 0 on their own, which is what
+<code>--strict</code> is for; a gate written as <code>jevlint check q.json &amp;&amp; deploy</code> ships a query carrying
+both. Read <code>summary</code>, or pass <code>--strict</code>.</p>
+<p><code>--min</code> sets one floor for both the listing and <code>--strict</code>, so <code>--min=warning --strict</code> fails
+on a warning and passes on advice. The counts in <code>summary</code> are always the whole run, and the
+report carries a note saying how many findings the floor left out.</p>
+<p><strong><code>2</code> means could not run, on every command</strong>, including a run where any call to the API
+failed or came back without answering what it was asked.</p>
+<p><strong>A run that could not ask its checks is not a run that passed.</strong> If any call fails - a bad key,
+a network fault - the checks it carried never ran, and reporting that as a clean query would
+tell a gate to deploy something nobody looked at. Those calls are recorded as <code>unreachable</code>
+notes, <code>summary.complete</code> goes false, and the exit code is 2 whatever the findings say.</p>
+<p><strong>Exit 3 is a check that could not decide.</strong> A reading landing within 0.05 of its trigger is
+asked again, and where separate calls answer on both sides of it the run says so instead of
+picking. A gate that treats 3 as a pass is flipping a coin.</p>
+<pre><code class="language-sh">jevlint check query.json --static-only            # no key, no calls, no cost
+jevlint check query.json --min=warning --strict   # for CI
+jevlint check query.json --question=urgency       # re-check one question while iterating
+jevlint check query.json --repeats=5              # ask the per-question checks five times
+jevlint check query.json --all                    # also show the checks that ran and cleared
+jevlint check query.json --show-accepted          # and the ones your config accepts
+jevlint check query.json --brief                  # one line per finding
+jevlint check query.json --format=json            # the report as JSON
+jevlint check query.json --jev=1.13               # the rules written for that Jev build
+jevlint --version                                 # the tool and the catalogue it loads
+jevlint probe query.json --strict                 # fail when a rewrite moves an answer
+</code></pre>
+<p>An unknown option or an unknown <code>--min</code> value is an error, not a shrug: a mistyped
+<code>--static-only</code> would otherwise spend money on a run you believed was free. A trigger outside
+0.3 to 0.95 is refused at load for the same reason - a catalogue that fires on everything and
+one that works produce reports of the same shape.</p>
+<p>Every <code>check</code> report carries the catalogue that produced it, as <code>catalogue v1 &lt;fingerprint&gt; for jev-1.13</code>. The fingerprint is a hash of the whole catalogue file, so two reports can be
+compared and an edited rule set is visible instead of inferred. It moves when a hint is reworded
+too, which is a difference that changes no finding: <code>jevlint --version --format=json</code> also
+carries <code>asked</code>, a digest over what the checks put to Jev, and that is the one to compare when
+what matters is whether the answers would be the same. <code>asked_through</code> carries the build
+<code>--model</code> pinned, and <code>answered_by</code> carries the builds the answers came back naming, so a run
+through another provider is distinguishable even where both were asked for the same thing. More
+than one entry in <code>answered_by</code> means one run was not answered by one build. <code>probe</code> reads no
+checks, so its output carries no catalogue.</p>
+<h2 id="which-jev-build-the-rules-are-for">Which Jev build the rules are for</h2>
+<p>A defect belongs to a build, so the checks are versioned with Jev. Every run resolves one
+version: <code>--jev</code>, then <code>jev</code> in the config, then <code>latest</code>. <code>jevlint --version</code> lists what the
+catalogue covers, and a version it holds nothing for is refused.</p>
+<pre><code class="language-sh">jevlint check query.json --jev=1.13   # the rules written for that build
+</code></pre>
+<pre><code class="language-json">{ &quot;jev&quot;: &quot;1.13&quot; }
+</code></pre>
+<p>A query pinning its own build with <code>&quot;model&quot;: &quot;jev-1.13&quot;</code> gets a note where the run resolved a
+different one. The pin does not change the version. <a href="output.html">Output</a> has the
+rest: what a skipped note carries, and how <code>since</code> and <code>until</code> narrow a check to a range.</p>
+<h2 id="accepting-a-finding">Accepting a finding</h2>
+<p>A finding you have read and disagree with goes in <code>.jevlint.json</code>, beside the query or in the
+working directory:</p>
+<pre><code class="language-json">{
+  &quot;accept&quot;: [
+    {
+      &quot;check&quot;: &quot;choice/no-fallback&quot;,
+      &quot;question&quot;: &quot;department&quot;,
+      &quot;reason&quot;: &quot;The three departments are the whole set; a ticket cannot be about anything else.&quot;
+    }
+  ]
+}
+</code></pre>
+<ul>
+<li><strong>A reason is required.</strong> Without one the run fails, because accepting a finding is a
+judgement somebody made and switching a check off is not.</li>
+<li><code>jev</code> belongs in the same file, and pins the Jev build every command checks against.</li>
+<li><code>question</code> is optional and takes <code>*</code>, for a check you accept across the whole query.</li>
+<li>A check id the catalogue does not hold fails the run, so a renamed check cannot leave an
+acceptance quietly covering nothing.</li>
+<li>No file is an empty config, not an error.</li>
+</ul>
+<p>Accepted findings are <strong>counted and named, not deleted</strong>. They come out of the severity counts
+and the exit code, and the report says <code>1 accepted by .jevlint.json</code> with <code>--show-accepted</code> for
+the reasons and <code>&quot;accepted&quot;: &quot;&lt;reason&gt;&quot;</code> in the JSON. A run whose only findings are accepted
+prints <code>Nothing to report</code> above that line: nothing is outstanding, and the line below says what
+was set aside and where to read why.</p>
+<p>The config lives beside the query instead of inside it because the API rejects an unknown key
+at the top of a request, and a query file that cannot be sent is no longer the thing you are
+checking.</p>
+<h2 id="for-a-program-reading-the-output">For a program reading the output</h2>
+<p><code>--format=json</code> on every command, including errors, which come back as
+<code>{&quot;error&quot;: {&quot;kind&quot;, &quot;message&quot;, &quot;command&quot;}}</code> with exit 2.
+<a href="spec/report.schema.json"><code>spec/report.schema.json</code></a> documents every field, and
+<a href="output.html">Output</a> covers what a caller needs beyond it.</p>
+<p>One trap is worth stating here. <strong>Exit 2 carries three shapes, and only one has an <code>error</code>
+key</strong>, so branching on that key alone reads two failures as a pass:</p>
+<pre><code>exit 2 and `error`            the run never started
+exit 2 and `complete: false`  it started and lost calls
+exit 2 and `asked: 0`         it ran and asked nothing
+</code></pre>
+<h2 id="the-catalogue-is-not-php">The catalogue is not PHP</h2>
+<p><code>checks/catalogue.json</code> holds every check: its id, severity, which primitives it applies to,
+and for a model check the Jev question that decides it. It mentions no language, so an
+implementation in another language reads the same file and writes no checks of its own.</p>
+<h2 id="what-this-cannot-tell-you">What this cannot tell you</h2>
+<p>A model check has read your instruction and your criteria. It has not seen your subject, and it
+is not calibrated against human judgement, so a finding is an argument you can weigh and not a
+verdict. A query can pass every check and still be the wrong question to ask.</p>
+</main>
+<footer><p>A linter for Jev queries. <a href="https://github.com/Fox-Islam/jevlint">Source on GitHub</a>.</p></footer>
+</body>
+</html>

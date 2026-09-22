@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The corpus · jevlint</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><nav><a href="index.html">Home</a><a href="examples.html">Examples</a><a href="evidence.html">Evidence</a><a href="output.html">Output</a><a href="library.html">From PHP</a><a href="languages.html">Languages</a><a href="behaviour.html">Behaviour</a><a href="corpus.html" aria-current="page">Corpus</a></nav></header>
+<main>
+<div class="title-row"><h1 id="the-corpus">The corpus</h1><a class="gh" href="https://github.com/Fox-Islam/jevlint" aria-label="jevlint on GitHub"><svg viewBox="0 0 16 16" width="26" height="26" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a></div>
+<p>What the checks are measured against, beyond the two examples each one ships.</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>file</th>
+<th>what it is</th>
+<th>how it is labelled</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gold.json</code></td>
+<td>22 questions the TypeSafe docs discuss in prose</td>
+<td>by the docs, with the quotation and the defect named</td>
+</tr>
+<tr>
+<td><code>docs-examples.json</code></td>
+<td>76 entries, 52 distinct, from the docs' cookbooks, patterns and demos</td>
+<td>correct by publication: TypeSafe wrote them as how to do it</td>
+</tr>
+<tr>
+<td><code>field.json</code></td>
+<td>62 questions from <code>jev-bias-bench</code> and the Atarim API</td>
+<td>unlabelled</td>
+</tr>
+<tr>
+<td><code>scores.json</code></td>
+<td>what every check put on every one of them</td>
+<td>a run of <code>harvest.py</code></td>
+</tr>
+<tr>
+<td><code>build.py</code></td>
+<td>the three above, as query files jevlint can read</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>dogfood.py</code></td>
+<td>the catalogue's own check wordings, as query files</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>squad.py</code></td>
+<td><code>state/answer-absent</code> against SQuAD 2.0, fetched on demand</td>
+<td>by the SQuAD annotators</td>
+</tr>
+<tr>
+<td><code>decision.py</code></td>
+<td><code>state/answer-absent</code> against decision-v7, whose states carry a policy that can be taken away</td>
+<td>by decision-v7</td>
+</tr>
+<tr>
+<td><code>advice.py</code></td>
+<td>whether following <code>choice/no-fallback</code> improves the answer, not just the report</td>
+<td>by decision-v7</td>
+</tr>
+<tr>
+<td><code>rewrite.py</code></td>
+<td>the same for <code>question/double-negative</code>, with the rewriting done blind by a panel</td>
+<td>by decision-v7</td>
+</tr>
+<tr>
+<td><code>wording.py</code></td>
+<td>three wording checks at once, on material the model does not already answer perfectly</td>
+<td>by decision-v7</td>
+</tr>
+<tr>
+<td><code>families.py</code></td>
+<td>whether the two date and arithmetic checks fire where decision-v7's answers fail</td>
+<td>by decision-v7</td>
+</tr>
+<tr>
+<td><code>levels.py</code></td>
+<td>whether rewriting a Score's levels as situations puts reviews where they belong</td>
+<td>by decision-v7</td>
+</tr>
+<tr>
+<td><code>contradiction.py</code></td>
+<td>what inverted criteria cost, against criteria that agree with the instruction</td>
+<td>by decision-v7</td>
+</tr>
+<tr>
+<td><code>external.py</code></td>
+<td><code>query/overlapping-questions</code> against Quora's duplicate questions</td>
+<td>by that dataset</td>
+</tr>
+<tr>
+<td><code>planted.py</code></td>
+<td><code>state/adversarial-content</code> on documents with a line planted in them</td>
+<td>by the injection being known</td>
+</tr>
+<tr>
+<td><code>unread.py</code></td>
+<td><code>state/irrelevant-field</code> on states with a field nothing reads</td>
+<td>by the field being known</td>
+</tr>
+<tr>
+<td><code>boundary.py</code></td>
+<td>what a vague boundary costs in how steadily the answer repeats</td>
+<td>none needed</td>
+</tr>
+<tr>
+<td><code>encoded.py</code></td>
+<td>whether a value written as hex costs an answer</td>
+<td>computed, not judged</td>
+</tr>
+<tr>
+<td><code>drift.py</code></td>
+<td>how far a re-harvest moved the readings, and which verdicts changed</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>arms/</code></td>
+<td>the samples and the blind rewrites the four arm experiments run over</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>pages.py</code></td>
+<td>mirrors the documentation pages the docs tier was lifted from</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>states.py</code></td>
+<td>puts back the state each docs example was run against</td>
+<td>-</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-sh">python3 corpus/build.py                # the three source files into the query files in local/corpus
+python3 corpus/harvest.py [path/to/.env]   # score them, 250 calls
+python3 corpus/measure.py              # recall on the gold negatives, firing rate on the rest
+python3 corpus/drift.py                # this harvest against the one it replaced
+</code></pre>
+<pre><code class="language-sh">python3 corpus/squad.py --items=40    # one call per item, balanced across the two labels
+</code></pre>
+<pre><code class="language-sh">python3 corpus/pages.py               # mirror the pages into local/docs
+python3 corpus/states.py --write      # recover each docs example's state from its page
+python3 corpus/decision.py --items=40 # the policy ablation, three calls per case
+python3 corpus/advice.py --items=30   # does the advice improve the answer, two calls per arm
+python3 corpus/rewrite.py             # the same for a wording check, five arms
+python3 corpus/wording.py --items=20  # three wording checks, seven arms
+python3 corpus/families.py --items=6  # do the error-severity checks fire where answers fail
+python3 corpus/levels.py              # does a Score check's advice improve where reviews land
+python3 corpus/levels.py --check=score/multi-dimension   # with the arms in local/score-arms.json
+</code></pre>
+<p><code>decision.py</code> fetches decision-v7 into <code>local/</code> on first run, and <code>advice.py</code>, <code>boundary.py</code>,
+<code>families.py</code>, <code>planted.py</code> and <code>unread.py</code> read it from there, so run <code>decision.py</code> before them.
+The arm experiments - <code>contradiction.py</code>, <code>rewrite.py</code>, <code>levels.py</code>, <code>wording.py</code> - read their
+sample and their rewrites from <code>corpus/arms/</code>, which is committed because those files are the
+experiment's inputs rather than its output: the rewrites were written blind by a panel and cannot
+be regenerated by running anything. A copy in <code>local/</code> takes precedence, which is how a different
+rewrite is tried without touching the committed one.</p>
+<p>The checks with no gold negative are measured by planting the defect in material somebody else
+wrote, or by fetching a dataset that is the defect:</p>
+<pre><code class="language-sh">python3 corpus/planted.py --items=20  # a line addressed to the reviewer, put into a document
+python3 corpus/unread.py --items=20   # a field added to a state that no question reads
+python3 corpus/external.py --check=query/overlapping-questions --items=30   # Quora's pairs
+python3 corpus/contradiction.py       # criteria inverted against the instruction they belong to
+python3 corpus/boundary.py            # a boundary taken out of the policy that defines it
+python3 corpus/encoded.py             # the same comparison over a value written plainly and as hex
+python3 corpus/dogfood.py             # the catalogue's own wordings, as queries jevlint can read
+</code></pre>
+<p><code>decision.py</code> is the strongest evidence here about a state-scoped check. decision-v7 ships states
+holding a <code>policy</code> and a <code>case</code>, the question asked about them, and the answer it should get, so
+removing the policy makes the state unable to answer the question and changes nothing else. It
+also records what Jev answers as written, scored against the label, which is the baseline
+<code>advice.py</code>, <code>rewrite.py</code>, <code>wording.py</code> and <code>levels.py</code> measure their repaired arms against.</p>
+<p><code>squad.py</code> is the only other measurement here whose labels come from outside this repository for a
+state-scoped check. It fetches SQuAD 2.0 into <code>local/</code> on first run, samples a seeded balanced
+set so two runs measure the same material, sends each paragraph as the state and its question as
+the question, and records what <code>state/answer-absent</code> read. <a href="evidence.html">Evidence</a>
+carries
+the result.</p>
+<p><code>harvest.py</code> uses <code>TYPESAFE_API_KEY</code> from the environment. Pass an env file as its
+argument, or set <code>JEVLINT_ENV_FILE</code>, if the key lives somewhere else; it refuses to start
+instead of running every check against a file that is not there.</p>
+<p>The three source files hold one question per entry with its label attached, which is the shape
+a label is easiest to read and write in. <code>build.py</code> turns them into the query files jevlint
+takes, grouped as they were asked, with the labels stripped and the ids normalised so that
+<code>measure.py</code> can split a score id back into its file and its question. It refuses a source
+entry whose primitive and criteria do not agree, naming the entry.</p>
+<p><code>harvest.py</code> runs <code>jevlint check --all</code>, which reports the model checks that ran and cleared
+alongside the ones that fired. That records a probability whether or not it would have been
+reported, without touching the catalogue other processes are reading.</p>
+<p>Query files that carry a state are asked with it. <code>states.py</code> recovers the state each docs
+example was run against from its own page, so 32 of the 76 entries carry one and the
+state-scoped checks are measured on material somebody else wrote. The other 44 belong to
+cookbook pages that fetch or loop over their state at run time, so the page holds none to
+recover, and <code>gold.json</code> is questions quoted from prose with no material anywhere upstream.
+Those files carry no state and the run says which checks that left out.</p>
+<h2 id="what-the-gold-set-is-for">What the gold set is for</h2>
+<p>A check's own two examples show it can tell an obvious defect from an obvious non-defect.
+They cannot show it fires on the right things, because the person who wrote the check wrote
+them both. The gold set is labelled by somebody else: each entry quotes the documentation
+saying this question is right, or is wrong and why.</p>
+<p>Fourteen are wrong with the defect named, so a check that claims to find that defect either
+finds it or does not. Eight are right.</p>
+<p>A positive carries <code>clears</code>: the checks its citation speaks to. The docs call &quot;Does
+this message convey urgency?&quot; a good question in a passage about snap judgements, which clears
+<code>question/compound-judgment</code> and says nothing about where the question's boundary falls. A
+blanket good label would have scored every check against a claim the citation does not make.</p>
+<p>Six entries are <code>tier: derived</code> instead of <code>quoted</code>: the documentation defines the failure but
+gives no example, so the example is written from the definition. They are weaker evidence than
+the quoted ones and are marked so.</p>
+<h2 id="reading-the-numbers">Reading the numbers</h2>
+<p><strong>Some docs examples carry no criteria.</strong> They are extracted from code where the options and
+levels are built from variables, so 34 of the 76 kept theirs and the rest are instruction only.
+A check that reads <code>criteria</code> is asked about criteria that are not there on those, which is one
+source of the firing rates on this tier.</p>
+<p><strong>The docs repeat examples across pages.</strong> 76 entries hold 52 distinct questions, so <code>measure.py</code>
+counts each question once. Reading the raw entry count inflates every rate.</p>
+<p><strong>The clean-material column is the docs tier plus the gold positives.</strong> <code>measure.py</code> counts a
+gold positive for a check only where that entry's <code>clears</code> names it, and no check is named by
+more than two of the eight, so the column adds at most two to a denominator: 52 distinct docs
+questions plus two gold positives is the 54 the widest checks are out of. The two tiers are
+labelled clean by the same standard, and the column is a rate over everything labelled clean.</p>
+<p><strong>The field tier has no labels.</strong> A firing rate on it is a rate, not an error rate. Where a
+finding there has been checked by hand, <a href="evidence.html">Evidence</a> says so.</p>
+<p><strong>A denominator is the questions the check was asked about.</strong> A check that applies only to
+Choice questions is asked about the Choice questions and no others, so its rate is out of
+those, not out of the tier. Counting a question the check never saw as a question it cleared
+would turn silence into a clean bill of health, and <code>measure.py</code> prints the checks that were
+never asked at all instead of scoring them 0.</p>
+<p><strong>Twenty-two gold entries is a small set</strong>, fourteen of them negatives. It is enough to show
+whether a check finds the example the documentation uses to define its own failure mode. It is
+not enough to put an interval on a recall figure.</p>
+</main>
+<footer><p>A linter for Jev queries. <a href="https://github.com/Fox-Islam/jevlint">Source on GitHub</a>.</p></footer>
+</body>
+</html>

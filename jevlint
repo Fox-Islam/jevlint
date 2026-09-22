@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# Runs jevlint from the repository root, wherever it is invoked from.
+exec php "$(dirname "$(readlink -f "$0")")/php/bin/jevlint" "$@"

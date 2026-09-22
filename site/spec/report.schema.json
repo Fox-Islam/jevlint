@@ -1,0 +1,438 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Fox-Islam/jevlint/spec/report.schema.json",
+  "title": "jevlint report",
+  "description": "What `jevlint check --format=json` prints. A caller reads `summary.complete` before anything else: a run that could not ask its checks is not a run that passed. `--format=json` prints this document, or the one in error.schema.json when the run could not start.",
+  "type": "object",
+  "required": [
+    "source",
+    "catalogue",
+    "summary",
+    "notes",
+    "findings"
+  ],
+  "properties": {
+    "source": {
+      "type": "string",
+      "description": "The query file, as the path it was given by."
+    },
+    "catalogue": {
+      "type": "object",
+      "required": [
+        "version",
+        "fingerprint",
+        "asked",
+        "model"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "fingerprint": {
+          "type": "string",
+          "description": "Over the check definitions. Two reports from different definitions differ here."
+        },
+        "asked": {
+          "type": "string",
+          "description": "A fingerprint over what the checks ask - their questions, triggers and applicability - and nothing else. Reworded display text does not move it, so a corpus can tell a rewritten message from a changed check."
+        },
+        "model": {
+          "type": "string"
+        }
+      }
+    },
+    "asked_through": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The build --model pinned for this run, or null for the SDK's default. Two runs through different models are otherwise identical documents. It records what was requested, not what answered; see `answered_by`."
+    },
+    "accepted_from": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The config file the acceptances were read from, or null where the run found none. Acceptances are discovered by directory, so a query checked from elsewhere loses them."
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "error",
+        "warning",
+        "advice",
+        "calls",
+        "tokens",
+        "accepted",
+        "unstable",
+        "unreachable",
+        "complete",
+        "narrowed",
+        "asked"
+      ],
+      "properties": {
+        "error": {
+          "type": "integer"
+        },
+        "warning": {
+          "type": "integer"
+        },
+        "advice": {
+          "type": "integer"
+        },
+        "calls": {
+          "type": "integer",
+          "description": "Calls this run made, including the ones that failed. A failed call may have been retried inside the SDK, so this is a count of calls the tool asked for, not of HTTP requests."
+        },
+        "tokens": {
+          "type": "integer",
+          "description": "Tokens the answers reported, summed. Calls whose answer carried no usage add nothing here and are counted in `tokens_unreported_for`."
+        },
+        "accepted": {
+          "type": "integer"
+        },
+        "unstable": {
+          "type": "integer"
+        },
+        "unreachable": {
+          "type": "integer",
+          "description": "Unreachable notes on this report. A call that failed leaves one; a call that answered only part of what it carried leaves one naming the rest. It is a count of those notes, not of calls and not of checks, so read `notes` for what was lost and `asked` for what ran."
+        },
+        "complete": {
+          "type": "boolean",
+          "description": "False when any check could not be asked. The exit code is then 2."
+        },
+        "narrowed": {
+          "type": "boolean",
+          "description": "True when a flag or the query's shape left checks out of this run. The `skipped` notes say which and how many."
+        },
+        "asked": {
+          "type": "integer",
+          "description": "Checks this run evaluated. Zero means the run asked nothing, whatever else the document says, and the exit code is 2."
+        },
+        "tokens_unreported_for": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Calls whose answer carried no token count. Where this is above zero, `tokens` is a floor."
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "target",
+          "message"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "note",
+              "unreachable",
+              "skipped"
+            ]
+          },
+          "target": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "checks": {
+            "type": "integer",
+            "description": "On a `skipped` note, how many checks that reason left out."
+          },
+          "cause": {
+            "enum": [
+              "auth",
+              "permission",
+              "rate-limit",
+              "timeout",
+              "connection",
+              "request",
+              "server",
+              "api",
+              "answer"
+            ],
+            "description": "On an `unreachable` note, why the call did not come back, so a caller can tell a wrong key from a dropped connection without reading the message."
+          },
+          "findings": {
+            "type": "integer",
+            "description": "On the note a severity floor writes, how many findings it left out of `findings` while leaving them in `summary`."
+          }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    },
+    "cleared": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cleared"
+      },
+      "description": "Checks that ran without firing. Without --all this holds only the readings that landed within 0.1 of their trigger; with it, every model check that ran."
+    },
+    "accepted": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    },
+    "unstable": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cleared"
+      },
+      "description": "Checks whose readings straddled their trigger and did not fire. A finding that did fire carries `unstable` instead."
+    },
+    "answered_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The builds that answered, as the API named them. `asked_through` is what the run asked for; this is what replied, so two runs through different providers are distinguishable even where both were asked for the same thing. More than one entry means the run was not answered by a single build."
+    }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "required": [
+        "check",
+        "fired",
+        "measure",
+        "message",
+        "near_trigger",
+        "severity",
+        "target",
+        "title",
+        "unstable"
+      ],
+      "properties": {
+        "check": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "error",
+            "warning",
+            "advice"
+          ]
+        },
+        "mode": {
+          "enum": [
+            "static",
+            "model"
+          ],
+          "description": "A rule, or a judgement with a probability."
+        },
+        "action": {
+          "enum": [
+            "rewrite",
+            "retype",
+            "restructure",
+            "add",
+            "remove"
+          ]
+        },
+        "target": {
+          "type": "string",
+          "description": "The question id, or `state`, or `query`. A question id can be an empty string, so this key is always present."
+        },
+        "path": {
+          "type": "string",
+          "description": "RFC 6901 pointer into the query. On an `add`, it names where the node belongs, so it does not resolve until the patch is applied."
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "hint": {
+          "type": "string"
+        },
+        "suggest": {
+          "type": "string"
+        },
+        "suggest_kind": {
+          "enum": [
+            "guidance",
+            "patch"
+          ],
+          "description": "`patch` means a `patch` key is present and applying it clears the finding."
+        },
+        "patch": {
+          "type": "object",
+          "required": [
+            "op",
+            "path",
+            "safety"
+          ],
+          "properties": {
+            "op": {
+              "enum": [
+                "replace",
+                "add",
+                "remove"
+              ]
+            },
+            "path": {
+              "type": "string"
+            },
+            "value": {},
+            "safety": {
+              "enum": [
+                "lossless",
+                "lossy",
+                "destructive"
+              ],
+              "description": "lossless: nothing the author wrote is lost, safe to apply unattended. lossy: the content survives but something around it does not, so read it first. destructive: it removes a question or a state field, so a person decides."
+            },
+            "covered_by": {
+              "type": "string",
+              "description": "A check listed earlier whose patch removes this node or an ancestor of it. Applying both leaves the query wrong: the second remove has nothing to remove, and an add under a removed node puts it back as a stub. Apply one of the two."
+            }
+          }
+        },
+        "docs": {
+          "type": "string"
+        },
+        "probability": {
+          "type": "number",
+          "description": "Model checks only. Higher means the defect is more strongly read as present."
+        },
+        "weight": {
+          "type": "number",
+          "description": "Present instead of probability on question/type-mismatch, which asks which primitive fits rather than whether a defect is present. It is the weight Jev put on every primitive other than the one you declared, so it says how wrong the declared type looks, not how strongly `suggested_type` was picked. `evidence` carries both of those."
+        },
+        "trigger": {
+          "type": "number"
+        },
+        "spread": {
+          "type": "number",
+          "description": "The distance between the highest and lowest reading behind `probability`. Where a check is asked in several wordings, this is how far those wordings disagreed, which is an error bar on one verdict rather than a sign the verdict moves; `unstable` says whether it moves between calls."
+        },
+        "readings": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "readings_of": {
+          "type": "string"
+        },
+        "near_trigger": {
+          "type": "boolean",
+          "description": "Always present. True means the reading may not repeat."
+        },
+        "unstable": {
+          "type": "boolean",
+          "description": "The readings from separate calls fell on both sides of the trigger, so another run may answer differently. Wordings disagreeing within one call is not this: that is reported in `spread`."
+        },
+        "fired": {
+          "const": true
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "suggested_type": {
+          "type": "string",
+          "description": "The primitive the check would use. Absent when it judged that none of the three fits, which is itself the finding."
+        },
+        "evidence": {
+          "type": "string",
+          "description": "What the check was shown, quoted back. On a static rule this is the detail that tripped it; on a model check it is the part of the query the check reads, elided in the middle where it is long. It is not an isolated span at fault, so two checks reading the same part of a query quote the same text."
+        },
+        "accepted": {
+          "type": "string",
+          "description": "The reason from .jevlint.json. Present only on accepted findings."
+        },
+        "superseded_by": {
+          "type": "string",
+          "description": "A check in this report whose fix discards this finding."
+        },
+        "advice_caveat": {
+          "type": "string",
+          "description": "What the self-test measured about this check's own suggestion, present only where it barely clears the check or cannot clear it at all."
+        },
+        "measure": {
+          "enum": [
+            "probability",
+            "weight"
+          ],
+          "description": "Which of probability and weight carries the number on a model finding. A static finding is a rule in code and carries neither, so read `mode` before this."
+        }
+      }
+    },
+    "cleared": {
+      "type": "object",
+      "required": [
+        "check",
+        "target",
+        "fired",
+        "near_trigger",
+        "unstable"
+      ],
+      "description": "A check that ran and did not fire. Deliberately carries no advice, so it cannot be mistaken for one that did.",
+      "properties": {
+        "check": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "probability": {
+          "type": "number"
+        },
+        "trigger": {
+          "type": "number"
+        },
+        "readings": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "near_trigger": {
+          "type": "boolean"
+        },
+        "fired": {
+          "const": false
+        },
+        "unstable": {
+          "type": "boolean",
+          "description": "Always present. True means the readings straddled the trigger, which is why this did not fire."
+        },
+        "cleared_because": {
+          "type": "string",
+          "description": "Why a reading above the trigger is not a finding. Present only on a cleared entry the catalogue set aside by a `suppress` rule; absent where the reading sat under the trigger."
+        },
+        "advice_caveat": {
+          "type": "string",
+          "description": "What this reading cannot tell you. Present where the check is marked inconclusive in the catalogue, because its readings for clean and defective material overlap, so a reading under the trigger is not evidence the defect is absent. Such a check is reported whether it fires or not."
+        }
+      }
+    }
+  }
+}

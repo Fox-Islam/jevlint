@@ -1,0 +1,279 @@
+{
+  "gold/analyse-and-determine": {
+    "label": "bad",
+    "defects": [
+      "question/compound-judgment"
+    ],
+    "cite": "primitives.md: \"is not. That needs slow reasoning\"",
+    "type": "noul",
+    "instructions": "Analyze this message and determine the best course of action",
+    "tier": "quoted"
+  },
+  "gold/rate-this-pitch": {
+    "label": "bad",
+    "defects": [
+      "question/compound-judgment"
+    ],
+    "cite": "primitives.md: \"Instead of 'rate this startup pitch', ask about market size, technical feasibility, and differentiation\"",
+    "type": "score",
+    "instructions": "Rate this startup pitch",
+    "criteria": [
+      "Weak",
+      "Average",
+      "Strong"
+    ],
+    "tier": "quoted",
+    "note": "The levels here are invented, since the docs give none; they are degree words, which score/degree-levels catches separately."
+  },
+  "gold/angry-and-refund": {
+    "label": "bad",
+    "defects": [
+      "question/compound-judgment"
+    ],
+    "cite": "noul.md: \"the model has to judge both at once and the value means less\"",
+    "type": "noul",
+    "instructions": "Is the customer angry and asking for a refund?",
+    "tier": "quoted"
+  },
+  "gold/free-of-personal-data": {
+    "label": "bad",
+    "defects": [
+      "noul/negated-phrasing"
+    ],
+    "cite": "noul.md: \"inverts the meaning, and code that reads it later will get it backwards\"",
+    "type": "noul",
+    "instructions": "Is the message free of personal data?",
+    "tier": "quoted"
+  },
+  "gold/numeric-levels": {
+    "label": "bad",
+    "defects": [
+      "score/degree-levels"
+    ],
+    "cite": "score.md: \"the model has nothing to match against and splits the probability\"",
+    "type": "score",
+    "instructions": "Rate severity from 0 to 2, where 2 is worst",
+    "criteria": [
+      "0",
+      "1",
+      "2"
+    ],
+    "tier": "quoted"
+  },
+  "gold/punctual-smart-experienced": {
+    "label": "bad",
+    "defects": [
+      "score/multi-dimension"
+    ],
+    "cite": "score.md: \"the question is measuring three things, and an input that is high on one and low on another can't be placed\"",
+    "type": "score",
+    "instructions": "How good is this candidate?",
+    "criteria": [
+      "Not punctual, not smart, inexperienced",
+      "Punctual and smart and experienced"
+    ],
+    "tier": "quoted"
+  },
+  "gold/strong-in-python": {
+    "label": "bad",
+    "defects": [
+      "question/undefined-boundary"
+    ],
+    "cite": "primitives.md: \"needs a clear definition of 'strong'. An unclear definition makes that probability hard to interpret\"",
+    "type": "noul",
+    "instructions": "Is this candidate strong in Python?",
+    "tier": "quoted"
+  },
+  "gold/hex-near": {
+    "label": "bad",
+    "defects": [
+      "question/numeric-representation"
+    ],
+    "cite": "jaggedness: \"Given RGB triples or hex values it cannot reliably judge whether two values are near each other\"",
+    "type": "noul",
+    "instructions": "Is #DC143C near #FF0000?",
+    "tier": "quoted"
+  },
+  "gold/count-fruit": {
+    "label": "bad",
+    "defects": [
+      "question/arithmetic"
+    ],
+    "cite": "jaggedness: \"jev-1.13 does not count reliably\"",
+    "type": "noul",
+    "instructions": "How many of the items in the list are fruit?",
+    "tier": "quoted"
+  },
+  "gold/date-window": {
+    "label": "bad",
+    "defects": [
+      "question/date-comparison"
+    ],
+    "cite": "jaggedness: \"Asking which of two dates comes first, how far apart they are, or whether one falls inside a window is unreliable\"",
+    "type": "noul",
+    "instructions": "Does the invoice date fall inside the current settlement window?",
+    "tier": "quoted"
+  },
+  "gold/convey-urgency": {
+    "label": "good",
+    "defects": [],
+    "cite": "primitives.md: \"is a good question\"",
+    "type": "noul",
+    "instructions": "Does this message convey urgency?",
+    "tier": "quoted",
+    "clears": [
+      "question/compound-judgment"
+    ]
+  },
+  "gold/contains-personal-data": {
+    "label": "good",
+    "defects": [],
+    "cite": "noul.md: \"is clear\"",
+    "type": "noul",
+    "instructions": "Does the message contain personal data?",
+    "tier": "quoted",
+    "clears": [
+      "noul/negated-phrasing"
+    ]
+  },
+  "gold/any-python": {
+    "label": "good",
+    "defects": [],
+    "cite": "noul.md: \"works well because 'any' leaves no middle ground\"",
+    "type": "noul",
+    "instructions": "Does this candidate have any Python experience?",
+    "tier": "quoted",
+    "clears": [
+      "question/undefined-boundary"
+    ]
+  },
+  "gold/used-python-at-work": {
+    "label": "good",
+    "defects": [],
+    "cite": "primitives.md: \"define the condition clearly\"",
+    "type": "noul",
+    "instructions": "Does the resume state that the candidate has used Python at work?",
+    "tier": "quoted",
+    "clears": [
+      "question/undefined-boundary"
+    ]
+  },
+  "gold/severity-described": {
+    "label": "good",
+    "defects": [],
+    "cite": "score.md: \"scores 0.0 at confidence 1.0\" against the numeric version",
+    "type": "score",
+    "instructions": "How severe is this bug report?",
+    "criteria": [
+      "Cosmetic issue, no functional impact",
+      "Broken or degraded feature, but workaround exists",
+      "Complete feature failure or data loss"
+    ],
+    "tier": "quoted",
+    "clears": [
+      "score/degree-levels",
+      "score/multi-dimension",
+      "question/type-mismatch"
+    ]
+  },
+  "gold/skill-levels": {
+    "label": "good",
+    "defects": [],
+    "cite": "primitives.md: \"use a Score with defined levels\"",
+    "type": "score",
+    "instructions": "What level of Python does this resume show?",
+    "criteria": [
+      "No experience",
+      "Some familiarity",
+      "Daily use",
+      "Deep expertise"
+    ],
+    "tier": "quoted",
+    "clears": [
+      "score/degree-levels",
+      "question/type-mismatch"
+    ]
+  },
+  "gold/property-of-property": {
+    "label": "bad",
+    "tier": "derived",
+    "defects": [
+      "question/indirection"
+    ],
+    "cite": "jaggedness: \"A question about a property of a property or something that requires multiple hops of reasoning costs accuracy\"",
+    "type": "noul",
+    "instructions": "Is the account manager of the customer who raised this ticket based in the same region as the warehouse that shipped the order it refers to?"
+  },
+  "gold/double-negative": {
+    "label": "bad",
+    "tier": "derived",
+    "defects": [
+      "question/double-negative"
+    ],
+    "cite": "jaggedness: \"Instructions carrying double negatives or complex indirection are answered less reliably\"",
+    "type": "noul",
+    "instructions": "Is it not the case that the customer has not been refunded?"
+  },
+  "gold/extract-the-value": {
+    "label": "bad",
+    "tier": "derived",
+    "defects": [
+      "question/generation"
+    ],
+    "cite": "jaggedness: \"jev-1.13 is not trained to generate text ... For data extraction, it is better to extract possible options ... and let jev-1.13 pick the correct extraction\"",
+    "type": "noul",
+    "instructions": "What is the order number the customer refers to?"
+  },
+  "gold/summarise": {
+    "label": "bad",
+    "tier": "derived",
+    "defects": [
+      "question/generation"
+    ],
+    "cite": "jaggedness: \"If you really need to generate text... there are other models for that\"",
+    "type": "noul",
+    "instructions": "Summarise the customer's complaint in one sentence."
+  },
+  "gold/pick-the-extraction": {
+    "label": "good",
+    "tier": "derived",
+    "defects": [],
+    "cite": "jaggedness: \"turn extraction into a Choice over the options rather than asking for the value itself\"",
+    "type": "choice",
+    "instructions": "Which of these is the order number the customer refers to?",
+    "criteria": {
+      "A-104": "The number A-104 appears in the message",
+      "B-220": "The number B-220 appears in the message",
+      "not_stated": "The message names no order number"
+    },
+    "clears": [
+      "question/generation"
+    ]
+  },
+  "gold/month-extraction": {
+    "label": "good",
+    "tier": "derived",
+    "defects": [],
+    "cite": "jaggedness: \"That turns extraction into a Choice over enumerated options\"",
+    "type": "choice",
+    "instructions": "Which month does the renewal date fall in?",
+    "criteria": {
+      "January": "The renewal date is in January",
+      "February": "The renewal date is in February",
+      "March": "The renewal date is in March",
+      "April": "The renewal date is in April",
+      "May": "The renewal date is in May",
+      "June": "The renewal date is in June",
+      "July": "The renewal date is in July",
+      "August": "The renewal date is in August",
+      "September": "The renewal date is in September",
+      "October": "The renewal date is in October",
+      "November": "The renewal date is in November",
+      "December": "The renewal date is in December",
+      "not_stated": "No renewal date is given"
+    },
+    "clears": [
+      "question/generation"
+    ]
+  }
+}

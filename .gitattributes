@@ -1,0 +1,15 @@
+# The two shipped entry points are shebang scripts, and a CRLF after `#!/usr/bin/env php`
+# is part of the interpreter name. A clone on a machine with core.autocrlf=true gets
+# them that way unless the repository says otherwise, so it says so for every file.
+* text=auto eol=lf
+
+# Kept out of the dist archive: a consumer needs the checks and the binary, not
+# the test suite, the tooling config or the corpus the checks were measured with.
+/local           export-ignore
+/php/tests       export-ignore
+/corpus          export-ignore
+/phpunit.xml     export-ignore
+/phpstan.neon    export-ignore
+/.gitattributes  export-ignore
+/.github         export-ignore
+/site            export-ignore

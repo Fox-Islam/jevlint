@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What the tool does on itself · jevlint</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><nav><a href="index.html">Home</a><a href="examples.html">Examples</a><a href="evidence.html">Evidence</a><a href="output.html">Output</a><a href="library.html">From PHP</a><a href="languages.html">Languages</a><a href="behaviour.html" aria-current="page">Behaviour</a><a href="corpus.html">Corpus</a></nav></header>
+<main>
+<div class="title-row"><h1 id="what-the-tool-does-on-itself">What the tool does on itself</h1><a class="gh" href="https://github.com/Fox-Islam/jevlint" aria-label="jevlint on GitHub"><svg viewBox="0 0 16 16" width="26" height="26" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a></div>
+<p>The measurements here are about jevlint rather than about the checks: what it costs, whether it
+repeats, what it reports on a query written to be bad, and what happens when it is pointed at its
+own catalogue. <a href="evidence.html">Evidence</a> has how good each check is.</p>
+<h2 id="what-a-self-test-verdict-means">What a self-test verdict means</h2>
+<p><code>ok</code> and <code>weak</code> pass; <code>flat</code>, <code>inverted</code>, <code>fires-on-clean</code>, <code>misses-broken</code> and
+<code>suggestion-fails</code> mean the check is not measuring what it claims and exit 1; <code>errored</code> means it
+was never scored and exits 2. <code>weak</code> is a span between 0.15 and 0.30 - it passes, and it is a
+check worth rewriting.</p>
+<h2 id="the-shapes-the-api-rejects-checked-against-the-api">The shapes the API rejects, checked against the API</h2>
+<p>Three checks are <code>error</code> severity and say the request will be rejected. The claim is not
+reproducible through this tool: the SDK rewrites a list of labels into a map before the request
+goes out, so <code>jevlint probe</code> on a list-shaped Choice gets an answer rather than a rejection.
+Sending the body by hand settles it. All three are rejected, and the two checks that quote the
+API quote it exactly:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>what was sent</th>
+<th>HTTP</th>
+<th>what came back</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Choice criteria as a list</td>
+<td>422</td>
+<td><code>Input should be a valid dictionary</code></td>
+</tr>
+<tr>
+<td>Score criteria as a map</td>
+<td>422</td>
+<td><code>Input should be a valid list</code></td>
+</tr>
+<tr>
+<td>Noul criteria as a list</td>
+<td>422</td>
+<td><code>Input should be a valid dictionary or object to extract fields from</code></td>
+</tr>
+<tr>
+<td>Choice criteria as a map</td>
+<td>200</td>
+<td>answered, <code>model: jev-1.13.0</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>The control also settles a second thing: <code>jev-latest</code> resolved to <code>jev-1.13.0</code> on the day this
+ran, which is what the self-test comparison against the pinned build inferred from readings.</p>
+<h2 id="the-catalogue-passes-its-own-checks">The catalogue passes its own checks</h2>
+<p>The checks are Jev questions, so the linter runs on them, every wording of every one:</p>
+<p>The 18 question-scoped wordings come back with one or two findings, over 38 to 40 calls depending
+on how many readings land near a trigger and are asked again. What comes back is
+<code>state/answer-absent</code> on the synthetic state the file carries, a hair over its trigger, and
+<code>question/type-mismatch</code> reading a check's own wording as better suited to another primitive.
+Both are artefacts of putting a check in the position of a query, not defects in the catalogue.
+The run also notes that the checks comparing questions did not run, because 18 questions make
+more pairs than one call carries - a limitation of this file, not of the catalogue.</p>
+<p>The five wordings in the state file, over 13 or 14 calls depending on how many readings land near
+a trigger, return two findings, and both are artefacts of how the file that
+holds them is built instead of defects in the catalogue: a distractor field planted so the
+state checks have something to read, which <code>state/irrelevant-field</code> correctly flags, and the
+two wordings of <code>state/answer-absent</code>, which <code>query/overlapping-questions</code> reads as two
+questions asking the same judgement. In a real run those two wordings are one check in one
+call.</p>
+<p><code>state/answer-absent</code> is the check that most often cannot decide about the catalogue. Asked
+about several of these wordings its readings fall on both sides of its 0.60 trigger. Which way
+that lands is run-dependent: where the mean clears the trigger the finding is reported and says
+on its own line that its readings disagreed, and where it does not the check is listed as
+undecided instead. Both are the report refusing to pick a side it cannot support.</p>
+<h2 id="asking-a-check-more-than-one-way">Asking a check more than one way</h2>
+<p>A check may carry several wordings. They go in one call, the mean is the answer, and the spread
+is printed with the finding.</p>
+<p>It does not widen the separation between a check's own examples. What it adds is an error bar:
+the spread between the wordings is printed with the finding, so a reader can see when two ways of
+asking the same thing disagreed. <code>question/generation</code> carries two because a question that asks
+for text and then asks for a pick is caught by one wording and not the other, and neither alone
+both catches that case and leaves the gold example above its trigger.</p>
+<h2 id="what-the-linter-finds-in-a-query-written-to-be-bad">What the linter finds in a query written to be bad</h2>
+<p><code>examples/broken-triage.json</code> carries one planted defect per question. Every one comes back:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>question</th>
+<th>found</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;Is this ticket free of spam and also written by a real customer?&quot;</td>
+<td>negated phrasing 0.88, two judgements in one question 0.90</td>
+</tr>
+<tr>
+<td>&quot;Were more than two charges made before the account's renewal date?&quot;</td>
+<td>arithmetic 0.97, date comparison 0.81, reaches its subject through another thing 0.81, and the state cannot answer it 0.65</td>
+</tr>
+<tr>
+<td>&quot;Rate severity from 0 to 2&quot;, levels <code>[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;]</code></td>
+<td>degrees instead of situations 0.96, plus the static rule for numeric levels</td>
+</tr>
+<tr>
+<td>&quot;Which department?&quot;, options <code>billing</code> and <code>payments</code></td>
+<td>options do not cover every input 0.88, overlapping options 0.93, plus the static rules for an instruction that repeats its id and a missing fallback</td>
+</tr>
+<tr>
+<td>&quot;What is the order number the customer refers to?&quot;</td>
+<td>generation 0.73, and a type that fits the answer better 0.89</td>
+</tr>
+</tbody>
+</table></div>
+<p>One question comes back with a defect that was not planted in it. &quot;the account's renewal date&quot;
+reaches its subject through another thing, and <code>question/indirection</code> is right to say so. The
+reading on that question's <code>state/answer-absent</code> straddles its trigger, and the report marks it
+undecided, or reports it with the disagreement noted, depending on where the mean of those
+readings lands. It is never counted as both.</p>
+<p>Six state fields are also flagged as read by no question. <code>examples/support-triage.json</code>, written
+to be clean, comes back with one advisory finding: the <code>plan</code> field, which none of its four
+questions reads.</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th>calls</th>
+<th>tokens</th>
+<th>findings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>check</code> on the four-question clean example</td>
+<td>10</td>
+<td>15,433</td>
+<td>1 advice</td>
+</tr>
+<tr>
+<td><code>check</code> on the five-question broken example</td>
+<td>12</td>
+<td>20,932</td>
+<td>4 errors, 6 warnings, 11 advice</td>
+</tr>
+<tr>
+<td><code>probe</code>, four questions, five repeats</td>
+<td>9</td>
+<td>5,275</td>
+<td>one question moved</td>
+</tr>
+<tr>
+<td><code>self-test</code>, whole catalogue</td>
+<td>118</td>
+<td>-</td>
+<td>20 checks, two example sets each</td>
+</tr>
+</tbody>
+</table></div>
+<p>TypeSafe reports no cost on a call, so these are token counts. <code>--no-state</code> removes the second
+call per question. The call counts move between runs: a reading that lands within 0.05 of its
+trigger is asked again, so the broken example costs 12 to 14 depending on how many do.</p>
+<p>Two calls per question plus two for the query is the floor, not the price. A check whose reading
+lands within 0.05 of its trigger is asked again, and those re-asks ride in one extra call per
+question that has any. The same file can therefore cost 12 calls on one run and 13 on the next,
+and it is the borderline readings that decide which.</p>
+<h2 id="what-a-rewrite-does-to-a-clean-query">What a rewrite does to a clean query</h2>
+<p><code>jevlint probe examples/support-triage.json</code>, five repeats:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>question</th>
+<th>unchanged</th>
+<th>repeat spread</th>
+<th>rewritten</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>refund_requested</td>
+<td>0.990</td>
+<td>0.0000</td>
+<td>0.990 stripped of criteria, 1.000 as a Choice</td>
+</tr>
+<tr>
+<td>blocked</td>
+<td>0.714</td>
+<td>0.0152</td>
+<td>0.730 stripped of criteria, <strong>0.870 as a Choice</strong></td>
+</tr>
+<tr>
+<td>category</td>
+<td>1.000</td>
+<td>0.0000</td>
+<td>1.000 with the options reversed</td>
+</tr>
+<tr>
+<td>urgency</td>
+<td>0.995</td>
+<td>0.0000</td>
+<td>0.990 with the levels reversed</td>
+</tr>
+</tbody>
+</table></div>
+<p>The three questions with one defensible answer against this state are pinned, and reversing a
+Choice's options or a Score's levels does not move them. <code>blocked</code> - &quot;Does the customer say they
+cannot carry on using the product?&quot; against a ticket saying &quot;I cannot place another order until
+this is sorted&quot; - is the only question with room in it, and the only one that moves.</p>
+<p><strong>Read the size of the move, not the multiple.</strong> The multiple is the move divided by the spread
+over five back-to-back repeats, and that spread is small enough that a small change in it moves
+the multiple a long way. It is what makes a move a finding instead of noise; it is not a
+measurement of anything.</p>
+<p>A threshold at 0.8 on that question means one thing as a Noul and another as a Choice.</p>
+<h2 id="what-the-report-says-about-itself">What the report says about itself</h2>
+<p>A report carries the catalogue that produced it, as a version, a fingerprint over the whole
+catalogue file, and the model. Two reports from different catalogues are distinguishable
+without reading either, and a trigger outside 0.3 to 0.95 is refused at load, because a
+catalogue that fires on everything and one that works produce reports of the same shape.</p>
+<p>Under <code>--all</code> the report also carries every model check that ran and cleared, with its
+probability and its trigger. Without it, a check that ran and cleared and a check that never
+applied are indistinguishable.</p>
+<p>Where a check reads <code>criteria</code>, it asks one more question in the same call, a Choice over the
+reviewed question's own levels or options. The finding then points at the one it read:
+<code>/questions/risk/criteria/1</code>, quoting that level. It costs a question and not a round trip.</p>
+<h2 id="repeatability">Repeatability</h2>
+<p>A model check asked twice about the same text does not return the same number. <code>probe</code> prints the
+spread it measures over its repeats, and <code>check --repeats=n</code> prints the spread over n asks, so
+the size of the jitter on your own query is something you can read rather than take on trust.
+TypeSafe's consistency cookbook publishes 0.0102 as the mean per-question deviation over 15
+repeats per condition; this tool's floor of 0.0085 is lower and where it came from is not
+recorded here.</p>
+<p>A finding whose probability sits within about 0.1 of its trigger may not survive the next run, so
+<code>check</code> marks any finding within 0.05 of its trigger and re-asks it.</p>
+<p>The repeats a probe sends go back to back, and nothing here sends them spaced out, so the spread
+it prints is a floor and the multiples of it are an overstatement.</p>
+</main>
+<footer><p>A linter for Jev queries. <a href="https://github.com/Fox-Islam/jevlint">Source on GitHub</a>.</p></footer>
+</body>
+</html>

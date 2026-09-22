@@ -1,0 +1,173 @@
+:root {
+    --ink: #17191c;
+    --dim: #5b6168;
+    --page: #fdfdfc;
+    --panel: #f3f3f1;
+    --line: #dcdcd8;
+    --link: #1c5d99;
+    --error: #a8322d;
+    --warning: #8a5a00;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ink: #e4e5e7;
+        --dim: #979ca3;
+        --page: #16181b;
+        --panel: #1e2125;
+        --line: #31353a;
+        --link: #78b5e8;
+        --error: #e8837e;
+        --warning: #d8a54a;
+    }
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+header {
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+nav {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.1rem;
+}
+
+nav a {
+    padding: 0.7rem 0;
+    color: var(--dim);
+    text-decoration: none;
+    font-size: 0.92rem;
+    border-bottom: 2px solid transparent;
+}
+
+nav a:hover { color: var(--ink); }
+
+nav a[aria-current="page"] {
+    color: var(--ink);
+    border-bottom-color: var(--link);
+}
+
+main {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 4rem;
+}
+
+h1, h2, h3 { line-height: 1.25; }
+h1 { font-size: 1.9rem; margin: 0; }
+
+.title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 1rem 0 1.25rem;
+}
+
+/* `align-items: center` lines the mark up on the title's line box, which sits
+   above the midpoint of its capitals because the font's ascent is the taller
+   half. */
+.gh { display: inline-flex; color: var(--dim); transform: translateY(1.5px); }
+.gh:hover { color: var(--link); }
+
+h2 {
+    font-size: 1.32rem;
+    margin: 2.4rem 0 0.8rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+}
+
+h3 {
+    font-size: 1rem;
+    margin: 1.6rem 0 0.5rem;
+    color: var(--dim);
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+}
+
+.title-row + p { font-size: 1.06rem; color: var(--dim); }
+
+a { color: var(--link); }
+
+code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.875em;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 0.1em 0.32em;
+}
+
+pre {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+}
+
+pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: 0.85rem;
+}
+
+/* A table of measurements is the densest thing here, so it gets the room. */
+.scroll { overflow-x: auto; margin: 1.2rem 0; }
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+th, td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.45rem 0.7rem;
+    border-bottom: 1px solid var(--line);
+}
+
+th { font-weight: 600; }
+thead th { border-bottom: 2px solid var(--line); }
+tbody tr:hover { background: var(--panel); }
+
+blockquote {
+    margin: 1.2rem 0;
+    padding: 0.2rem 0 0.2rem 1rem;
+    border-left: 3px solid var(--line);
+    color: var(--dim);
+}
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 2rem 0; }
+
+footer {
+    border-top: 1px solid var(--line);
+    color: var(--dim);
+    font-size: 0.88rem;
+}
+
+footer p { max-width: 52rem; margin: 0 auto; padding: 1.2rem 1rem; }
+
+@media (max-width: 40rem) {
+    body { font-size: 15px; }
+    main { padding: 1rem 1rem 3rem; }
+    h1 { font-size: 1.6rem; }
+    table { font-size: 0.84rem; }
+}

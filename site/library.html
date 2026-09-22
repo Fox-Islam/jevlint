@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calling jevlint from PHP · jevlint</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><nav><a href="index.html">Home</a><a href="examples.html">Examples</a><a href="evidence.html">Evidence</a><a href="output.html">Output</a><a href="library.html" aria-current="page">From PHP</a><a href="languages.html">Languages</a><a href="behaviour.html">Behaviour</a><a href="corpus.html">Corpus</a></nav></header>
+<main>
+<div class="title-row"><h1 id="calling-jevlint-from-php">Calling jevlint from PHP</h1><a class="gh" href="https://github.com/Fox-Islam/jevlint" aria-label="jevlint on GitHub"><svg viewBox="0 0 16 16" width="26" height="26" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a></div>
+<p><code>Phox\JevLint\Lint\Linter</code> runs the catalogue over a query and hands back a <code>Report</code>. The
+<code>check</code> command goes through it, so a caller here gets the report the CLI prints instead of a
+second implementation of it.</p>
+<pre><code class="language-php">use Phox\JevLint\Lint\Linter;
+use Phox\JevLint\Query\Query;
+use Phox\JevLint\Report\Severity;
+
+$report = Linter::fromEnvironment()-&gt;check(Query::fromArray([
+    'state' =&gt; ['ticket' =&gt; 'I was charged twice for order A-104.'],
+    'questions' =&gt; [
+        'refund' =&gt; ['type' =&gt; 'noul', 'instructions' =&gt; 'Does the customer ask for a refund?'],
+    ],
+]));
+
+foreach ($report-&gt;findings() as $finding) {
+    printf(&quot;%s %s %s\n&quot;, $finding-&gt;severity-&gt;value, $finding-&gt;checkId, $finding-&gt;message);
+}
+</code></pre>
+<p>The query is the request body you would send, so a query built in memory is checked without
+going to disk first. <code>Query::fromFile</code> reads one, <code>Query::fromJson</code> takes the body as a string,
+and <code>Query::fromArray</code> takes it decoded. Prefer one of the first two where you have the JSON:
+<code>criteria</code> written as a JSON object and as a JSON array are different requests and the API
+rejects the wrong one, and <code>json_decode</code> to an associative array loses which one it was.</p>
+<h2 id="starting-one">Starting one</h2>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Linter::make($client)</code></td>
+<td>asks its model checks through an SDK client you supply</td>
+</tr>
+<tr>
+<td><code>Linter::fromEnvironment()</code></td>
+<td>reads <code>TYPESAFE_API_KEY</code> from the environment or a <code>.env</code> in the working directory and builds its own</td>
+</tr>
+<tr>
+<td><code>Linter::rulesOnly()</code></td>
+<td>runs the rules, makes no calls and needs no key</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>make</code> takes any <code>Phox\TypeSafe\Client</code>, including the one <code>FakeTypeSafe</code> hands out, which is
+how the tests here run the model path without calling anything:</p>
+<pre><code class="language-php">$fake = FakeTypeSafe::make();
+$fake-&gt;alwaysReply(FakeAnswers::make()-&gt;noul('question_compound_judgment', 0.93)-&gt;only());
+
+$report = Linter::make($fake-&gt;client())-&gt;check($query);
+</code></pre>
+<p>A client is built when the run reaches a check that needs one, so <code>fromEnvironment()</code> narrowed
+to rules asks for no key.</p>
+<h2 id="narrowing-a-run">Narrowing a run</h2>
+<p>Each of these returns a new linter, so one can be configured once and reused:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-&gt;only([...])</code></td>
+<td>carry these checks. An id the catalogue does not hold throws, instead of narrowing to nothing and reporting a clean query</td>
+</tr>
+<tr>
+<td><code>-&gt;forJev('1.13')</code></td>
+<td>the rules for one Jev build. Without it the run carries the newest version the catalogue covers</td>
+</tr>
+<tr>
+<td><code>-&gt;accepting(Config::load('.jevlint.json'))</code></td>
+<td>the acceptances that set findings aside. The CLI discovers this file beside the query; nothing here does it for you</td>
+</tr>
+<tr>
+<td><code>-&gt;withoutState()</code></td>
+<td>leave out the checks that read the query's state</td>
+</tr>
+<tr>
+<td><code>-&gt;repeats(3)</code></td>
+<td>ask each model check this many times, so the report carries the spread</td>
+</tr>
+<tr>
+<td><code>-&gt;reportingCleared()</code></td>
+<td>carry every model check that ran and cleared, not only the readings near a trigger</td>
+</tr>
+<tr>
+<td><code>-&gt;maxStateChars(20000)</code></td>
+<td>where a state stops being state and starts being a document</td>
+</tr>
+</tbody>
+</table></div>
+<p>Where you narrow the query itself with <code>Query::only()</code>, pass the whole query as the second
+argument to <code>check()</code>. The checks that judge a state field against the whole query cannot answer
+from part of it, so they are left out and the report records it:</p>
+<pre><code class="language-php">$report = $linter-&gt;check($whole-&gt;only(['refund']), $whole);
+</code></pre>
+<h2 id="reading-the-report">Reading the report</h2>
+<p><code>$report-&gt;toArray()</code> is the document in <a href="spec/report.schema.json"><code>spec/report.schema.json</code></a>,
+and <a href="output.html">Output</a> covers what every field means. Read as objects instead:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$report-&gt;findings($floor)</code></td>
+<td>the findings, ordered as the query wrote its questions</td>
+</tr>
+<tr>
+<td><code>$report-&gt;count(Severity::Error)</code></td>
+<td>how many at one severity, counted whole even where a floor hid them from the list</td>
+</tr>
+<tr>
+<td><code>$report-&gt;cleared()</code>, <code>$report-&gt;unstable()</code>, <code>$report-&gt;accepted()</code></td>
+<td>checks that ran without firing, could not decide, or were set aside by the config</td>
+</tr>
+<tr>
+<td><code>$report-&gt;notes()</code>, <code>$report-&gt;skippedNotes()</code>, <code>$report-&gt;unreachableNotes()</code></td>
+<td>what the run could not ask, and what it left out</td>
+</tr>
+<tr>
+<td><code>$report-&gt;isComplete()</code>, <code>$report-&gt;askedCount()</code></td>
+<td>whether every check was asked, and how many were</td>
+</tr>
+<tr>
+<td><code>$report-&gt;calls()</code>, <code>$report-&gt;tokens()</code></td>
+<td>what it cost</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>A run that lost its calls is not a run that passed, and neither is one that asked nothing.</strong>
+The exit codes belong to the CLI; a caller gating on a report writes the same three conditions:</p>
+<pre><code class="language-php">if (! $report-&gt;isComplete() || $report-&gt;askedCount() === 0) {
+    // the run did not check the query
+}
+
+if ($report-&gt;hasErrors()) {
+    // the query has a defect the API is documented to reject
+}
+
+if ($report-&gt;unstable() !== []) {
+    // a check answered on both sides of its trigger, so another run may differ
+}
+</code></pre>
+<p>A report with no findings and <code>askedCount() === 0</code> is the same object as a clean pass. Nothing
+distinguishes them but that count.</p>
+<h2 id="what-the-cli-does-that-this-does-not">What the CLI does that this does not</h2>
+<p>Reading the arguments, discovering <code>.jevlint.json</code> beside the query, formatting the text report
+and turning a report into an exit code all live in <code>Phox\JevLint\Console</code>. The catalogue, the
+narrowing, the order of the two linters, the notes saying what was left out and the reconciling
+that makes a lost check visible are all in <code>Linter</code> and run wherever it does.</p>
+</main>
+<footer><p>A linter for Jev queries. <a href="https://github.com/Fox-Islam/jevlint">Source on GitHub</a>.</p></footer>
+</body>
+</html>

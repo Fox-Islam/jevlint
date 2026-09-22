@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Worked examples · jevlint</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><nav><a href="index.html">Home</a><a href="examples.html" aria-current="page">Examples</a><a href="evidence.html">Evidence</a><a href="output.html">Output</a><a href="library.html">From PHP</a><a href="languages.html">Languages</a><a href="behaviour.html">Behaviour</a><a href="corpus.html">Corpus</a></nav></header>
+<main>
+<div class="title-row"><h1 id="worked-examples">Worked examples</h1><a class="gh" href="https://github.com/Fox-Islam/jevlint" aria-label="jevlint on GitHub"><svg viewBox="0 0 16 16" width="26" height="26" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a></div>
+<p>Three queries with a defect in each, the report <code>jevlint check</code> prints on them, and the same query rewritten until it clears. Each report is output from a run, not written for this page.</p>
+<h2 id="a-score-whose-levels-are-numbers">A Score whose levels are numbers</h2>
+<p><code>score/numeric-levels</code> is a rule, so this costs no call and needs no key. It has no patch, because which situation each level stands for is a judgement about your rubric.</p>
+<h3>The query</h3>
+<pre><code class="language-json">{
+  "state": {"ticket": "The login page is broken and nobody on my team can work."},
+  "questions": {
+    "severity": {
+      "type": "score",
+      "instructions": "Rate the severity of this ticket from 0 to 2.",
+      "criteria": ["0", "1", "2"]
+    }
+  }
+}</code></pre>
+<h3>What jevlint reports</h3>
+<pre><code>1-before.json · catalogue v1 51d384eb777b for jev-1.13
+
+severity
+  error    Score levels are bare numbers
+           score/numeric-levels
+           The levels are bare numbers, so there is nothing in the state for the model to match
+           them against.
+           Likelihood  certain, because this rule either matches or does not
+           Found       Levels: 0, 1, 2.
+           Suggested   Replace each number with the situation it stands for. For example, a
+                       three-level severity rubric becomes "Cosmetic, and nobody's work is
+                       affected", "Broken or degraded, but a workaround exists", "No workaround,
+                       and the work has stopped".
+           Why         The model never sees a level's number or its neighbours, so a bare number
+                       gives it nothing to match against. The documented example scores 0.55 at
+                       confidence 0.33 with numeric levels and 0.0 at confidence 1.0 with
+                       described ones.
+           Docs        https://docs.typesafe.ai/primitives/score#writing-good-levels
+
+note   Jev was not asked, so the 20 checks that ask it were not run.
+
+1 error, 0 warnings, 0 advice · no calls made</code></pre>
+<h3>The query rewritten</h3>
+<pre><code class="language-json">{
+  "state": {"ticket": "The login page is broken and nobody on my team can work."},
+  "questions": {
+    "severity": {
+      "type": "score",
+      "instructions": "How badly is this ticket blocking the customer's work?",
+      "criteria": [
+        "Cosmetic, and nobody's work is affected",
+        "Broken or degraded, but a workaround exists",
+        "No workaround, and the work has stopped"
+      ]
+    }
+  }
+}</code></pre>
+<pre><code>1-after.json · catalogue v1 51d384eb777b for jev-1.13
+
+Nothing to report.
+
+note   Jev was not asked, so the 20 checks that ask it were not run.
+
+0 errors, 0 warnings, 0 advice · no calls made</code></pre>
+<h2 id="a-choice-with-nowhere-to-put-the-rest">A Choice with nowhere to put the rest</h2>
+<p>Two findings on one question, both rules. <code>choice/no-fallback</code> has a patch, marked <code>lossy</code> because adding one key rewrites the object around the labels you wrote. <code>question/instruction-is-id</code> has none: only you know what the question is asking.</p>
+<h3>The query</h3>
+<pre><code class="language-json">{
+  "state": {"ticket": "I was charged twice for order A-104. Please refund the duplicate."},
+  "questions": {
+    "department": {
+      "type": "choice",
+      "instructions": "Which department?",
+      "criteria": {"billing": "Money things", "payments": "Anything to do with money"}
+    }
+  }
+}</code></pre>
+<h3>What jevlint reports</h3>
+<pre><code>2-before.json · catalogue v1 51d384eb777b for jev-1.13
+
+department
+  warning  Choice has no fallback option
+           choice/no-fallback
+           None of the options is an `other` or `none of the above`.
+           Likelihood  certain, because this rule either matches or does not
+           Found       Options: billing, payments.
+           Suggested   Add `"other": "Anything the other options do not cover"`.
+           Patch       lossy · add /questions/department/criteria = {"billing":"Money
+                       things","payments":"Anything to do with money","other":"Anything the
+                       other options do not cover"}
+           Why         Without a catch-all the probability mass has nowhere to go, so it lands
+                       on the nearest wrong label. Measured on decision-v7: where the answer was
+                       none of the options, removing the catch-all put a mean 0.79 on a label
+                       that could not be right and cost a Brier score of 0.660 against 0.349
+                       with it. Where the answer was among the options it cost nothing.
+           Docs        https://docs.typesafe.ai/primitives#choose-a-question-type
+
+  warning  Instruction too short to stand on its own
+           question/instruction-is-id
+           The instruction is short enough that it leans on the question id for its meaning.
+           Likelihood  certain, because this rule either matches or does not
+           Found       Instructions: "Which department?".
+           Suggested   Write the question out in full, so `instructions` says what is being
+                       asked without `department` beside it.
+           Why         Question ids are for your code and are never sent, so whatever the id
+                       carries does not reach the model.
+           Docs        https://docs.typesafe.ai/primitives#define-a-question
+
+note   Jev was not asked, so the 20 checks that ask it were not run.
+
+A patch says what kind of change it is: lossy, what you wrote survives, something around it changes.
+
+0 errors, 2 warnings, 0 advice · no calls made</code></pre>
+<h3>The query rewritten</h3>
+<pre><code class="language-json">{
+  "state": {"ticket": "I was charged twice for order A-104. Please refund the duplicate."},
+  "questions": {
+    "department": {
+      "type": "choice",
+      "instructions": "Which department should handle this ticket?",
+      "criteria": {
+        "billing": "Invoices, charges and refunds",
+        "shipping": "Delivery, tracking and returns",
+        "other": "Anything the other options do not cover"
+      }
+    }
+  }
+}</code></pre>
+<pre><code>2-after.json · catalogue v1 51d384eb777b for jev-1.13
+
+Nothing to report.
+
+note   Jev was not asked, so the 20 checks that ask it were not run.
+
+0 errors, 0 warnings, 0 advice · no calls made</code></pre>
+<h2 id="one-question-asking-two-things">One question asking two things</h2>
+<p>Nothing about the shape of this query is wrong, so finding the defect costs calls. Splitting one question into two then doubles what checking it costs: 6 calls against 3.</p>
+<h3>The query</h3>
+<pre><code class="language-json">{
+  "state": {"ticket": "Hi, I am a long-time customer and my invoice looks wrong this month."},
+  "questions": {
+    "not_spam": {
+      "type": "noul",
+      "instructions": "Is this ticket free of spam and also written by a real customer?"
+    }
+  }
+}</code></pre>
+<h3>What jevlint reports</h3>
+<pre><code>3-before.json · catalogue v1 51d384eb777b for jev-1.13
+A probability is how strongly the defect is present, so higher is worse.
+
+not_spam
+  error    The question weighs several factors at once
+           question/compound-judgment
+           Answering this weighs several separate factors to reach one answer.
+           Likelihood  0.91, almost certain, against a 0.70 trigger
+           Found       Read: "Is this ticket free of spam and also written by a real customer?"
+           Suggested   Ask one question per factor and weight them in code, so you can see which
+                       factor moved the answer. For example, a question about whether to
+                       interview someone becomes one about experience, one about the skills the
+                       role needs, and one about availability.
+           Why         Ask one question per factor and combine them in code, where you can see
+                       and change the weights. One answer carrying several judgements means
+                       less, and you cannot tell which factor moved it. Measured on
+                       decision-v7's policy cases: joining a second condition that every case
+                       already satisfies, so the right answer does not change, still took the
+                       answers from 15 of 20 to 11 of 20 and more than doubled the Brier score,
+                       and splitting it recovered all of it. That is the largest cost measured
+                       for any check here. Accept it where the factors always move together, so
+                       no material can satisfy one and not the others, or where the caller wants
+                       the blended judgement and will never read the parts: a severity rubric
+                       that composites how bad and how urgent is the documented shape, not a
+                       defect.
+           Docs        https://docs.typesafe.ai/primitives#ask-for-one-snap-judgment-per-question
+
+  warning  A yes answer means the thing is absent
+           noul/negated-phrasing
+           A yes answer here means the thing is absent, which reads backwards in the code that
+           uses it.
+           Likelihood  0.91, almost certain, against a 0.70 trigger
+           Found       Read: "Is this ticket free of spam and also written by a real customer?"
+           Suggested   Ask about the thing being present rather than absent: "Is the message
+                       free of personal data?" becomes "Does the message contain personal
+                       data?". This flips which answer means what, so the code reading it has to
+                       flip in the same change - a question reworded on its own and a caller
+                       left as it was inverts every result and reports nothing.
+           Why         A high probability then means the thing is missing, and the code that
+                       reads it later gets the sense backwards. The harm this names is in the
+                       code that reads the answer, not in the answer, so measuring answer
+                       quality cannot see it and none is reported here. Accept it where the code
+                       reading the answer is written for this polarity and says so; the risk
+                       here is a later reader changing one side of that pair without the other.
+           Docs        https://docs.typesafe.ai/primitives/noul#writing-a-noul-question
+
+  advice   Noul does not say what yes and no mean
+           noul/no-criteria
+           The question carries no criteria, so where the line between yes and no falls is left
+           to the model.
+           Likelihood  certain, because this rule either matches or does not
+           Suggested   Add a `criteria` object with a `true` and a `false` description, saying
+                       which material counts as each.
+           Why         The instruction is enough for many Nouls. Where the boundary is subtle,
+                       saying what a yes and a no mean is what moves a question from guessing to
+                       deciding.
+           Docs        https://docs.typesafe.ai/primitives/noul#writing-a-noul-question
+
+note   The checks that compare questions need two to compare. This run carried 1, so they did not run.
+
+1 error, 1 warning, 1 advice · 3 calls, 3,119 tokens</code></pre>
+<h3>The query rewritten</h3>
+<pre><code class="language-json">{
+  "state": {"ticket": "Hi, I am a long-time customer and my invoice looks wrong this month."},
+  "questions": {
+    "is_spam": {
+      "type": "noul",
+      "instructions": "Is this ticket spam?",
+      "criteria": {
+        "true": "Unsolicited advertising, a mass mailing, or a message with no support request in it.",
+        "false": "A message asking for help with the product or an account."
+      }
+    },
+    "from_a_real_customer": {
+      "type": "noul",
+      "instructions": "Does the sender write as somebody who already uses the product?",
+      "criteria": {
+        "true": "The message refers to their own account, order, invoice or usage.",
+        "false": "The message shows no sign the sender has an account."
+      }
+    }
+  }
+}</code></pre>
+<pre><code>3-after.json · catalogue v1 51d384eb777b for jev-1.13
+
+Nothing to report.
+
+0 errors, 0 warnings, 0 advice · 6 calls, 6,851 tokens</code></pre>
+</main>
+<footer><p>A linter for Jev queries. <a href="https://github.com/Fox-Islam/jevlint">Source on GitHub</a>.</p></footer>
+</body>
+</html>

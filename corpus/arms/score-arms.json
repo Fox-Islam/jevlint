@@ -1,0 +1,25 @@
+{
+  "very negative | negative | neutral | positive | very positive": {
+    "joined_varying": [
+      "The review expresses a very negative sentiment and provides no specific details or examples.",
+      "The review expresses a negative sentiment and provides minimal details or brief mentions of specific flaws.",
+      "The review expresses a neutral sentiment and provides a moderate level of detail covering both pros and cons.",
+      "The review expresses a positive sentiment and provides clear details or specific examples of what was liked.",
+      "The review expresses a very positive sentiment and provides extensive, thorough details justifying the high praise."
+    ],
+    "joined_uniform": [
+      "very negative and detailed",
+      "negative and detailed",
+      "neutral and detailed",
+      "positive and detailed",
+      "very positive and detailed"
+    ],
+    "split_sentiment": [
+      "very negative",
+      "negative",
+      "neutral",
+      "positive",
+      "very positive"
+    ]
+  }
+}

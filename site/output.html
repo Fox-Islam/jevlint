@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading the output from a program · jevlint</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><nav><a href="index.html">Home</a><a href="examples.html">Examples</a><a href="evidence.html">Evidence</a><a href="output.html" aria-current="page">Output</a><a href="library.html">From PHP</a><a href="languages.html">Languages</a><a href="behaviour.html">Behaviour</a><a href="corpus.html">Corpus</a></nav></header>
+<main>
+<div class="title-row"><h1 id="reading-the-output-from-a-program">Reading the output from a program</h1><a class="gh" href="https://github.com/Fox-Islam/jevlint" aria-label="jevlint on GitHub"><svg viewBox="0 0 16 16" width="26" height="26" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a></div>
+<p><a href="spec/report.schema.json"><code>spec/report.schema.json</code></a> is the contract and documents every
+field. This is what a caller needs to know beyond it.</p>
+<p>The text report and the JSON carry the same information: a patch prints its <code>safety</code> in both,
+a probability prints its trigger in both. What differs is shape, not substance - <code>action</code>,
+<code>mode</code> and <code>suggest_kind</code> are enum words in the JSON and are said in prose to a reader, and the
+JSON pointer in <code>path</code> is addressing a program needs and a person editing the file does not.</p>
+<p>Three fields are spelled with some form of &quot;asked&quot; and mean different things: <code>summary.asked</code>
+counts the checks this run evaluated, <code>catalogue.asked</code> is a digest over the questions the
+checks put to Jev, and <code>asked_through</code> is the build <code>--model</code> pinned. Only the first is about
+this run's coverage.</p>
+<p><code>--format=json</code> on every command, including errors, which come back as
+<code>{&quot;error&quot;: {&quot;kind&quot;, &quot;message&quot;, &quot;command&quot;}}</code> with exit 2. <code>kind</code> is one of <code>usage</code>, <code>not-found</code>,
+<code>invalid-json</code>, <code>query</code>, <code>config</code>, <code>auth</code>, <code>catalogue</code>, <code>api</code> or <code>internal</code>, so a caller can tell
+a mistyped flag from a missing file from a failure worth retrying without matching on English.</p>
+<p><strong>Exit 2 carries three shapes, and only one of them has an <code>error</code> key.</strong> A run that never
+started returns <code>{&quot;error&quot;: ...}</code>. A run that started and lost its calls returns a whole report
+with <code>summary.complete: false</code>. A run narrowed until it asked nothing returns a whole report with
+<code>summary.asked: 0</code>, <code>complete: true</code> and no findings, which is the shape a clean pass has. Read
+all three before calling a run a pass:</p>
+<pre><code>exit 2 and `error`            the run never started
+exit 2 and `complete: false`  it started and lost calls
+exit 2 and `asked: 0`         it ran and asked nothing
+</code></pre>
+<p><a href="spec/report.schema.json"><code>spec/report.schema.json</code></a> is the shape of a report, and
+<a href="corpus.html">The corpus</a> covers the material the checks are measured against.</p>
+<p>Read <code>summary.complete</code> before the findings. It is false when any check could not be asked, and
+<code>notes</code> then carries <code>{kind: &quot;unreachable&quot;, target, message}</code> entries saying what was lost.
+<code>summary.unreachable</code> counts those entries, not calls and not checks: a call that failed outright
+leaves one, and a call that came back having answered only some of what it carried leaves one
+naming the rest. Read the notes for the scope of what went missing, and <code>summary.asked</code> for how
+much did run.</p>
+<p>Read <code>summary.narrowed</code> next. It is true when a flag, or the shape of your query, left checks
+out of the run - <code>--only</code>, <code>--static-only</code>, <code>--no-state</code>, a state with no named fields, a query
+too wide for the checks that compare questions. Each reason is a <code>{kind: &quot;skipped&quot;, checks}</code>
+note saying how many it left out. A narrowed run is not a failure and not coverage either, and
+without this it is the same JSON as a full clean pass.</p>
+<p>Each finding carries:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>field</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>check</code></td>
+<td>the check id, which is what to group or count by. <code>title</code> can carry the located detail, so it varies between two findings of the same check</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td><code>static</code> for a rule, <code>model</code> for a judgement. Never infer this from a missing key</td>
+</tr>
+<tr>
+<td><code>action</code></td>
+<td>the kind of change: <code>rewrite</code> the text, <code>retype</code> the primitive, <code>restructure</code> into a different shape, <code>add</code> something, <code>remove</code> the node the <code>patch</code> names. A question that should not be put to Jev at all says <code>remove</code>; one that has to change shape and might go either way says <code>restructure</code></td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>a JSON pointer into your file, such as <code>/questions/urgency/criteria</code>. On an <code>add</code> it names where the node belongs, which is either a node that is not there yet or the one the patch adds into, so it may not resolve until the patch is applied</td>
+</tr>
+<tr>
+<td><code>target</code></td>
+<td>the question id, or <code>state</code>, or <code>query</code>. Always present, and a question id can be an empty string</td>
+</tr>
+<tr>
+<td><code>evidence</code></td>
+<td>what the check was shown, quoted back and elided in the middle where it is long. On a static rule it is the detail that tripped it; on a model check it is the part of the query the check reads, so two checks reading the same part quote the same text and neither isolates a span at fault</td>
+</tr>
+<tr>
+<td><code>trigger</code>, <code>probability</code>, <code>spread</code></td>
+<td>what the check needed, what it got, and how far its wordings or repeats disagreed. A check that reads one state field asks about it once per question and reports the weakest of those readings, so its <code>probability</code> is the smallest number in <code>readings</code>, not their mean</td>
+</tr>
+<tr>
+<td><code>measure</code>, <code>weight</code></td>
+<td>Read <code>mode</code> first: a <code>static</code> finding is a rule in code and carries no number at all. On a <code>model</code> finding, <code>measure</code> says which key holds it - <code>probability</code> on every check but <code>question/type-mismatch</code>, which asks which primitive fits rather than whether a defect is present, and reports <code>weight</code> with no <code>probability</code> key. The weight is how far Jev's answer sat from the primitive you declared, not how strongly <code>suggested_type</code> was picked - <code>evidence</code> carries that</td>
+</tr>
+<tr>
+<td><code>near_trigger</code></td>
+<td>the probability sits within 0.05 of the trigger, so it may not repeat. Always present, <code>true</code> or <code>false</code>, because an absent key and a <code>false</code> are different claims</td>
+</tr>
+<tr>
+<td><code>unstable</code></td>
+<td>separate calls answered on both sides of the trigger, so another run may decide differently. Wordings disagreeing inside one call is not this - that is <code>spread</code>. Always present</td>
+</tr>
+<tr>
+<td><code>supersedes</code>, <code>superseded_by</code></td>
+<td>acting on one finding can discard another. Changing a question's type drops the advice about the type it used to be</td>
+</tr>
+<tr>
+<td><code>patch</code></td>
+<td>an <code>{op, path, safety, value}</code> you can apply to the query file without reading it. <code>safety</code> is <code>lossless</code> (nothing you wrote is lost, apply it unattended), <code>lossy</code> (the content survives and something around it does not) or <code>destructive</code> (it takes a question or a field out, so a person decides). A <code>remove</code> is always destructive. <code>covered_by</code> names a check listed earlier whose patch already removes that node, so applying both leaves the query wrong</td>
+</tr>
+<tr>
+<td><code>fired</code></td>
+<td><code>false</code>, on a check that ran and cleared. A cleared entry carries its check, target, path, probability, trigger, <code>near_trigger</code> and <code>unstable</code>, plus <code>readings</code> where more than one was taken, and none of the fields that tell you to do something - it is a measurement, not advice, and it never arrives in the same shape as a finding</td>
+</tr>
+<tr>
+<td><code>suggest_kind</code></td>
+<td><code>patch</code> when <code>suggest</code> is backed by an appliable change, <code>guidance</code> when it is prose to read</td>
+</tr>
+<tr>
+<td><code>advice_caveat</code></td>
+<td>present only where <code>jevlint self-test</code> measured this check's own suggestion barely clearing it, or unable to clear it at all. The text report prints it as <code>Advice</code></td>
+</tr>
+<tr>
+<td><code>accepted</code></td>
+<td>the reason from <code>.jevlint.json</code>, on a finding you have already decided about</td>
+</tr>
+</tbody>
+</table></div>
+<p>A check that cleared within 0.1 of its trigger is reported without asking, under <code>Cleared, and worth a look</code>. The reading is already paid for, and it is the one that would otherwise cost a
+second run to see.</p>
+<p><strong>A check that cannot clear your query says so in the run.</strong> Where a check's readings for clean
+and defective material overlap, a reading under its trigger is not evidence the defect is absent.
+The catalogue marks such a check <code>inconclusive</code>, and it is reported whether it fires or not,
+carrying the caveat in <code>advice_caveat</code>. <code>score/multi-dimension</code> is one: published-correct rubrics
+read 0.62 to 0.76 and two-axis rubrics read 0.72 to 0.80, so nothing separates them. A silent
+check would read as a clean bill of health, and that is the one thing its reading cannot give
+you.</p>
+<p><code>--all</code> fills the <code>cleared</code> array with every model check that ran without firing, with its
+probability and trigger. Without it the array is present but holds only the checks that could
+not decide, so a check that ran and cleared and a check that never applied otherwise look the
+same.</p>
+<p>Where a check reads <code>criteria</code>, it asks about the elements in the same call and names the ones
+at fault. A fault every element can carry at once, such as levels written as degrees, is asked
+one element at a time and <code>paths</code> lists all of them. A fault one element carries relative to the
+others is asked as a single choice across them, because asked in isolation every level that
+describes a situation reads as naming several things.</p>
+<p>A finding whose fix is deleting one node carries a <code>remove</code> patch: <code>question/arithmetic</code> on a
+question that asks for a tally emits <code>{&quot;op&quot;:&quot;remove&quot;,&quot;path&quot;:&quot;/questions/charge_count&quot;}</code>, and
+<code>state/irrelevant-field</code> emits the pointer to the field. <code>question/type-mismatch</code> carries
+<code>suggested_type</code>, so the primitive it picked is a field and not a phrase to pull out of prose.
+It is absent when the check judged that none of the three fits, which is a finding worth
+acting on and not a type to retype to.</p>
+<p><code>probe --format=json</code> carries <code>moved</code> on every reading and a <code>summary</code> naming which
+questions moved and the rule that decided it.</p>
+<h2 id="versions-in-full">Versions, in full</h2>
+<p>A version the catalogue holds nothing for is refused, because the alternative is a query
+checked against a different build's rules and reported as clean. Where the resolved version
+leaves checks out, the report carries a skipped note, the same as <code>--only</code> does, and the header
+and <code>catalogue.model</code> name the version that ran.</p>
+<p>In the catalogue a check carries <code>since</code>, <code>until</code>, both or neither. A check with neither is a
+rule for every version the file covers, and one written for no version it covers fails the load.</p>
+<h2 id="which-checks-emit-a-patch">Which checks emit a patch</h2>
+<p>The shape rules, because the right shape is arithmetic on what you wrote:
+<code>noul/criteria-shape</code>, <code>choice/criteria-shape</code>, <code>score/criteria-shape</code> and
+<code>choice/no-fallback</code>. So do <code>question/type-not-lowercase</code> and <code>query/unknown-key</code>, and the three
+whose answer is to delete a node: <code>question/arithmetic</code>, <code>question/date-comparison</code> and
+<code>state/irrelevant-field</code>.</p>
+<p>A patch is withheld where reshaping would lose something or produce a file this tool would
+refuse: levels keyed by words, because ordering them is a judgement about your rubric and not
+arithmetic on it; a level with no text, which has nothing to carry over but its own index;
+options written as numbers, which reshape into the list the rule exists to refuse; <code>yes</code> beside
+<code>YES</code>, which collapse onto one key; and removing the only question in a query, which leaves
+nothing to ask. In each case the advice stands without a patch. <code>suggest_kind</code> says which of the
+two a finding carries, and a test applies each patch to a query written to break it and asserts
+the finding is gone.</p>
+<p>Applying a patch can raise a finding the old shape hid: filling in option labels leaves them
+undescribed, and removing the last field of a state object leaves the object itself unread.
+Neither is a mistake in the patch; both are the next thing to look at.</p>
+<h2 id="pointing-the-loader-elsewhere">Pointing the loader elsewhere</h2>
+<p><code>JEVLINT_CHECKS_DIR</code> points the loader at another directory holding <code>catalogue.json</code> and
+<code>fixtures.json</code>, for trying a rule set without editing the installed one. It is an override and
+not a preference: a directory missing <code>catalogue.json</code> is an error rather than a fall back to
+the bundled copy, because a run against half a rule set reports like a clean one.
+<code>fixtures.json</code> is read only by <code>self-test</code>, which is the command that fails without it.</p>
+<p>Everything the catalogue can get wrong is refused at load - a check naming a rule no code
+raises, two checks naming one rule, a model check with no question, an <code>applies_to</code> or a <code>reads</code>
+naming something that does not exist - so a damaged file cannot produce a report that reads as a
+pass.</p>
+</main>
+<footer><p>A linter for Jev queries. <a href="https://github.com/Fox-Islam/jevlint">Source on GitHub</a>.</p></footer>
+</body>
+</html>

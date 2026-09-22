@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Fox-Islam/jevlint/spec/query.schema.json",
+  "title": "Jev query",
+  "description": "A System One request as jevlint reads it: the state, and the questions asked about it. This is the request body, so a file that validates here is one you can send.",
+  "type": "object",
+  "required": ["questions"],
+  "properties": {
+    "state": {
+      "description": "The material the questions are asked about. Jev accepts text only.",
+      "oneOf": [
+        {"type": "string"},
+        {"type": "object"},
+        {"type": "array"}
+      ]
+    },
+    "model": {
+      "type": "string",
+      "description": "The build to send to. jevlint reads it but does not use it; --model decides what the checks themselves are asked through."
+    },
+    "questions": {
+      "type": "object",
+      "description": "Keyed by the id the answer comes back under. Ids are not sent to the model.",
+      "minProperties": 1,
+      "additionalProperties": {"$ref": "#/$defs/question"}
+    }
+  },
+  "$defs": {
+    "question": {
+      "type": "object",
+      "required": ["type", "instructions"],
+      "properties": {
+        "type": {"enum": ["noul", "choice", "score"]},
+        "instructions": {
+          "description": "The question itself. A string, or an object or array putting the question in one field and the data it refers to in others.",
+          "oneOf": [{"type": "string"}, {"type": "object"}, {"type": "array"}]
+        },
+        "criteria": {
+          "description": "A map of label to description for a choice, an ordered list of levels for a score, and an optional true/false pair for a noul. The choice and score shapes are inverse, and sending the wrong one is a 422."
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"type": {"const": "choice"}}, "required": ["type"]},
+          "then": {"properties": {"criteria": {"type": "object", "minProperties": 2}}}
+        },
+        {
+          "if": {"properties": {"type": {"const": "score"}}, "required": ["type"]},
+          "then": {"properties": {"criteria": {"type": "array", "minItems": 2, "maxItems": 10}}}
+        },
+        {
+          "if": {"properties": {"type": {"const": "noul"}}, "required": ["type"]},
+          "then": {
+            "properties": {
+              "criteria": {
+                "type": "object",
+                "properties": {"true": {}, "false": {}},
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

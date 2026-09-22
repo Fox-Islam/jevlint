@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Fox-Islam/jevlint/spec/error.schema.json",
+  "title": "jevlint error",
+  "description": "What `--format=json` prints on stdout, with exit 2, when a run could not start: a bad option, a missing or unreadable file, a config or catalogue that does not load, or no API key. A run that started and then lost a call prints a report instead, with `summary.complete` false.",
+  "type": "object",
+  "required": [
+    "error"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "error": {
+      "type": "object",
+      "required": [
+        "kind",
+        "message",
+        "command"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "usage",
+            "not-found",
+            "invalid-json",
+            "query",
+            "config",
+            "catalogue",
+            "auth",
+            "api",
+            "internal"
+          ],
+          "description": "What kind of thing was wrong, so a caller can branch without reading the message."
+        },
+        "message": {
+          "type": "string",
+          "description": "Written for a person, and the only field that names the specific thing at fault."
+        },
+        "command": {
+          "type": "string",
+          "description": "The command that was asked for, including one that does not exist."
+        }
+      }
+    }
+  }
+}

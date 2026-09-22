@@ -1,0 +1,97 @@
+{
+  "sample": [
+    {
+      "id": "boolq/validation/2905",
+      "label": true,
+      "state": "While called bonds, these obligations to protect an employer from employee-dishonesty losses are really insurance policies. These insurance policies protect from losses of company monies, securities, and other property from employees who have a manifest intent to i) cause the company to sustain a loss and ii) obtain an improper financial benefit, either for themselves or another party. There are also many other coverage extensions available through the purchase of additional insuring agreements. These are common to most crime insurance policies (burglary, fire, general theft, computer theft, disappearance, fraud, forgery, etc.) and are designed to further protect specific company assets.",
+      "question": "is fidelity bond the same as crime insurance?"
+    },
+    {
+      "id": "boolq/validation/1957",
+      "label": false,
+      "state": "Seawise Giant, later Happy Giant, Jahre Viking, Knock Nevis, Oppama, and finally Mont, was a ULCC supertanker that was the longest ship ever built. She possessed the greatest deadweight tonnage ever recorded. Fully loaded, her displacement was 657,019 tonnes (646,642 long tons; 724,239 short tons), the heaviest ship of any kind, and with a laden draft of 24.6 m (81 ft), she was incapable of navigating the English Channel, the Suez Canal or the Panama Canal. Overall, she is generally considered the largest ship ever built. She was sunk during the Iran--Iraq War, but was later salvaged and restored to service. She was last used as a floating storage and offloading unit (FSO) moored off the coast of Qatar in the Persian Gulf at the Al Shaheen Oil Field.",
+      "question": "is the titanic still the biggest ship ever built?"
+    },
+    {
+      "id": "boolq/validation/270",
+      "label": true,
+      "state": "Depending on the context, a dependent variable is sometimes called a ``response variable'', ``regressand'', ``criterion'', ``predicted variable'', ``measured variable'', ``explained variable'', ``experimental variable'', ``responding variable'', ``outcome variable'', ``output variable'' or ``label''.",
+      "question": "is outcome variable the same as dependent variable?"
+    },
+    {
+      "id": "boolq/validation/2058",
+      "label": true,
+      "state": "The casting of actors not known for their singing abilities led to some mixed reviews. Variety stated that ``some stars, especially the bouncy and rejuvenated Streep, seem better suited for musical comedy than others, including Brosnan and Skarsg\u00e5rd.'' Brosnan, especially, was savaged by many critics: his singing was compared to ``a water buffalo'' (New York Magazine), ``a donkey braying'' (The Philadelphia Inquirer) and ``a wounded raccoon'' (The Miami Herald), and Matt Brunson of Creative Loafing Charlotte said he ``looks physically pained choking out the lyrics, as if he's being subjected to a prostate exam just outside of the camera's eye.''",
+      "question": "does everyone do their own singing in mamma mia?"
+    },
+    {
+      "id": "boolq/validation/1901",
+      "label": true,
+      "state": "Alpha-gal allergy, also known as meat allergy or mammalian meat allergy (MMA), is a reaction to galactose-alpha-1,3-galactose (alpha-gal), whereby the body is overloaded with immunoglobulin E (IgE) antibodies on contact with the carbohydrate. The alpha-gal molecule is found in all mammals apart from Old World monkeys and the apes, which include humans. Anti-gal is a human natural antibody that interacts specifically with the mammalian carbohydrate structure gal alpha 1-3Gal beta 1-4GlcNAc-R, termed, the alpha-galactosyl epitope. Whereas anti-gal is abundant in humans, apes, and Old World monkeys, it is absent from New World monkeys, prosimians, and nonprimate mammals.",
+      "question": "is there such a thing as meat allergy?"
+    },
+    {
+      "id": "boolq/validation/3189",
+      "label": false,
+      "state": "The mahi-mahi (/\u02c8m\u0251\u02d0hi\u02d0\u02c8m\u0251\u02d0hi\u02d0/) or common dolphinfish (Coryphaena hippurus) is a surface-dwelling ray-finned fish found in off-shore temperate, tropical, and subtropical waters worldwide. Also widely called dorado and dolphin, it is one of two members of the Coryphaenidae family, the other being the pompano dolphinfish.",
+      "question": "is mahi mahi the same as ahi tuna?"
+    },
+    {
+      "id": "boolq/validation/1420",
+      "label": true,
+      "state": "The 2018 UEFA Champions League Final was the final match of the 2017--18 UEFA Champions League, the 63rd season of Europe's premier club football tournament organised by UEFA, and the 26th season since it was renamed from the European Cup to the UEFA Champions League. It was played at the NSC Olimpiyskiy Stadium in Kiev, Ukraine on 26 May 2018, between Spanish side and defending champions Real Madrid, who had won the competition in each of the last two seasons, and English side Liverpool.",
+      "question": "is the uefa champions league final one game?"
+    },
+    {
+      "id": "boolq/validation/618",
+      "label": true,
+      "state": "Texas is the second-largest U.S. state, after Alaska, with an area of 268,820 square miles (696,200 km). Though 10% larger than France and almost twice as large as Germany or Japan, it ranks only 27th worldwide amongst country subdivisions by size. If it were an independent country, Texas would be the 40th largest behind Chile and Zambia.",
+      "question": "is the state of texas bigger than germany?"
+    },
+    {
+      "id": "boolq/validation/1114",
+      "label": true,
+      "state": "The gray wolf (Canis lupus), also known as the timber wolf, western wolf, or simply, wolf, is a canine native to the wilderness and remote areas of Eurasia and North America. It is the largest extant member of its family, with males averaging 43--45 kg (95--99 lb) and females 36--38.5 kg (79--85 lb). Like the red wolf, it is distinguished from other Canis species by its larger size and less pointed features, particularly on the ears and muzzle. Its winter fur is long and bushy and predominantly a mottled gray in color, although nearly pure white, red, and brown to black also occur. Mammal Species of the World (3rd ed., 2005), a standard reference work in zoology, recognises 38 subspecies of C. lupus..",
+      "question": "is a timber wolf the same as a gray wolf?"
+    },
+    {
+      "id": "boolq/validation/1784",
+      "label": true,
+      "state": {
+        "document": "The untitled Avengers film is scheduled to be released in the United States on May 3, 2019, in IMAX and 3D."
+      },
+      "question": "is there a sequal to avengers infinity war?"
+    },
+    {
+      "id": "boolq/validation/2311",
+      "label": false,
+      "state": "The word ``mineral'' in ``mineral spirits'' or ``mineral turpentine'' is meant to distinguish it from distilled spirits (distilled directly from fermented grains and fruit) or from true turpentine (distilled tree resin).",
+      "question": "is turpentine and white spirit the same thing?"
+    },
+    {
+      "id": "boolq/validation/2328",
+      "label": false,
+      "state": "Gone Baby Gone is a 2007 American neo-noir mystery drama film directed by Ben Affleck. In his feature-length directorial debut, Affleck co-wrote the screenplay with Aaron Stockard based on the novel Gone, Baby, Gone by Dennis Lehane. The film stars Casey Affleck and Michelle Monaghan as two private investigators hunting for a little girl who was abducted from the Boston neighborhood of Dorchester. The supporting cast includes Morgan Freeman, Ed Harris and Amy Ryan.",
+      "question": "is the movie gone baby gone a true story?"
+    },
+    {
+      "id": "boolq/validation/535",
+      "label": true,
+      "state": {
+        "ticket": {
+          "channel": "email",
+          "body": "The character appears in various Marvel Cinematic Universe films, including The Avengers (2012), portrayed by Damion Poitier, and Guardians of the Galaxy (2014), Avengers: Age of Ultron (2015), Avengers: Infinity War (2018), and the fourth Avengers film (2019), portrayed by Josh Brolin through voice and motion capture. The character has appeared in various comic adaptations, including animated television series, arcade, and video games."
+        }
+      },
+      "question": "was thanos in the first guardians of the galaxy?"
+    },
+    {
+      "id": "boolq/validation/1907",
+      "label": false,
+      "state": {
+        "document": "Northern Ireland (Irish: Tuaisceart \u00c9ireann (\u02c8t\u032a\u0263u\u0259\u0283c\u0259\u027e\u0263t\u032a\u0263 \u02c8e\u02d0\u027ej\u0259n\u032a\u0263) ( listen); Ulster-Scots: Norlin Airlann) is a part of the United Kingdom in the north-east of the island of Ireland, variously described as a country, province or region. Northern Ireland shares a border to the south and west with the Republic of Ireland. In 2011, its population was 1,810,863, constituting about 30% of the island's total population and about 3% of the UK's population. Established by the Northern Ireland Act 1998 as part of the Good Friday Agreement, the Northern Ireland Assembly holds responsibility for a range of devolved policy matters, while other areas are reserved for the British government. Northern Ireland co-operates with the Republic of Ireland in some areas, and the Agreement granted the Republic the ability to ``put forward views and proposals'' with ``determined efforts to resolve disagreements between the two governments''."
+      },
+      "question": "is northern ireland the same as republic of ireland?"
+    }
+  ]
+}
