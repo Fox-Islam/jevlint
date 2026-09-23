@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header><nav><a href="index.html" aria-current="page">Home</a><a href="examples.html">Examples</a><a href="evidence.html">Evidence</a><a href="output.html">Output</a><a href="library.html">From PHP</a><a href="javascript.html">From JavaScript</a><a href="languages.html">Languages</a><a href="behaviour.html">Behaviour</a><a href="corpus.html">Corpus</a></nav></header>
+<header><nav><a href="index.html" aria-current="page">Home</a><a href="examples.html">Examples</a><a href="evidence.html">Evidence</a><a href="output.html">Output</a><a href="library.html">From PHP</a><a href="javascript.html">From JavaScript</a><a href="python.html">From Python</a><a href="languages.html">Languages</a><a href="behaviour.html">Behaviour</a><a href="corpus.html">Corpus</a></nav></header>
 <main>
 <div class="title-row"><h1 id="jevlint">jevlint</h1><a class="gh" href="https://github.com/Fox-Islam/jevlint" aria-label="jevlint on GitHub"><svg viewBox="0 0 16 16" width="26" height="26" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a></div>
 <p>A linter for <a href="https://docs.typesafe.ai">Jev</a> queries. It takes the request you would send
@@ -22,15 +22,16 @@ written in a way the model is documented to handle badly.</p>
 <a href="#what-this-cannot-tell-you">What this cannot tell you</a></p>
 <p><strong>Going further:</strong> <a href="#the-probe">The probe</a> · <a href="#accepting-a-finding">Accepting a finding</a> ·
 <a href="#which-jev-build-the-rules-are-for">Which Jev build the rules are for</a> ·
-<a href="#the-catalogue-is-not-php">The catalogue is not PHP</a></p>
+<a href="#the-catalogue-is-not-a-language">The catalogue is not a language</a></p>
 <p><strong>Beyond this page:</strong> <a href="evidence.html">Evidence</a>, how good each check is ·
 <a href="output.html">Output</a>, reading the output from a program ·
 <a href="library.html">From PHP</a>, calling it from PHP ·
 <a href="javascript.html">From JavaScript</a>, calling it from JavaScript ·
+<a href="python.html">From Python</a>, calling it from Python ·
 <a href="languages.html">Languages</a>, how to add a language ·
 <a href="behaviour.html">Behaviour</a>, what the tool does on itself</p>
 <h2 id="quickstart">Quickstart</h2>
-<pre><code class="language-sh">composer install                                          # or: npm install
+<pre><code class="language-sh">composer install
 ./jevlint check examples/broken-triage.json --static-only
 </code></pre>
 <p>That reads a query written to be bad, costs nothing and makes no calls. It reports one error,
@@ -42,7 +43,8 @@ two warnings and three advisories, each naming the defect, where it is and what 
 <p>The second needs <code>TYPESAFE_API_KEY</code> in the environment or in a <code>.env</code> in the working directory,
 and costs two calls per question plus two for the query. <code>./jevlint help</code> lists the rest.</p>
 <p>Called as a library, <code>Linter</code> hands the report back instead of printing it:
-<a href="library.html">from PHP</a>, <a href="javascript.html">from JavaScript</a>.</p>
+<a href="library.html">from PHP</a>, <a href="javascript.html">from JavaScript</a>,
+<a href="python.html">from Python</a>.</p>
 <h2 id="install">Install</h2>
 <p>As a dependency, which puts <code>jevlint</code> on your <code>PATH</code>:</p>
 <pre><code class="language-sh">composer require --dev phox/jevlint    # PHP 8.3+
@@ -51,13 +53,18 @@ and costs two calls per question plus two for the query. <code>./jevlint help</c
 <pre><code class="language-sh">npm install --save-dev @phox-js/jevlint  # Node 20.19+
 npx jevlint help
 </code></pre>
-<p>Or from a clone, where <code>./jevlint</code> at the root runs it from anywhere:</p>
+<pre><code class="language-sh">pip install jevlint                      # Python 3.10+
+jevlint help
+</code></pre>
+<p>Or from a clone. <code>./jevlint</code> at the root is the PHP one, and runs from wherever you are:</p>
 <pre><code class="language-sh">composer install
 ./jevlint help
 </code></pre>
+<p>The other two run from the same clone: <code>npm install &amp;&amp; npm run build</code>, then
+<code>node js/dist/bin/jevlint.js help</code>; or <code>pip install -e .</code>, then <code>jevlint help</code>.</p>
 <p>The commands below are written from the repository root, where <code>examples/</code> sits. The PHP source
-is under <code>php/</code> and the JavaScript under <code>js/</code>; <code>checks/</code> sits beside them because both read the
-same catalogue.</p>
+is under <code>php/</code>, the JavaScript under <code>js/</code> and the Python under <code>python/</code>; <code>checks/</code> sits beside
+them because all three read the same catalogue.</p>
 <p>Put <code>TYPESAFE_API_KEY</code> in the environment or in a <code>.env</code> in the working directory, or pass
 <code>--env-file</code>. <code>check --static-only</code> needs no key and makes no calls. <code>--openrouter</code> sends the
 checks through OpenRouter instead and reads <code>OPENROUTER_API_KEY</code>.</p>
@@ -213,19 +220,21 @@ scores a median 0.17 and the broken one 0.87.</li>
 material the documentation publishes as correct, firing rates run from 0 to 28%.</li>
 <li><strong>Severity is what the defect costs, measured.</strong> Joining a second condition to a question
 that every case already satisfies takes the answers from 15 of 20 to 11 of 20 and doubles the
-Brier score, so <code>question/compound-judgment</code> is an error. Three checks are advice because
-their defect was detected and cost nothing on the hardest material to hand.</li>
-<li><strong>Acting on a finding can be worth more than the finding.</strong> Following
-<code>question/date-comparison</code> - extract the date parts as a Choice over enumerated options and
-subtract in code - took a returns-window query from 21 of 40 correct to 40 of 40 on held-out
-labelled cases.</li>
+Brier score, so <code>question/compound-judgment</code> is an error. <code>question/criteria-contradiction</code>
+is caught 20 of 20 and costs nothing - the same 19 of 20 answers with the criteria inverted
+as without - so it is a warning and not the error the documentation alone would make it.</li>
+<li><strong>Acting on a finding can be worth more than the finding.</strong> Putting back the catch-all
+<code>choice/no-fallback</code> asks for took 30 labelled cases whose answer is none of the options
+from 0 of 30 right to 15 of 30, halving the Brier score, and moved the control rows by
+nothing.</li>
 </ul>
 <p>And what it cannot tell you:</p>
 <ul>
 <li>A check passing does not mean your question is right. It means the ways this tool knows how to
 be wrong were not found.</li>
-<li>One check, <code>score/multi-dimension</code>, cannot separate its clean and defective readings at all.
-It says so in its own output rather than leaving you to find out.</li>
+<li><code>score/multi-dimension</code> catches both forms of its defect and only one of them costs
+anything, so a finding from it can be right and not worth acting on. Its hint says which
+form is which rather than leaving you to find out.</li>
 <li>The corpus tests firing rates, not correctness. A check that fires on 0 of 52 published
 examples may still be wrong about yours.</li>
 </ul>
@@ -475,13 +484,13 @@ key</strong>, so branching on that key alone reads two failures as a pass:</p>
 exit 2 and `complete: false`  it started and lost calls
 exit 2 and `asked: 0`         it ran and asked nothing
 </code></pre>
-<h2 id="the-catalogue-is-not-php">The catalogue is not PHP</h2>
+<h2 id="the-catalogue-is-not-a-language">The catalogue is not a language</h2>
 <p><code>checks/catalogue.json</code> holds every check: its id, severity, which primitives it applies to,
-and for a model check the Jev question that decides it. It mentions no language, so both
-implementations read the same file and neither writes checks of its own. A harness runs every
+and for a model check the Jev question that decides it. It mentions no language, so all three
+implementations read the same file and none writes checks of its own. A harness runs every
 command through each and diffs what comes back, so the report, the text and the exit code are
-one document; the <a href="javascript.html">JavaScript page</a> names where the platform's own
-wording shows through.</p>
+one document; the <a href="javascript.html">JavaScript page</a> and the
+<a href="python.html">Python page</a> name where each platform's own wording shows through.</p>
 <h2 id="what-this-cannot-tell-you">What this cannot tell you</h2>
 <p>A model check has read your instruction and your criteria. It has not seen your subject, and it
 is not calibrated against human judgement, so a finding is an argument you can weigh and not a

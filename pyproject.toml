@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jevlint"
+version = "1.1.0"
+description = "A linting tool combining static analysis and Jev queries, to improve Jev queries"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+keywords = ["typesafe", "jev", "linter", "prompt", "system-one"]
+authors = [{ name = "Fox Islam", email = "foxislam@outlook.com" }]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+dependencies = [
+    "babel>=2.12",
+    "typesafe-sdk>=0.7",
+]
+
+[project.urls]
+Homepage = "https://fox-islam.github.io/jevlint/"
+Source = "https://github.com/Fox-Islam/jevlint"
+Issues = "https://github.com/Fox-Islam/jevlint/issues"
+
+[project.scripts]
+jevlint = "jevlint.console.application:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.13"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["python/src/jevlint"]
+
+# The catalogue is not Python, and both other implementations read the same file,
+# so it sits at the root of the repository and rides into the wheel from there.
+[tool.hatch.build.targets.wheel.force-include]
+"checks" = "jevlint/checks"
+
+[tool.hatch.build.targets.sdist]
+include = ["/python", "/checks", "/spec", "/docs", "/examples", "/README.md", "/LICENSE"]
+
+[tool.pytest.ini_options]
+testpaths = ["python/tests"]
+pythonpath = ["python/src"]
+
+[tool.ruff]
+line-length = 120
+src = ["python/src"]
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "I", "UP", "B", "C4", "SIM", "RET", "PTH", "RUF"]
+[tool.ruff.lint.per-file-ignores]
+# The messages are data: a pattern is one string however long it runs, and the
+# characters in it are the ones the other two implementations print.
+"python/src/jevlint/lang/en.py" = ["E501", "RUF001"]

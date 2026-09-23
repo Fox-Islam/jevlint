@@ -20,19 +20,20 @@ defect in each, the report, and the same query rewritten.
 
 **Going further:** [The probe](#the-probe) · [Accepting a finding](#accepting-a-finding) ·
 [Which Jev build the rules are for](#which-jev-build-the-rules-are-for) ·
-[The catalogue is not PHP](#the-catalogue-is-not-php)
+[The catalogue is not a language](#the-catalogue-is-not-a-language)
 
 **Beyond this page:** [docs/evidence.md](docs/evidence.md), how good each check is ·
 [docs/output.md](docs/output.md), reading the output from a program ·
 [docs/library.md](docs/library.md), calling it from PHP ·
 [docs/javascript.md](docs/javascript.md), calling it from JavaScript ·
+[docs/python.md](docs/python.md), calling it from Python ·
 [docs/languages.md](docs/languages.md), how to add a language ·
 [docs/behaviour.md](docs/behaviour.md), what the tool does on itself
 
 ## Quickstart
 
 ```sh
-composer install                                          # or: npm install
+composer install
 ./jevlint check examples/broken-triage.json --static-only
 ```
 
@@ -50,7 +51,8 @@ The second needs `TYPESAFE_API_KEY` in the environment or in a `.env` in the wor
 and costs two calls per question plus two for the query. `./jevlint help` lists the rest.
 
 Called as a library, `Linter` hands the report back instead of printing it:
-[from PHP](docs/library.md), [from JavaScript](docs/javascript.md).
+[from PHP](docs/library.md), [from JavaScript](docs/javascript.md),
+[from Python](docs/python.md).
 
 ## Install
 
@@ -66,16 +68,24 @@ npm install --save-dev @phox-js/jevlint  # Node 20.19+
 npx jevlint help
 ```
 
-Or from a clone, where `./jevlint` at the root runs it from anywhere:
+```sh
+pip install jevlint                      # Python 3.10+
+jevlint help
+```
+
+Or from a clone. `./jevlint` at the root is the PHP one, and runs from wherever you are:
 
 ```sh
 composer install
 ./jevlint help
 ```
 
+The other two run from the same clone: `npm install && npm run build`, then
+`node js/dist/bin/jevlint.js help`; or `pip install -e .`, then `jevlint help`.
+
 The commands below are written from the repository root, where `examples/` sits. The PHP source
-is under `php/` and the JavaScript under `js/`; `checks/` sits beside them because both read the
-same catalogue.
+is under `php/`, the JavaScript under `js/` and the Python under `python/`; `checks/` sits beside
+them because all three read the same catalogue.
 
 Put `TYPESAFE_API_KEY` in the environment or in a `.env` in the working directory, or pass
 `--env-file`. `check --static-only` needs no key and makes no calls. `--openrouter` sends the
@@ -187,19 +197,21 @@ Measured, and the measurements are in the repository. The short version:
   material the documentation publishes as correct, firing rates run from 0 to 28%.
 - **Severity is what the defect costs, measured.** Joining a second condition to a question
   that every case already satisfies takes the answers from 15 of 20 to 11 of 20 and doubles the
-  Brier score, so `question/compound-judgment` is an error. Three checks are advice because
-  their defect was detected and cost nothing on the hardest material to hand.
-- **Acting on a finding can be worth more than the finding.** Following
-  `question/date-comparison` - extract the date parts as a Choice over enumerated options and
-  subtract in code - took a returns-window query from 21 of 40 correct to 40 of 40 on held-out
-  labelled cases.
+  Brier score, so `question/compound-judgment` is an error. `question/criteria-contradiction`
+  is caught 20 of 20 and costs nothing - the same 19 of 20 answers with the criteria inverted
+  as without - so it is a warning and not the error the documentation alone would make it.
+- **Acting on a finding can be worth more than the finding.** Putting back the catch-all
+  `choice/no-fallback` asks for took 30 labelled cases whose answer is none of the options
+  from 0 of 30 right to 15 of 30, halving the Brier score, and moved the control rows by
+  nothing.
 
 And what it cannot tell you:
 
 - A check passing does not mean your question is right. It means the ways this tool knows how to
   be wrong were not found.
-- One check, `score/multi-dimension`, cannot separate its clean and defective readings at all.
-  It says so in its own output rather than leaving you to find out.
+- `score/multi-dimension` catches both forms of its defect and only one of them costs
+  anything, so a finding from it can be right and not worth acting on. Its hint says which
+  form is which rather than leaving you to find out.
 - The corpus tests firing rates, not correctness. A check that fires on 0 of 52 published
   examples may still be wrong about yours.
 
@@ -452,14 +464,14 @@ exit 2 and `complete: false`  it started and lost calls
 exit 2 and `asked: 0`         it ran and asked nothing
 ```
 
-## The catalogue is not PHP
+## The catalogue is not a language
 
 `checks/catalogue.json` holds every check: its id, severity, which primitives it applies to,
-and for a model check the Jev question that decides it. It mentions no language, so both
-implementations read the same file and neither writes checks of its own. A harness runs every
+and for a model check the Jev question that decides it. It mentions no language, so all three
+implementations read the same file and none writes checks of its own. A harness runs every
 command through each and diffs what comes back, so the report, the text and the exit code are
-one document; [docs/javascript.md](docs/javascript.md) names where the platform's own wording
-shows through.
+one document; [docs/javascript.md](docs/javascript.md) and [docs/python.md](docs/python.md)
+name where each platform's own wording shows through.
 
 ## What this cannot tell you
 

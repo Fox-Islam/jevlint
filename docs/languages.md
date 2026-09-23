@@ -25,8 +25,8 @@ return [
 ];
 ```
 
-In the JavaScript package it is JSON, because a file dropped into a directory at run time
-cannot be a module the build compiled:
+In the JavaScript and Python packages it is JSON, because a file dropped into a directory at
+run time is data: it cannot be a module the build compiled, and importing it would run it:
 
 ```json
 {
@@ -40,8 +40,8 @@ Point `JEVLINT_LANG_DIR` at the directory holding it; the PHP package also reads
 not replace them, so a directory holding only `fr.php` is a translation and English is still
 found behind it. **A locale needs only the keys it
 translates**; anything absent is read from English, so a part-finished file prints English and
-never a key. `php/lang/en.php` and `js/src/lang/en.ts` are the list to work from, and they
-hold the same keys and the same patterns.
+never a key. `php/lang/en.php`, `js/src/lang/en.ts` and `python/src/jevlint/lang/en.py` are the
+list to work from, and they hold the same keys and the same patterns.
 
 Patterns are [ICU MessageFormat](https://unicode-org.github.io/icu/userguide/format_parse/messages/),
 so a plural is chosen by the locale's own CLDR rules instead of by a rule written in code.
@@ -57,15 +57,16 @@ middle, which ICU reads as a literal apostrophe. A lone apostrophe before an ord
 letter is already literal, so `the SDK's` needs nothing.
 
 Two tests in each package hold the file to its job: every pattern has to parse and leave no
-argument unfilled, and every key the source asks for has to exist. A third compares the two
+argument unfilled, and every key the source asks for has to exist. A third compares the
 formatters against each other over every shipped pattern, because a plural chosen one way in
-one implementation and another way in the other is two tools with one name.
+one implementation and another way in the next is three tools with one name.
 
 ## What a check reports about your query
 
 A check's `title`, `message`, `hint` and `suggest` live in the catalogue, not in a language
-directory, because the catalogue is not PHP and not JavaScript and both implementations read
-the same file. They are translated in `checks/lang/<locale>.json`, keyed by check id:
+directory, because the catalogue is not PHP, not JavaScript and not Python, and all three
+implementations read the same file. They are translated in `checks/lang/<locale>.json`, keyed
+by check id:
 
 ```json
 {

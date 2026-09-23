@@ -8,6 +8,7 @@
 /local           export-ignore
 /php/tests       export-ignore
 /js/test         export-ignore
+/python/tests    export-ignore
 /corpus          export-ignore
 /phpunit.xml     export-ignore
 /phpstan.neon    export-ignore

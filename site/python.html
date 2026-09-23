@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calling jevlint from Python · jevlint</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><nav><a href="index.html">Home</a><a href="examples.html">Examples</a><a href="evidence.html">Evidence</a><a href="output.html">Output</a><a href="library.html">From PHP</a><a href="javascript.html">From JavaScript</a><a href="python.html" aria-current="page">From Python</a><a href="languages.html">Languages</a><a href="behaviour.html">Behaviour</a><a href="corpus.html">Corpus</a></nav></header>
+<main>
+<div class="title-row"><h1 id="calling-jevlint-from-python">Calling jevlint from Python</h1><a class="gh" href="https://github.com/Fox-Islam/jevlint" aria-label="jevlint on GitHub"><svg viewBox="0 0 16 16" width="26" height="26" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a></div>
+<pre><code class="language-sh">pip install jevlint
+jevlint check your-query.json --static-only
+</code></pre>
+<p>Python 3.10 or newer. Two dependencies:
+<a href="https://pypi.org/project/typesafe-sdk/"><code>typesafe-sdk</code></a>, which is how the model checks are
+asked, and <a href="https://pypi.org/project/babel/"><code>babel</code></a>, which supplies the CLDR plural rules and
+number formats the messages are written against.</p>
+<p>The commands and the options are the ones on the front page. This page is the library.</p>
+<h2 id="the-library">The library</h2>
+<p><code>Linter</code> runs the catalogue over a query and hands back a <code>Report</code>. The <code>check</code> command goes
+through it, so a caller here gets the report the CLI prints instead of a second implementation
+of it.</p>
+<pre><code class="language-python">from jevlint import Linter, Query
+
+report = Linter.from_environment().check(Query.from_dict({
+    'state': {'ticket': 'I was charged twice for order A-104.'},
+    'questions': {
+        'refund': {'type': 'noul', 'instructions': 'Does the customer ask for a refund?'},
+    },
+}))
+
+for finding in report.findings():
+    print(finding.severity.value, finding.check_id, finding.message)
+</code></pre>
+<p><code>check()</code> blocks while the model checks are asked. The JavaScript package is asynchronous and
+this one is not, so a caller here writes no <code>await</code> and gets no event loop.</p>
+<p>The query is the request body you would send, so a query built in memory is checked without
+going to disk first. <code>Query.from_file</code> reads one, <code>Query.from_json</code> takes the body as a string,
+and <code>Query.from_dict</code> takes it decoded.</p>
+<p><strong>All three keep the order the file wrote.</strong> A <code>dict</code> lists its keys in the order they went in,
+and <code>json.loads</code> fills one in the order the text holds, so a Choice written
+<code>{&quot;30&quot;: &quot;A month&quot;, &quot;7&quot;: &quot;A week&quot;}</code> reaches the request that way round. Option order changes
+answers, and in JavaScript it is the entry point that decides whether it survives; here it is
+not something you have to think about.</p>
+<h2 id="starting-one">Starting one</h2>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Linter.make(client)</code></td>
+<td>asks its model checks through a client you supply</td>
+</tr>
+<tr>
+<td><code>Linter.from_environment()</code></td>
+<td>reads <code>TYPESAFE_API_KEY</code> from the environment or a <code>.env</code> in the working directory and builds its own</td>
+</tr>
+<tr>
+<td><code>Linter.rules_only()</code></td>
+<td>runs the rules, makes no calls and needs no key</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>make</code> takes a <code>Client</code> from this package, which wraps the SDK. The SDK takes an
+<code>httpx2</code> transport, so the model path runs in a test against a function instead of a network:</p>
+<pre><code class="language-python">import httpx2
+from jevlint import Client, Linter
+
+def handle(request):
+    return httpx2.Response(200, json={
+        'model': 'jev-1.13.0',
+        'answers': {'question_compound_judgment': {'type': 'noul', 'noul': 0.93}},
+        'usage': {'input_tokens': 10, 'output_tokens': 2},
+    })
+
+client = Client(api_key='not-used', transport=httpx2.MockTransport(handle))
+report = Linter.make(client).only(['question/compound-judgment']).check(query)
+</code></pre>
+<p>A client is built when the run reaches a check that needs one, so <code>from_environment()</code> narrowed
+to rules asks for no key.</p>
+<h2 id="narrowing-a-run">Narrowing a run</h2>
+<p>Each of these returns a new linter, so one can be configured once and reused:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.only([...])</code></td>
+<td>run these checks. An id the catalogue does not hold raises, instead of narrowing to nothing and reporting a clean query</td>
+</tr>
+<tr>
+<td><code>.for_jev('1.13')</code></td>
+<td>the rules for one Jev build. Without it the run uses the newest version the catalogue covers</td>
+</tr>
+<tr>
+<td><code>.accepting(Config.load('.jevlint.json'))</code></td>
+<td>the acceptances that set findings aside. The CLI discovers this file beside the query; nothing here does it for you</td>
+</tr>
+<tr>
+<td><code>.without_state()</code></td>
+<td>leave out the checks that read the query's state</td>
+</tr>
+<tr>
+<td><code>.repeats(3)</code></td>
+<td>ask each model check this many times, so the report has the spread</td>
+</tr>
+<tr>
+<td><code>.reporting_cleared()</code></td>
+<td>report every model check that ran and cleared, not only the readings near a trigger</td>
+</tr>
+<tr>
+<td><code>.max_state_chars(20000)</code></td>
+<td>where a state stops being state and starts being a document</td>
+</tr>
+</tbody>
+</table></div>
+<p>Where you narrow the query itself with <code>Query.only()</code>, pass the whole query as the second
+argument to <code>check()</code>. The checks that judge a state field against the whole query cannot answer
+from part of it, so they are left out and the report records it:</p>
+<pre><code class="language-python">report = linter.check(whole.only(['refund']), whole)
+</code></pre>
+<h2 id="reading-the-report">Reading the report</h2>
+<p><code>report.to_dict()</code> is the document in <a href="spec/report.schema.json"><code>spec/report.schema.json</code></a>,
+and <a href="output.html">Output</a> covers what every field means. Read as objects instead:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>report.findings(floor)</code></td>
+<td>the findings, ordered as the query wrote its questions</td>
+</tr>
+<tr>
+<td><code>report.count(Severity.Error)</code></td>
+<td>how many at one severity, counted whole even where a floor hid them from the list</td>
+</tr>
+<tr>
+<td><code>report.cleared()</code>, <code>report.unstable()</code>, <code>report.accepted()</code></td>
+<td>checks that ran without firing, could not decide, or were set aside by the config</td>
+</tr>
+<tr>
+<td><code>report.notes()</code>, <code>report.skipped_notes()</code>, <code>report.unreachable_notes()</code></td>
+<td>what the run could not ask, and what it left out</td>
+</tr>
+<tr>
+<td><code>report.is_complete()</code>, <code>report.asked_count()</code></td>
+<td>whether every check was asked, and how many were</td>
+</tr>
+<tr>
+<td><code>report.calls()</code>, <code>report.tokens()</code></td>
+<td>what it cost</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>A run that lost its calls is not a run that passed, and neither is one that asked nothing.</strong>
+The exit codes belong to the CLI; a caller gating on a report writes the same three conditions:</p>
+<pre><code class="language-python">if not report.is_complete() or report.asked_count() == 0:
+    ...  # the run did not check the query
+
+if report.has_errors():
+    ...  # the query has a defect the API is documented to reject
+
+if len(report.unstable()) &gt; 0:
+    ...  # a check answered on both sides of its trigger, so another run may differ
+</code></pre>
+<h2 id="where-the-implementations-part">Where the implementations part</h2>
+<p>All three are held to the same output by a harness that runs every command through each and
+diffs what comes back, so the report, the text, the exit code and the request body are the same
+document. What is left is the platform's own and cannot be:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>the detail on an invalid query file</td>
+<td><code>Syntax error</code> against <code>Expecting property name enclosed in double quotes: line 1 column 2 (char 1)</code>. The <code>kind</code> a program reads is <code>invalid-json</code> either way</td>
+</tr>
+<tr>
+<td>the detail on a call that never connected</td>
+<td>cURL names the host it could not resolve and the URL it was asking for; <code>httpx2</code> reports the resolver error alone. The <code>cause</code> is <code>connection</code> either way</td>
+</tr>
+<tr>
+<td>a <code>--lang</code> tag no locale data exists for</td>
+<td>ICU falls back to the root locale, whose plurals have one form; Babel falls back to English. A tag anybody has, translated or not, behaves the same in all three</td>
+</tr>
+</tbody>
+</table></div>
+<p>These are worth knowing instead of comparing:</p>
+<ul>
+<li><strong>A locale file is <code>&lt;locale&gt;.json</code> here and in the JavaScript package, and <code>&lt;locale&gt;.php</code> in
+the PHP one.</strong> All three read <code>JEVLINT_LANG_DIR</code>, and <code>checks/lang/&lt;locale&gt;.json</code>, which is
+where what a check reports about your query is translated, is the same file for every
+implementation. A file dropped into a directory at run time is data here, not a module, so it
+is JSON and importing it never runs it. See <a href="languages.html">Languages</a>.</li>
+<li><strong>The methods carry Python names.</strong> <code>reportingCleared</code> is <code>reporting_cleared</code>,
+<code>fromEnvironment</code> is <code>from_environment</code>, <code>toObject</code> is <code>to_dict</code>. The catalogue, the report
+fields and the check ids are the same words everywhere, because they are data and not an API.</li>
+<li><strong><code>python -m jevlint</code> runs the same command line as the <code>jevlint</code> script</strong>, for a checkout
+with nothing installed on the <code>PATH</code>.</li>
+</ul>
+<h2 id="what-the-cli-does-that-this-does-not">What the CLI does that this does not</h2>
+<p>Reading the arguments, discovering <code>.jevlint.json</code> beside the query, formatting the text report
+and turning a report into an exit code all live in the console layer. The catalogue, the
+narrowing, the order of the two linters, the notes saying what was left out and the reconciling
+that makes a lost check visible are all in <code>Linter</code> and run wherever it does.</p>
+</main>
+<footer><p>A linter for Jev queries. <a href="https://github.com/Fox-Islam/jevlint">Source on GitHub</a>.</p></footer>
+</body>
+</html>
