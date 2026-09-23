@@ -1129,6 +1129,23 @@
       "docs": "https://docs.typesafe.ai/primitives"
     },
     {
+      "id": "query/floating-model",
+      "title": "The request names a moving build",
+      "mode": "static",
+      "rule": "query.floatingModel",
+      "scope": "query",
+      "applies_to": [
+        "*"
+      ],
+      "severity": "advice",
+      "message": "The request names a build by an alias, which resolves to whichever build is newest when it runs.",
+      "hint": "A report describes the build it was taken against, and a request naming an alias runs against whichever build is newest, so the two come apart the day a new one lands. `jev-latest` answers as `jev-1.13.0`, the build this catalogue is written for, so nothing is wrong with such a request today. Accept it where you want new builds without a deploy and have something else watching for the answers moving.",
+      "suggest": "Name the build, as `jev-1.13`, and raise it when you have measured the new one.",
+      "reads": "query",
+      "action": "rewrite",
+      "docs": "https://docs.typesafe.ai/primitives"
+    },
+    {
       "id": "choice/description-not-text",
       "title": "An option's description is not text",
       "mode": "static",

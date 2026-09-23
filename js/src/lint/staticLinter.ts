@@ -94,6 +94,18 @@ export class StaticLinter {
             seen.set(text, question.id);
         }
 
+        // A request naming no build at all makes no claim about one, and the
+        // report names the build it ran against. An alias claims a build and
+        // resolves to a different one the day a newer lands.
+        if (typeof query.model === 'string' && !/^jev-\d+(?:\.\d+)*$/.test(query.model)) {
+            this.raise(
+                'query.floatingModel',
+                'query',
+                report,
+                Text.of('evidence.found_quoted', { what: query.model }),
+            );
+        }
+
         const extra = keysOf(query.raw).filter((key) => !['state', 'questions', 'model'].includes(key));
 
         if (extra.length > 0) {

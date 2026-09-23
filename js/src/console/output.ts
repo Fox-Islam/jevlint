@@ -10,7 +10,7 @@ export class Output {
         return this.coloured;
     }
 
-    /** A reader that closes the pipe, such as `head`, is not an error here */
+    /** A stream already torn down throws here; a pipe closing is an event the binary handles */
     write(text: string): void {
         try {
             process.stdout.write(text);

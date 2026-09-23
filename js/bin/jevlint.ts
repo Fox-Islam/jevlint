@@ -8,4 +8,14 @@
 
 import { Application } from '../src/console/application.js';
 
+// A write to a pipe is asynchronous, so a reader that goes away - `jevlint checks
+// | head -2` - arrives as an error event and never as a throw. Node's default
+// handler for it rethrows, which prints a stack trace over output the reader
+// already has and exits 1 where the PHP package exits 0.
+process.stdout.on('error', (error: NodeJS.ErrnoException) => {
+    if (error.code !== 'EPIPE') {
+        throw error;
+    }
+});
+
 process.exitCode = await new Application().run(['jevlint', ...process.argv.slice(2)]);

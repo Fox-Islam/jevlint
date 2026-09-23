@@ -45,6 +45,7 @@ final class StaticLinter
         'noul.criteriaShape',
         'noul.noCriteria',
         'query.duplicateInstructions',
+        'query.floatingModel',
         'query.noQuestions',
         'query.unknownKey',
         'question.criteriaNotAStructure',
@@ -138,6 +139,18 @@ final class StaticLinter
             }
 
             $seen[$text] = $question->id;
+        }
+
+        // A request naming no build at all makes no claim about one, and the
+        // report names the build it ran against. An alias claims a build and
+        // resolves to a different one the day a newer lands.
+        if (is_string($query->model) && preg_match('/^jev-\d+(?:\.\d+)*$/', $query->model) !== 1) {
+            $this->raise(
+                'query.floatingModel',
+                'query',
+                $report,
+                Text::of('evidence.found_quoted', ['what' => $query->model]),
+            );
         }
 
         $extra = array_values(array_diff(array_keys($query->raw), ['state', 'questions', 'model']));

@@ -18,6 +18,7 @@ export const RULES = [
     'noul.criteriaShape',
     'noul.noCriteria',
     'query.duplicateInstructions',
+    'query.floatingModel',
     'query.noQuestions',
     'query.unknownKey',
     'question.criteriaNotAStructure',
