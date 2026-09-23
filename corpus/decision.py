@@ -13,12 +13,15 @@ Two measurements, neither of which this repository could make on its own:
 
   baseline  What Jev answers, scored against the label with a Brier score. This
             is what a later run has to beat to show that acting on a finding
-            improves an answer rather than only quieting a check.
+            improves an answer instead of only quieting a check.
 
     python3 corpus/decision.py [--items=40] [--env=.env] [--out=local/decision-scores.json]
 """
 import json, pathlib, random, subprocess, sys
 import urllib.request
+
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+from answers import ask, brier, key, scored as against_label
 from datetime import datetime, timezone
 
 URL = 'https://raw.githubusercontent.com/jaredpalmer/kev/main/evals/v7/decision-v7/test.jsonl'
@@ -42,6 +45,7 @@ contrastive = [r for r in rows if r['_meta'].get('source') == 'contrastive' and 
 sample = random.Random(SEED).sample(contrastive, min(items, len(contrastive)))
 
 env = [f'--env-file={env_file}'] if env_file else []
+API_KEY = key(env_file)
 
 
 def run(args):
@@ -62,16 +66,14 @@ def reading(query, name):
                  if f['check'] == CHECK and 'probability' in f), None)
 
 
-def answer(query, name):
-    """What Jev answers, through `probe`, which sends the query as written."""
-    path = path = work / name
-    path.write_text(json.dumps(query, indent=2))
-    report = run(['probe', str(path), '--repeats=1'])
+def answer(state, qid, question):
+    """What Jev answers, scored against the label decision-v7 ships.
 
-    if not report['summary'].get('complete', True):
-        sys.exit(f'{name}: the call could not be made. Nothing written.')
-
-    return next((q['baseline'] for q in report['questions'].values()), None)
+    Not through `probe`, which reports a Choice's winning label and its
+    probability. What a score needs is the probability on the labelled option,
+    and a confident answer to the wrong one reads as a perfect hit without it
+    """
+    return against_label(ask(API_KEY, state, qid, question), question['label'])
 
 
 scored = []
@@ -91,7 +93,7 @@ for n, row in enumerate(sample):
         'label': label,
         'with_policy': reading(whole, f'{n:03d}-with.json'),
         'without_policy': reading(without, f'{n:03d}-without.json'),
-        'answer': answer(whole, f'{n:03d}-answer.json'),
+        'answer': answer(row['state'], qid, question),
     })
     print(f"  {n:3d} {scored[-1]['family']:18s} with {scored[-1]['with_policy']} "
           f"without {scored[-1]['without_policy']} answer {scored[-1]['answer']}", file=sys.stderr)
@@ -110,7 +112,7 @@ trigger = next(c.get('trigger', 0.7) for c in json.loads(pathlib.Path('checks/ca
 mean = lambda xs: sum(xs) / len(xs) if xs else float('nan')
 whole_r = [s['with_policy'] for s in scored if s['with_policy'] is not None]
 without_r = [s['without_policy'] for s in scored if s['without_policy'] is not None]
-answers = [(s['answer'], s['label']) for s in scored if s['answer'] is not None]
+answers = [tuple(s['answer']) for s in scored if s['answer'] is not None]
 
 print(f'\n{len(scored)} contrastive cases, trigger {trigger}')
 print(f'policy in the state:   mean {mean(whole_r):.2f}, fires {sum(1 for r in whole_r if r > trigger)}/{len(whole_r)}')
@@ -118,6 +120,5 @@ print(f'policy taken away:     mean {mean(without_r):.2f}, fires {sum(1 for r in
 print(f'separation:            {mean(without_r) - mean(whole_r):+.2f}')
 
 if answers:
-    brier = mean([(p - (1.0 if y else 0.0)) ** 2 for p, y in answers])
-    print(f'\nJev on the question as written: Brier {brier:.3f} over {len(answers)} cases '
-          f'(0.25 is a coin flip), accuracy {sum(1 for p, y in answers if (p > 0.5) == bool(y))}/{len(answers)}')
+    print(f'\nJev on the question as written: Brier {brier(answers):.3f} over {len(answers)} cases '
+          f'(0.25 is a coin flip), accuracy {sum(1 for _, ok in answers if ok)}/{len(answers)}')

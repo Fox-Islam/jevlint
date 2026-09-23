@@ -28,32 +28,33 @@ rewritten the way the check's own suggestion says. All three differ, so the fixe
 measures the advice instead of re-reading the clean question. Each check carries two such sets,
 one in a support-desk domain and one in a parcel-delivery domain, so a wording that latches
 onto the subject instead of the defect shows up as a set it cannot separate. The table reports
-whichever set the check does worse on. It is one `jevlint self-test` run, on 2026-09-22, and
+whichever set the check does worse on. It is one `jevlint self-test` run, on 2026-09-23, and
 `local/` is not committed, so the run behind it is not in the repository: `jevlint self-test`
 produces it again, at the cost of the calls.
 
 | check | clean | broken | fixed | span |
 | --- | --- | --- | --- | --- |
-| `question/type-mismatch` | 0.02 | 0.99 | 0.01 | 0.97 |
+| `question/type-mismatch` | 0.03 | 0.99 | 0.01 | 0.96 |
 | `state/irrelevant-field` | 0.03 | 0.96 | 0.03 | 0.93 |
-| `noul/negated-phrasing` | 0.04 | 0.93 | 0.05 | 0.89 |
-| `question/criteria-off-topic` | 0.07 | 0.96 | 0.05 | 0.89 |
-| `question/date-comparison` | 0.08 | 0.96 | 0.06 | 0.88 |
-| `score/degree-levels` | 0.06 | 0.94 | 0.07 | 0.88 |
-| `state/adversarial-content` | 0.12 | 0.97 | n/a | 0.85 |
-| `question/undefined-boundary` | 0.08 | 0.92 | 0.16 | 0.84 |
+| `noul/negated-phrasing` | 0.04 | 0.94 | 0.05 | 0.90 |
+| `question/criteria-off-topic` | 0.07 | 0.97 | 0.06 | 0.90 |
+| `question/date-comparison` | 0.08 | 0.96 | 0.05 | 0.88 |
+| `score/degree-levels` | 0.05 | 0.92 | 0.06 | 0.87 |
 | `question/double-negative` | 0.03 | 0.87 | 0.03 | 0.84 |
-| `question/criteria-contradiction` | 0.08 | 0.92 | 0.05 | 0.84 |
-| `question/numeric-representation` | 0.18 | 0.95 | 0.08 | 0.77 |
-| `query/overlapping-questions` | 0.02 | 0.75 | 0.03 | 0.73 |
-| `question/compound-judgment` | 0.18 | 0.84 | 0.17 | 0.66 |
-| `score/multi-dimension` | 0.18 | 0.83 | 0.26 | 0.65 |
-| `question/indirection` | 0.21 | 0.84 | 0.45 | 0.63 |
-| `question/arithmetic` | 0.06 | 0.68 | 0.07 | 0.62 |
-| `score/overlapping-levels` | 0.27 | 0.81 | 0.14 | 0.54 |
-| `choice/overlapping-options` | 0.38 | 0.86 | 0.39 | 0.48 |
-| `question/generation` | 0.24 | 0.70 | 0.15 | 0.45 |
-| `state/answer-absent` | 0.44 | 0.81 | 0.13 | 0.37 |
+| `question/undefined-boundary` | 0.09 | 0.92 | 0.17 | 0.83 |
+| `question/numeric-representation` | 0.17 | 0.96 | 0.08 | 0.79 |
+| `question/criteria-contradiction` | 0.17 | 0.94 | 0.05 | 0.77 |
+| `state/adversarial-content` | 0.22 | 0.97 | n/a | 0.75 |
+| `query/overlapping-questions` | 0.02 | 0.76 | 0.02 | 0.74 |
+| `score/multi-dimension` | 0.18 | 0.86 | 0.26 | 0.68 |
+| `question/compound-judgment` | 0.19 | 0.84 | 0.16 | 0.65 |
+| `question/indirection` | 0.22 | 0.83 | 0.48 | 0.61 |
+| `question/arithmetic` | 0.07 | 0.66 | 0.07 | 0.59 |
+| `question/unsettled-case` | 0.17 | 0.72 | 0.14 | 0.55 |
+| `score/overlapping-levels` | 0.27 | 0.80 | 0.14 | 0.53 |
+| `choice/overlapping-options` | 0.39 | 0.84 | 0.36 | 0.46 |
+| `question/generation` | 0.26 | 0.69 | 0.15 | 0.43 |
+| `state/answer-absent` | 0.47 | 0.78 | 0.14 | 0.31 |
 
 **Every column here is one reading.** A fixture is asked once, on a model whose repeat spread is
 about 0.035, and the verdict is decided by comparing that single draw against the trigger. Where a
@@ -68,8 +69,8 @@ but containment clears it by 0.02 and duplication by 0.22, so a containment find
 read rather than gate on. Where a narrower level can be read as excluding the wider one, as
 "cleaned" can be read as "cleaned and not bevelled", it reads 0.46 and does not fire.
 
-`state/answer-absent` has the narrowest span, 0.36, because its clean example in the parcel
-domain reads 0.45: a question answerable from a two-field state still reads as nearly a
+`state/answer-absent` has the narrowest span, 0.31, because its clean example in the
+parcel domain reads 0.47: a question answerable from a two-field state still reads as nearly a
 question the state cannot answer. `state/adversarial-content` has no fixed column because its
 advice cannot clear it - the check reads the state, and hardening the question leaves the state
 as it was. The static checks are rules, so they carry no fixtures and their suggestions are
@@ -119,6 +120,7 @@ to answers nobody gave it. The table below was harvested on 2026-09-22 over 250 
 | `score/degree-levels` | 1 of 1 | 1 of 1 | 1 of 15 | 3 of 10, 1 of them shaky |
 | `question/compound-judgment` | 3 of 3 | 3 of 3 | 4 of 53, 4 of them shaky | 26 of 62, 9 of them shaky |
 | `score/multi-dimension` | 1 of 1 | 1 of 1 | 0 of 14 | 0 of 10 |
+| `question/unsettled-case` | no gold example | - | 5 of 18, 2 of them shaky | not asked |
 
 **Ten of the fourteen gold negatives quote an example the documentation prints. Four do not.**
 For those four the documentation defines the failure and gives no example, so the example is
@@ -146,10 +148,28 @@ were made with different wordings for several checks.
 state can be asked about one, and `states.py` recovers a state for 32 of the 76 docs entries, so
 `state/answer-absent` has 32 readings here, `state/adversarial-content` 9 and
 `state/irrelevant-field` 1. A denominator of 1 supports nothing. The measurements those three
-rest on are `planted.py`, `unread.py`, `squad.py` and `decision.py`, further down, not this
-table. `query/overlapping-questions` is not one of them - it reads the question set, not the
+rest on are `planted.py`, `unread.py`, `fields.py`, `flores.py`, `squad.py` and `decision.py`,
+further down, not this table. `query/overlapping-questions` is not one of them - it reads the question set, not the
 state - but it fires per pair and attaches to the second question, and `harvest.py` keeps the
 strongest reading per target, so its field column understates how often it spoke.
+
+**What they do to a state that is already right** is the other half, and every arm further down
+plants a defect for them to find. `corpus/fields.py` asks the opposite question. decision-v7's
+contrastive rows carry a `policy` and a `case` in one state, both needed to answer the question
+asked about them, so a reading over the trigger is a false positive:
+
+| the check | readings | mean | highest | over the trigger |
+| --- | --- | --- | --- | --- |
+| `state/irrelevant-field` | 40 | 0.04 | 0.12 | **0 of 40** |
+| `state/answer-absent` | 20 | 0.08 | 0.13 | **0 of 20** |
+| `question/unsettled-case` | 20 | 0.11 | 0.29 | **0 of 20** |
+| `state/adversarial-content` | 20 | 0.34 | 0.55 | **0 of 20** |
+
+Not one of them speaks on twenty states nobody here wrote or changed, and
+`state/irrelevant-field` reads every field of every state, which is where its 40 comes from.
+`state/adversarial-content` runs nearest the line at 0.55 against a 0.60 trigger. Its question
+asks whether a passage instructs whoever is assessing the material, and a policy is a rule
+addressed to that reader.
 
 One rate is high. `question/compound-judgment` fires on 25 of 62 field queries because the
 bias bench is a study of holistic decisions - "Should this defendant be released on bail before
@@ -160,8 +180,8 @@ say how often it speaks, not how often it is right. Treat its advice as a prompt
 
 The field tier carries no labels, so a rate on it is a rate and not an error rate.
 
-The corpus holds readings for all twenty model checks, and a labelled defect to catch for eleven
-of them; the other nine are measured only by how often they fire on material labelled clean. That
+The corpus holds readings for all 21 model checks, and a labelled defect to catch for eleven
+of them; the other 10 are measured only by how often they fire on material labelled clean. That
 is the shape of the evidence: every check has been asked about somebody else's material, and
 fewer than half have been shown catching a defect somebody else named.
 
@@ -349,7 +369,7 @@ only wording check measured to cost anything, and it costs more than either stru
 which is what its `error` severity rests on.
 
 A noisy check and a cheap defect are separate facts, and the corpus table can only show the
-first. `question/compound-judgment` has the worst firing rate in it - 25 of 62 field queries,
+first. `question/compound-judgment` has the worst firing rate in it - 26 of 62 field queries,
 every one of its fires on material labelled clean inside the noise band - and the defect it names
 is the most costly one measured here.
 
@@ -472,8 +492,42 @@ seems to want, and the reason it is `advice` with a title naming what it reads.
 
 ## The checks with no labelled defect to catch
 
-Nine model checks have no gold negative. Two of them have a public dataset that is the defect,
+Ten model checks have no gold negative. Two of them have a public dataset that is the defect,
 and one can be labelled from the readings the corpus already holds.
+
+**`question/unsettled-case`, on paragraphs with an edge planted in them.** The check asks
+whether the state holds a case on the edge of the question that the question never settles.
+boolq passages are Wikipedia prose, so taking out the sentence that names a term and putting one
+carrier sentence back leaves twelve paragraphs that differ in that sentence and nothing else.
+`corpus/borderline.py` runs six arms over them, one call each.
+
+| the carrier sentence | mean reading | fires at the 0.45 trigger |
+| --- | --- | --- |
+| names the term | 0.17 | 0 of 24 |
+| leaves the term out | 0.11 | 0 of 24 |
+| names the term, negates something else | 0.17 | 0 of 24 |
+| negates the term | 0.66 | **24 of 24** |
+| puts the term in a conditional | 0.63 | **24 of 24** |
+| negates the term, criteria naming the edge | 0.20 | 0 of 24 |
+
+Twelve paragraphs, run twice, so each row is 24 readings. The third and sixth rows are what the
+arms are for. A check that fires wherever a state carries a negation would fire on the third,
+and it reads 0.17 there, level with the row that carries no negation at all. A check reading the
+state's shape and not the query's silence about it would fire on the sixth, where the edge is
+there and the criteria settle it, and it reads 0.20. The gap runs from 0.32 to 0.48 across both
+runs, and at the 0.45 trigger every one of the 96 verdicts was the same in both.
+
+**Its rate on clean material is the highest in the catalogue, and rests on one person reading
+five queries.** It fires on 5 of the 18 documentation questions that carry a state, 28%, against
+8% for the next highest. Reading those five: two ask how frustrated a customer is, where
+"honestly I'm done" and "I'm losing sales, please help ASAP" both sit between the rubric's
+"frustrated but civil" and its "very angry, strong language"; one asks how severe an issue is
+where the state says it works in Chrome but some customers only use Safari, which is a
+workaround for some readers and not others; two are conditionals - "if this is a shipping
+problem", "if the customer wants to return something" - put to a state carrying two complaints
+and no stated want. Each is a case the query does not settle, so none of the five is a false
+positive by this reading. One person read them, which is why the check is advice and not a
+warning.
 
 **`state/adversarial-content`, on documents with a line planted in them.** The check asks whether
 the material carries text aimed at whoever is judging it. decision-v7's review rows are documents
@@ -559,15 +613,57 @@ state with named fields and the corpus holds one reading for it. decision-v7's c
 carry exactly two fields, both of which the question needs, so adding a third that nothing reads
 puts the defect in and changes nothing else:
 
-| the state | mean reading | fires at the 0.75 trigger |
-| --- | --- | --- |
-| every field needed | 0.05 | 0 of 20 |
-| one field nothing reads | 0.97 | **20 of 20** |
+| the state | mean reading | fires at the 0.75 trigger | answer right | Brier |
+| --- | --- | --- | --- | --- |
+| every field needed | 0.03 | 0 of 20 | 17 of 20 | 0.091 |
+| one spare line | 0.97 | **20 of 20** | 17 of 20 | 0.089 |
+| a 14,000-character spare field | 0.97 | **20 of 20** | 17 of 20 | 0.086 |
+| a spare field holding another claim | 0.90 | **19 of 20** | 17 of 20 | 0.072 |
+
+The same run asks each state its own question and scores the answer against decision-v7's label,
+which is what decides the severity. **The field costs nothing measurable.** Not one line of it,
+not fourteen thousand characters of it, and not a field holding another claim that reads like the
+one being asked about: the answer is right 17 times out of 20 in every arm, and the Brier moves
+by less than the check's own repeat spread. A defect detected every time and costing nothing that
+can be measured is advice, not a warning.
+
+A field that does cost an answer is one whose content is what the question asks about. A router
+asking which language a query is written in, with a dozen FAQ entries in one of the candidate
+languages beside it, goes from 13 of 19 correct to 0 or 1. That is a property of the pair, not of
+the field, and no arm above reproduces it.
+
+`corpus/flores.py` puts that pair on public material. FLORES-200 holds 1,012 sentences
+translated into 204 languages line for line, so a spare field can be built from the same
+material in a chosen language and nothing else about it moves. Twelve Korean sentences are
+asked which language they are written in, each with one spare field filled to the same size:
+
+| the spare field | answer right | accepted at 0.8 | Brier | check reads |
+| --- | --- | --- | --- | --- |
+| none | 12 of 12 | 12 | 0.000 | - |
+| Greek, a language the options do not offer | 10 of 12 | 9 | 0.152 | 0.79 |
+| Japanese, a language the options do offer | 11 of 12 | 10 | 0.059 | 0.65 |
+| Korean, the language the query is in | 12 of 12 | 12 | 0.001 | 0.63 |
+
+**A spare field in the query's own language costs nothing**, which is the control the planted
+arms have no version of: the field holds material of exactly the kind the question judges and
+still costs nothing, so being spare and being of that kind are together not enough. What costs
+the answer is a spare field the question could read in the query's place, and the worst of the
+three is the language the options do not offer, where the answer has nowhere to go but `other`
+or `uncertain`.
+
+**The check reads much the same on all three.** Its readings run from 0.63 to 0.79 across arms
+whose cost to the answer differs by a factor of 150, and it clears its 0.75 trigger on the two
+that differ most. It finds the field and cannot rank what the field costs, which is the same
+conclusion the decision-v7 arms reach, on material nobody here planted.
+
+These figures are twelve sentences in one query language against three spare languages. They
+are enough to separate what costs an answer from what does not; they are not a rate.
 
 ## Measured against a corpus nobody here wrote
 
-Two public sets carry what this repository could not write for itself: material to judge, and
-the answer each question should get.
+`decision-v7` and SQuAD 2.0 carry what this repository could not write for itself: material to
+judge, and the answer each question should get. FLORES-200 does the same for
+`state/irrelevant-field`, and its result sits with that check's other arms above.
 
 **`decision-v7` settles `state/answer-absent`.** Its contrastive rows hold a `policy` and a
 `case` in one state, a question about them, and the answer that question should get. Taking the
@@ -577,14 +673,14 @@ policy families.
 
 | the state | mean reading | fires at the 0.6 trigger |
 | --- | --- | --- |
-| policy and case | 0.11, highest 0.40 | **0 of 40** |
-| policy taken away | 0.67, lowest 0.49 | 28 of 40 |
+| policy and case | 0.09, highest 0.28 | **0 of 40** |
+| policy taken away | 0.63, lowest 0.50 | 28 of 40 |
 
 Not one false positive on forty states somebody else wrote, and seven in ten of the removals
 caught. This is the check with the narrowest span in the self-test, and on the defect it exists
 for it is the best evidenced check in the catalogue.
 
-The same run records what Jev answers those questions as written: a **Brier score of 0.103**
+The same run records what Jev answers those questions as written: a **Brier score of 0.102**
 over forty cases, 33 of 40 called correctly, against 0.25 for a coin flip. That is the baseline
 an arm applying a finding has to beat, and "Does acting on a finding improve the answer?" above
 is where it is beaten and where it is not.

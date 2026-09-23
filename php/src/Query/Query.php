@@ -274,14 +274,19 @@ final class Query
 
     /**
      * The state a state-scoped check is shown: the question it is about, and
-     * the material itself, each under a name the check can point at
+     * the material itself, each under a name the check can point at.
+     *
+     * The question goes in whole. Its `criteria` decide as much about whether a
+     * query is any good as its instruction does, and a check shown the
+     * instruction alone cannot tell a query that settles an edge case from one
+     * that leaves it open
      *
      * @return array<string, mixed>
      */
     public function stateWith(ReviewedQuestion $question): array
     {
         return [
-            'question' => $question->instructionsText(),
+            'question' => $question->asState(),
             'state' => $this->state,
         ];
     }

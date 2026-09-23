@@ -4,8 +4,9 @@ The sources hold one question per entry, each with its label attached. A query f
 holds the questions grouped as jevlint takes them, with the labels stripped, because a
 label is evidence about a question and not part of it.
 
-No query file carries a state. `harvest.py` runs `--no-state`, so the state-scoped
-checks are never asked and a state would change nothing it records.
+A question the docs published with a state is grouped by that state, because a state
+belongs to one request. `states.py` recovers those, and the questions whose page builds
+its state at run time are grouped together with none.
 
     python3 corpus/build.py [outdir]     # default local/corpus
 """

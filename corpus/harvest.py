@@ -8,6 +8,13 @@ Query files that carry a state are asked with it, so the state-scoped checks are
 measured on the material the documentation ran them against. The files whose
 state the page computes at run time carry none, and the run says which checks
 that left out.
+
+`--only=<check ids>` scores those checks and merges them into the readings
+already recorded, leaving every other check's numbers where they were. A check
+added to the catalogue is folded in for the price of itself, instead of buying
+the whole corpus again and moving every published figure.
+
+    python3 corpus/harvest.py [path/to/.env] [--only=<ids>] [--out=<file>]
 """
 import json, os, pathlib, subprocess, sys
 from datetime import datetime, timezone
@@ -24,7 +31,21 @@ if env_file and not pathlib.Path(env_file).is_file():
 if not env_file and not os.environ.get('TYPESAFE_API_KEY'):
     sys.exit('Set TYPESAFE_API_KEY, or pass an env file: python3 corpus/harvest.py path/to/.env')
 
-scored, calls = {}, 0
+only = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--only=')), None)
+
+# A narrowed run adds to what is there. Starting from nothing would write out a
+# file holding one check and read as every other check scoring zero.
+held = json.loads(out_path.read_text()) if only and out_path.is_file() else {}
+scored = held.get('scores', {})
+
+# The readings in the file were paid for, and a narrowed run adds to them rather
+# than replacing them, so the cost it records is the cost of the whole file.
+calls = held.get('calls', 0)
+
+# What this run has written. A narrowed run replaces the reading it already held
+# for a check instead of taking the higher of the two, and a check asked
+# several times about one question still keeps its strongest reading.
+written = set()
 
 for f in sorted(pathlib.Path('local/corpus').glob('*.json')):
     if f.name == 'all-scores.json':
@@ -32,6 +53,7 @@ for f in sorted(pathlib.Path('local/corpus').glob('*.json')):
 
     out = subprocess.run(
         ['php', 'php/bin/jevlint', 'check', str(f), '--all', '--format=json']
+        + ([f'--only={only}'] if only else [])
         + ([f'--env-file={env_file}'] if env_file else []),
         capture_output=True, text=True).stdout
 
@@ -57,9 +79,12 @@ for f in sorted(pathlib.Path('local/corpus').glob('*.json')):
         # is asked per pair, `state/irrelevant-field` per field - produces several
         # readings. Keeping the last silently discarded the rest and understated the
         # check; the strongest reading is the one a run would have reported.
-        at = scored.setdefault(f'{f.stem}/{finding["target"]}', {})
+        key = f'{f.stem}/{finding["target"]}'
+        at = scored.setdefault(key, {})
         check = finding['check']
-        at[check] = max(at.get(check, 0.0), finding['probability'])
+        held = at.get(check, 0.0) if (key, check) in written else 0.0
+        written.add((key, check))
+        at[check] = max(held, finding['probability'])
 
     print(f'  {f.stem}: {d["summary"]["calls"]} calls', file=sys.stderr)
 

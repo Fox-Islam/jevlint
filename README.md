@@ -130,7 +130,7 @@ low on its broken one, which is the `inverted` verdict, and the run fails.
 
 | Failure mode | Checks |
 | --- | --- |
-| [Literal reading](https://docs.typesafe.ai/model-jaggedness/jev-1.13#literal-reading) | `question/undefined-boundary` |
+| [Literal reading](https://docs.typesafe.ai/model-jaggedness/jev-1.13#literal-reading) | `question/undefined-boundary`, `question/unsettled-case` |
 | [Math and numbers](https://docs.typesafe.ai/model-jaggedness/jev-1.13#math-and-numbers) | `question/arithmetic`, `question/numeric-representation` |
 | [Date and time](https://docs.typesafe.ai/model-jaggedness/jev-1.13#date-and-time-comparison) | `question/date-comparison` |
 | [Indirection](https://docs.typesafe.ai/model-jaggedness/jev-1.13#indirection) | `question/indirection`, `question/double-negative` |
@@ -182,9 +182,9 @@ Measured, and the measurements are in the repository. The short version:
 
 - **The checks separate a well-written question from a badly written one.** Each ships two
   example sets in unrelated domains; taking whichever it does worse on, the clean example
-  scores a median 0.08 and the broken one 0.90.
+  scores a median 0.17 and the broken one 0.87.
 - **Every defect the TypeSafe documentation gives an example for is caught**, 14 of 14. On
-  material the documentation publishes as correct, firing rates run from 0 to 8%.
+  material the documentation publishes as correct, firing rates run from 0 to 28%.
 - **Severity is what the defect costs, measured.** Joining a second condition to a question
   that every case already satisfies takes the answers from 15 of 20 to 11 of 20 and doubles the
   Brier score, so `question/compound-judgment` is an error. Three checks are advice because
@@ -219,8 +219,8 @@ is.** They move independently, and the report shows both because neither answers
 
 `question/type-mismatch` can report `advice` at a probability of 1.00: the check is certain the
 answers would fit a Score better, and the query works either way, so the cost of ignoring it is
-small. `question/arithmetic` is an `error` at 0.97 because a question that asks Jev to count
-returns a wrong number.
+small. `question/arithmetic` is an `error` at any probability that clears its trigger, because a
+question that asks Jev to count returns a wrong number.
 
 This matters for `--min`. Filtering to `warning` hides advice whatever its probability, so a
 run gated that way can pass while carrying the most confident finding in the report.
@@ -303,6 +303,13 @@ one moves the wording and whatever the generator decided the question meant at t
 time, and the spread cannot then be attributed to either. That is what `--variants` is for:
 a rewording you wrote, so that when the answer moves, the disagreement is between you and
 the model.
+
+It also names any yes/no question whose unchanged answer landed within 0.15 of the middle, where
+the threshold reading it decides the outcome instead of the query. Where the repeats fell on both
+sides of that middle it reports that too: the answer did not hold still between sends. A Choice
+reports its winning label and a Score a position on its scale, so neither has a middle and
+neither is counted. The band is a judgement, not a figure any run here sets, and it changes no
+exit code.
 
 Movement is reported in multiples of the repeat spread, and counted when it clears both three
 times that spread and 0.05. The spread is the sample deviation of the repeats, or 0.0085 where

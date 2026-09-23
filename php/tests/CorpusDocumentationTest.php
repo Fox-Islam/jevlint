@@ -18,6 +18,27 @@ final class CorpusDocumentationTest extends TestCase
      * Naming a script in the table of what each one is does not say how to run
      * it. Only the fenced blocks carry a command, so only those count.
      */
+    /**
+     * A file the other scripts import is a shared helper and not a command, so
+     * it is documented where its callers are and not as a line to run
+     */
+    private static function isImported(string $script): bool
+    {
+        $module = basename($script, '.py');
+
+        foreach (glob(self::CORPUS.'/*.py') ?: [] as $other) {
+            if ($other === $script) {
+                continue;
+            }
+
+            if (preg_match('/^(from|import) '.preg_quote($module, '/').'\b/m', (string) file_get_contents($other)) === 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function test_every_corpus_script_has_a_command_somebody_can_run(): void
     {
         $readme = (string) file_get_contents(self::CORPUS.'/README.md');
@@ -28,9 +49,11 @@ final class CorpusDocumentationTest extends TestCase
         $missing = [];
 
         foreach (glob(self::CORPUS.'/*.py') ?: [] as $script) {
-            if (! str_contains($commands, 'corpus/'.basename($script))) {
-                $missing[] = basename($script);
+            if (str_contains($commands, 'corpus/'.basename($script)) || self::isImported($script)) {
+                continue;
             }
+
+            $missing[] = basename($script);
         }
 
         self::assertSame([], $missing, sprintf(

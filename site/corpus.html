@@ -38,11 +38,16 @@
 <tr>
 <td><code>scores.json</code></td>
 <td>what every check put on every one of them</td>
-<td>a run of <code>harvest.py</code></td>
+<td>runs of <code>harvest.py</code>, 286 calls so far</td>
 </tr>
 <tr>
 <td><code>build.py</code></td>
 <td>the three above, as query files jevlint can read</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>answers.py</code></td>
+<td>asking Jev one question and scoring the answer against its label, for the scripts that do both</td>
 <td>-</td>
 </tr>
 <tr>
@@ -111,6 +116,11 @@
 <td>none needed</td>
 </tr>
 <tr>
+<td><code>borderline.py</code></td>
+<td><code>question/unsettled-case</code>, on paragraphs with an edge planted in them</td>
+<td>planted, the edge being known</td>
+</tr>
+<tr>
 <td><code>encoded.py</code></td>
 <td>whether a value written as hex costs an answer</td>
 <td>computed, not judged</td>
@@ -170,7 +180,13 @@ python3 corpus/contradiction.py       # criteria inverted against the instructio
 python3 corpus/boundary.py            # a boundary taken out of the policy that defines it
 python3 corpus/encoded.py             # the same comparison over a value written plainly and as hex
 python3 corpus/dogfood.py             # the catalogue's own wordings, as queries jevlint can read
+python3 corpus/borderline.py --items=12   # an edge planted in a paragraph, six arms over each
 </code></pre>
+<p><code>borderline.py</code> measures <code>question/unsettled-case</code>, which reads the reviewed question's
+<code>criteria</code> beside the state. That is what <code>scope: state</code> shows a check, and it is the reason it
+can work at all: shown the instruction line alone it reads 0.31 on a defect and 0.49 on the
+repair for it, because the repair is in the criteria; shown the whole question the same two read
+0.63 and 0.08.</p>
 <p><code>decision.py</code> is the strongest evidence here about a state-scoped check. decision-v7 ships states
 holding a <code>policy</code> and a <code>case</code>, the question asked about them, and the answer it should get, so
 removing the policy makes the state unable to answer the question and changes nothing else. It
@@ -182,6 +198,10 @@ set so two runs measure the same material, sends each paragraph as the state and
 the question, and records what <code>state/answer-absent</code> read. <a href="evidence.html">Evidence</a>
 carries
 the result.</p>
+<p><code>harvest.py --only=&lt;check ids&gt;</code> scores those checks and merges them into the readings already
+recorded, leaving every other check's numbers where they were and adding what the run paid to
+the cost the file carries. A check added to the catalogue is folded in for the price of itself,
+instead of buying the whole corpus again and moving every published figure.</p>
 <p><code>harvest.py</code> uses <code>TYPESAFE_API_KEY</code> from the environment. Pass an env file as its
 argument, or set <code>JEVLINT_ENV_FILE</code>, if the key lives somewhere else; it refuses to start
 instead of running every check against a file that is not there.</p>

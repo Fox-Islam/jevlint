@@ -33,27 +33,22 @@ ran, which is what the self-test comparison against the pinned build inferred fr
 
 The checks are Jev questions, so the linter runs on them, every wording of every one:
 
-The 18 question-scoped wordings come back with one or two findings, over 38 to 40 calls depending
-on how many readings land near a trigger and are asked again. What comes back is
-`state/answer-absent` on the synthetic state the file carries, a hair over its trigger, and
-`question/type-mismatch` reading a check's own wording as better suited to another primitive.
-Both are artefacts of putting a check in the position of a query, not defects in the catalogue.
-The run also notes that the checks comparing questions did not run, because 18 questions make
-more pairs than one call carries - a limitation of this file, not of the catalogue.
+The 18 question-scoped wordings come back with one finding, over 40 calls. It is
+`question/type-mismatch` at 0.76, reading `question/arithmetic`'s own wording as better suited
+to another primitive, which is an artefact of putting a check in the position of a query instead
+of a defect in the catalogue. The run also notes that the checks comparing questions did not
+run, because 18 questions make more pairs than one call carries - a limitation of this file, not
+of the catalogue.
 
-The five wordings in the state file, over 13 or 14 calls depending on how many readings land near
-a trigger, return two findings, and both are artefacts of how the file that
-holds them is built instead of defects in the catalogue: a distractor field planted so the
-state checks have something to read, which `state/irrelevant-field` correctly flags, and the
-two wordings of `state/answer-absent`, which `query/overlapping-questions` reads as two
-questions asking the same judgement. In a real run those two wordings are one check in one
-call.
+The six wordings in the state file come back with one finding, over 16 calls: a distractor field
+planted so the state checks have something to read, which `state/irrelevant-field` reports at
+0.86. Both call counts move with how many readings land near a trigger and are asked again.
 
-`state/answer-absent` is the check that most often cannot decide about the catalogue. Asked
-about several of these wordings its readings fall on both sides of its 0.60 trigger. Which way
-that lands is run-dependent: where the mean clears the trigger the finding is reported and says
-on its own line that its readings disagreed, and where it does not the check is listed as
-undecided instead. Both are the report refusing to pick a side it cannot support.
+`state/answer-absent` is the check that comes closest to firing on the catalogue without doing
+so. Its highest reading over the question file is 0.56 against a 0.60 trigger, on one wording of
+`choice/overlapping-options`. Which side of the trigger a reading that close lands on is
+run-dependent, and this page has previously recorded the same file returning it as a finding
+and returning it as undecided. Both are the report refusing to pick a side it cannot support.
 
 ## Asking a check more than one way
 
@@ -68,32 +63,40 @@ both catches that case and leaves the gold example above its trigger.
 
 ## What the linter finds in a query written to be bad
 
-`examples/broken-triage.json` carries one planted defect per question. Every one comes back:
+`examples/broken-triage.json` carries one planted defect per question. Four of the five come
+back; the fifth is the interesting row:
 
 | question | found |
 | --- | --- |
-| "Is this ticket free of spam and also written by a real customer?" | negated phrasing 0.88, two judgements in one question 0.90 |
-| "Were more than two charges made before the account's renewal date?" | arithmetic 0.97, date comparison 0.81, reaches its subject through another thing 0.81, and the state cannot answer it 0.65 |
+| "Is this ticket free of spam and also written by a real customer?" | negated phrasing 0.90, two judgements in one question 0.92 |
+| "Were more than two charges made before the account's renewal date?" | date comparison 0.85, reaches its subject through another thing 0.76, and the state cannot answer it 0.66. **`question/arithmetic` reads 0.46 against its 0.60 trigger and does not fire** |
 | "Rate severity from 0 to 2", levels `["0","1","2"]` | degrees instead of situations 0.96, plus the static rule for numeric levels |
-| "Which department?", options `billing` and `payments` | options do not cover every input 0.88, overlapping options 0.93, plus the static rules for an instruction that repeats its id and a missing fallback |
-| "What is the order number the customer refers to?" | generation 0.73, and a type that fits the answer better 0.89 |
+| "Which department?", options `billing` and `payments` | overlapping options 0.92, plus the static rules for an instruction that repeats its id and a missing fallback |
+| "What is the order number the customer refers to?" | generation 0.70, and a type that fits the answer better, at the full weight |
+
+**The arithmetic row is a check losing its own planted example.** "More than two charges" is a
+tally, which is what `question/arithmetic` exists to find, and this page recorded 0.97 for it.
+The question in the example file and the check's own wording are both unchanged between that
+reading and this one. The check separates its own two examples in `self-test`, so what a move
+of half a point on fixed inputs shows is the distance between a fixture and a query somebody
+wrote.
 
 One question comes back with a defect that was not planted in it. "the account's renewal date"
-reaches its subject through another thing, and `question/indirection` is right to say so. The
-reading on that question's `state/answer-absent` straddles its trigger, and the report marks it
-undecided, or reports it with the disagreement noted, depending on where the mean of those
-readings lands. It is never counted as both.
+reaches its subject through another thing, and `question/indirection` is right to say so.
 
-Six state fields are also flagged as read by no question. `examples/support-triage.json`, written
-to be clean, comes back with one advisory finding: the `plan` field, which none of its four
-questions reads.
+Six state fields are also flagged as read by no question, from 0.80 on `account.id` to 0.96 on
+`routing.experiment_bucket`. `examples/support-triage.json`, written to be clean, comes back
+with two advisory findings: the `plan` field at 0.90, which none of its four questions reads,
+and `question/unsettled-case` at 0.47 on "Does the customer say they cannot carry on using the
+product?" against a state saying the customer cannot place another order. Placing an order is
+using the product on one reading and not on another, and the question settles neither.
 
 | | calls | tokens | findings |
 | --- | --- | --- | --- |
-| `check` on the four-question clean example | 10 | 15,433 | 1 advice |
-| `check` on the five-question broken example | 12 | 20,932 | 4 errors, 6 warnings, 11 advice |
+| `check` on the four-question clean example | 11 | 16,980 | 2 advice |
+| `check` on the five-question broken example | 14 | 23,140 | 4 errors, 6 warnings, 11 advice |
 | `probe`, four questions, five repeats | 9 | 5,275 | one question moved |
-| `self-test`, whole catalogue | 118 | - | 20 checks, two example sets each |
+| `self-test`, whole catalogue | 124 | - | 21 checks, 42 example sets, all `ok` |
 
 TypeSafe reports no cost on a call, so these are token counts. `--no-state` removes the second
 call per question. The call counts move between runs: a reading that lands within 0.05 of its
@@ -111,7 +114,7 @@ and it is the borderline readings that decide which.
 | question | unchanged | repeat spread | rewritten |
 | --- | --- | --- | --- |
 | refund_requested | 0.990 | 0.0000 | 0.990 stripped of criteria, 1.000 as a Choice |
-| blocked | 0.714 | 0.0152 | 0.730 stripped of criteria, **0.870 as a Choice** |
+| blocked | 0.720 | 0.0158 | 0.690 stripped of criteria, **0.870 as a Choice** |
 | category | 1.000 | 0.0000 | 1.000 with the options reversed |
 | urgency | 0.995 | 0.0000 | 0.990 with the levels reversed |
 

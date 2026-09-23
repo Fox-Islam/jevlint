@@ -1,12 +1,12 @@
 {
   "catalogue": {
     "version": "1",
-    "fingerprint": "3c0aeb57d8d6",
-    "asked": "17ef6c4e731f",
+    "fingerprint": "199be3a3f726",
+    "asked": "cd2ee9e1671b",
     "model": "jev-1.13"
   },
-  "measured": "2026-09-22",
-  "calls": 250,
+  "measured": "2026-09-23",
+  "calls": 286,
   "scores": {
     "atarim-passages/candidate_2": {
       "query/overlapping-questions": 0.63,
@@ -1479,7 +1479,8 @@
       "score/multi-dimension": 0.76,
       "score/overlapping-levels": 0.24,
       "state/answer-absent": 0.205,
-      "query/overlapping-questions": 0.09
+      "query/overlapping-questions": 0.09,
+      "question/unsettled-case": 0.26
     },
     "docs_ex_state_00/primitives_score_2": {
       "question/compound-judgment": 0.46,
@@ -1495,7 +1496,8 @@
       "score/degree-levels": 0.34,
       "score/multi-dimension": 0.62,
       "score/overlapping-levels": 0.15,
-      "state/answer-absent": 0.11
+      "state/answer-absent": 0.11,
+      "question/unsettled-case": 0.59
     },
     "docs_ex_state_00/state": {
       "state/adversarial-content": 0.06
@@ -1512,7 +1514,8 @@
       "question/generation": 0.1,
       "question/type-mismatch": 0.16,
       "state/answer-absent": 0.06,
-      "query/overlapping-questions": 0.11
+      "query/overlapping-questions": 0.11,
+      "question/unsettled-case": 0.09
     },
     "docs_ex_state_01/introduction_quickstart_0": {
       "question/compound-judgment": 0.33,
@@ -1526,7 +1529,8 @@
       "question/criteria-off-topic": 0.21,
       "question/type-mismatch": 0.01,
       "choice/overlapping-options": 0.49,
-      "state/answer-absent": 0.49
+      "state/answer-absent": 0.49,
+      "question/unsettled-case": 0.17
     },
     "docs_ex_state_01/introduction_quickstart_1": {
       "question/compound-judgment": 0.35,
@@ -1543,7 +1547,8 @@
       "score/multi-dimension": 0.705,
       "score/overlapping-levels": 0.15,
       "state/answer-absent": 0.13,
-      "query/overlapping-questions": 0.05
+      "query/overlapping-questions": 0.05,
+      "question/unsettled-case": 0.52
     },
     "docs_ex_state_01/state": {
       "state/adversarial-content": 0.07
@@ -1560,7 +1565,8 @@
       "question/numeric-representation": 0.08,
       "question/generation": 0.23,
       "question/type-mismatch": 0.03,
-      "state/answer-absent": 0.06
+      "state/answer-absent": 0.06,
+      "question/unsettled-case": 0.11
     },
     "docs_ex_state_02/primitives_noul_3": {
       "query/overlapping-questions": 0.98,
@@ -1574,7 +1580,8 @@
       "question/numeric-representation": 0.04,
       "question/generation": 0.175,
       "question/type-mismatch": 0.03,
-      "state/answer-absent": 0.305
+      "state/answer-absent": 0.305,
+      "question/unsettled-case": 0.41
     },
     "docs_ex_state_02/primitives_noul_0": {
       "question/compound-judgment": 0.16,
@@ -1587,7 +1594,8 @@
       "question/numeric-representation": 0.08,
       "question/generation": 0.245,
       "question/type-mismatch": 0.03,
-      "state/answer-absent": 0.06
+      "state/answer-absent": 0.06,
+      "question/unsettled-case": 0.09
     },
     "docs_ex_state_02/primitives_noul_1": {
       "question/compound-judgment": 0.13,
@@ -1601,7 +1609,8 @@
       "question/generation": 0.19,
       "question/type-mismatch": 0.02,
       "state/answer-absent": 0.325,
-      "query/overlapping-questions": 0.03
+      "query/overlapping-questions": 0.03,
+      "question/unsettled-case": 0.34
     },
     "docs_ex_state_02/state": {
       "state/adversarial-content": 0.09
@@ -1616,7 +1625,8 @@
       "question/arithmetic": 0.1,
       "question/date-comparison": 0.06,
       "question/numeric-representation": 0.05,
-      "state/answer-absent": 0.4
+      "state/answer-absent": 0.4,
+      "question/unsettled-case": 0.22
     },
     "docs_ex_state_03/state": {
       "state/adversarial-content": 0.15
@@ -1633,7 +1643,8 @@
       "question/numeric-representation": 0.13,
       "question/generation": 0.255,
       "question/type-mismatch": 0.08,
-      "state/answer-absent": 0.085
+      "state/answer-absent": 0.085,
+      "question/unsettled-case": 0.09
     },
     "docs_ex_state_04/sdk_python_api_clients_async_3": {
       "query/overlapping-questions": 0.96,
@@ -1648,7 +1659,8 @@
       "question/criteria-off-topic": 0.08,
       "question/type-mismatch": 0.43,
       "choice/overlapping-options": 0.195,
-      "state/answer-absent": 0.11
+      "state/answer-absent": 0.11,
+      "question/unsettled-case": 0.37
     },
     "docs_ex_state_04/sdk_python_api_clients_sync_0": {
       "query/overlapping-questions": 0.98,
@@ -1662,7 +1674,8 @@
       "question/numeric-representation": 0.14,
       "question/generation": 0.26,
       "question/type-mismatch": 0.11,
-      "state/answer-absent": 0.09
+      "state/answer-absent": 0.09,
+      "question/unsettled-case": 0.08
     },
     "docs_ex_state_04/sdk_python_api_clients_sync_1": {
       "query/overlapping-questions": 0.96,
@@ -1677,7 +1690,8 @@
       "question/criteria-off-topic": 0.07,
       "question/type-mismatch": 0.51,
       "choice/overlapping-options": 0.185,
-      "state/answer-absent": 0.11
+      "state/answer-absent": 0.11,
+      "question/unsettled-case": 0.33
     },
     "docs_ex_state_04/sdk_python_api_clients_sync_2": {
       "query/overlapping-questions": 0.98,
@@ -1691,7 +1705,8 @@
       "question/numeric-representation": 0.11,
       "question/generation": 0.265,
       "question/type-mismatch": 0.07,
-      "state/answer-absent": 0.09
+      "state/answer-absent": 0.09,
+      "question/unsettled-case": 0.09
     },
     "docs_ex_state_04/sdk_python_api_clients_sync_3": {
       "query/overlapping-questions": 0.96,
@@ -1706,7 +1721,8 @@
       "question/criteria-off-topic": 0.07,
       "question/type-mismatch": 0.41,
       "choice/overlapping-options": 0.185,
-      "state/answer-absent": 0.105
+      "state/answer-absent": 0.105,
+      "question/unsettled-case": 0.33
     },
     "docs_ex_state_04/sdk_python_api_clients_async_0": {
       "question/compound-judgment": 0.12,
@@ -1719,7 +1735,8 @@
       "question/numeric-representation": 0.13,
       "question/generation": 0.25,
       "question/type-mismatch": 0.08,
-      "state/answer-absent": 0.09
+      "state/answer-absent": 0.09,
+      "question/unsettled-case": 0.08
     },
     "docs_ex_state_04/sdk_python_api_clients_async_1": {
       "question/compound-judgment": 0.23,
@@ -1734,7 +1751,8 @@
       "question/type-mismatch": 0.49,
       "choice/overlapping-options": 0.175,
       "state/answer-absent": 0.105,
-      "query/overlapping-questions": 0.03
+      "query/overlapping-questions": 0.03,
+      "question/unsettled-case": 0.35
     },
     "docs_ex_state_04/state": {
       "state/adversarial-content": 0.12
@@ -1752,7 +1770,8 @@
       "question/criteria-off-topic": 0.13,
       "question/type-mismatch": 0.01,
       "choice/overlapping-options": 0.54,
-      "state/answer-absent": 0.46
+      "state/answer-absent": 0.46,
+      "question/unsettled-case": 0.08
     },
     "docs_ex_state_05/primitives_choice_0": {
       "question/compound-judgment": 0.31,
@@ -1766,7 +1785,8 @@
       "question/criteria-off-topic": 0.14,
       "question/type-mismatch": 0.01,
       "choice/overlapping-options": 0.57,
-      "state/answer-absent": 0.455
+      "state/answer-absent": 0.455,
+      "question/unsettled-case": 0.07
     },
     "docs_ex_state_05/state": {
       "state/adversarial-content": 0.06
@@ -1783,7 +1803,8 @@
       "question/criteria-off-topic": 0.07,
       "question/type-mismatch": 0.0,
       "choice/overlapping-options": 0.415,
-      "state/answer-absent": 0.15
+      "state/answer-absent": 0.15,
+      "question/unsettled-case": 0.44
     },
     "docs_ex_state_06/primitives_choice_3": {
       "question/compound-judgment": 0.16,
@@ -1798,7 +1819,8 @@
       "question/type-mismatch": 0.0,
       "choice/overlapping-options": 0.35,
       "state/answer-absent": 0.34,
-      "query/overlapping-questions": 0.11
+      "query/overlapping-questions": 0.11,
+      "question/unsettled-case": 0.76
     },
     "docs_ex_state_06/primitives_choice_4": {
       "question/compound-judgment": 0.19,
@@ -1813,7 +1835,8 @@
       "question/type-mismatch": 0.0,
       "choice/overlapping-options": 0.455,
       "state/answer-absent": 0.245,
-      "query/overlapping-questions": 0.09
+      "query/overlapping-questions": 0.09,
+      "question/unsettled-case": 0.67
     },
     "docs_ex_state_06/primitives_choice_5": {
       "question/compound-judgment": 0.27,
@@ -1827,7 +1850,8 @@
       "question/criteria-off-topic": 0.06,
       "choice/overlapping-options": 0.48,
       "state/answer-absent": 0.095,
-      "query/overlapping-questions": 0.05
+      "query/overlapping-questions": 0.05,
+      "question/unsettled-case": 0.39
     },
     "docs_ex_state_06/state": {
       "state/adversarial-content": 0.06
@@ -1847,7 +1871,8 @@
       "score/degree-levels": 0.09,
       "score/multi-dimension": 0.52,
       "score/overlapping-levels": 0.15,
-      "state/answer-absent": 0.26
+      "state/answer-absent": 0.26,
+      "question/unsettled-case": 0.51
     },
     "docs_ex_state_07/primitives_score_0": {
       "question/compound-judgment": 0.49,
@@ -1863,7 +1888,8 @@
       "score/degree-levels": 0.08,
       "score/multi-dimension": 0.51,
       "score/overlapping-levels": 0.15,
-      "state/answer-absent": 0.26
+      "state/answer-absent": 0.26,
+      "question/unsettled-case": 0.54
     },
     "docs_ex_state_07/state": {
       "state/adversarial-content": 0.04
@@ -1880,7 +1906,8 @@
       "question/numeric-representation": 0.12,
       "question/generation": 0.25,
       "question/type-mismatch": 0.06,
-      "state/answer-absent": 0.085
+      "state/answer-absent": 0.085,
+      "question/unsettled-case": 0.07
     },
     "docs_ex_state_08/sdk_python_4": {
       "query/overlapping-questions": 0.98,
@@ -1895,7 +1922,8 @@
       "question/criteria-off-topic": 0.06,
       "question/type-mismatch": 0.7,
       "choice/overlapping-options": 0.5,
-      "state/answer-absent": 0.08
+      "state/answer-absent": 0.08,
+      "question/unsettled-case": 0.34
     },
     "docs_ex_state_08/sdk_python_5": {
       "query/overlapping-questions": 0.99,
@@ -1912,7 +1940,8 @@
       "score/degree-levels": 0.4,
       "score/multi-dimension": 0.08,
       "score/overlapping-levels": 0.25,
-      "state/answer-absent": 0.22
+      "state/answer-absent": 0.22,
+      "question/unsettled-case": 0.415
     },
     "docs_ex_state_08/sdk_python_0": {
       "question/compound-judgment": 0.12,
@@ -1925,7 +1954,8 @@
       "question/numeric-representation": 0.12,
       "question/generation": 0.25,
       "question/type-mismatch": 0.06,
-      "state/answer-absent": 0.09
+      "state/answer-absent": 0.09,
+      "question/unsettled-case": 0.08
     },
     "docs_ex_state_08/sdk_python_1": {
       "question/compound-judgment": 0.28,
@@ -1940,7 +1970,8 @@
       "question/type-mismatch": 0.7,
       "choice/overlapping-options": 0.525,
       "state/answer-absent": 0.09,
-      "query/overlapping-questions": 0.03
+      "query/overlapping-questions": 0.03,
+      "question/unsettled-case": 0.36
     },
     "docs_ex_state_08/sdk_python_2": {
       "question/compound-judgment": 0.51,
@@ -1957,7 +1988,8 @@
       "score/multi-dimension": 0.08,
       "score/overlapping-levels": 0.23,
       "state/answer-absent": 0.225,
-      "query/overlapping-questions": 0.07
+      "query/overlapping-questions": 0.07,
+      "question/unsettled-case": 0.445
     },
     "docs_ex_state_08/state": {
       "state/irrelevant-field": 0.04,

@@ -371,6 +371,37 @@
       "action": "rewrite"
     },
     {
+      "id": "question/unsettled-case",
+      "title": "The state holds a case the question does not settle",
+      "mode": "model",
+      "scope": "state",
+      "applies_to": [
+        "noul",
+        "choice",
+        "score"
+      ],
+      "severity": "advice",
+      "trigger": 0.45,
+      "jaggedness": [
+        "literal-reading"
+      ],
+      "question": {
+        "type": "noul",
+        "instructions": "The material in `state` holds a case on the edge of what the question in `question` asks about, and the question does not say which side it falls on.",
+        "criteria": {
+          "true": "Something in the state sits on the edge of the question: the thing asked about is mentioned and negated, quoted, hypothetical, partial or part of something larger, or it falls between two of the levels or options on offer. Neither the instructions nor the criteria say where such a case belongs.",
+          "false": "Everything in the state falls plainly on one side of the question, or the instructions or the criteria say where the edge case in the state belongs. Material that the question simply does not cover is outside it, not on its edge."
+        }
+      },
+      "hint": "A question is written against the material its author had in mind, and meets the material that arrives. \"Does the text contain hello?\" reads 0.59 against a state of \"not hello\", and 0.95 once the criteria say a negated mention still counts, so the defect has a measured cost. The trigger is 0.45 because on twelve paragraphs with an edge planted in them, run twice, the arms that should fire read 0.48 and up and the arms that should not read 0.32 and down. This is advice and not a warning because its rate on clean material is not established: it fires on 5 of the 18 documentation questions that carry a state, the highest rate in this catalogue, and the case for those being real findings instead of false ones is one person reading five queries. Accept it where the edge case is settled by a convention the reader already shares, so naming it in the question would repeat what the material settles.",
+      "docs": "https://docs.typesafe.ai/model-jaggedness/jev-1.13#literal-reading",
+      "message": "The material holds a case on the edge of what this question asks, and nothing says which side it falls on.",
+      "suggest": "Name the edge case and say where it belongs, in the instructions or in a criterion. Saying that a negated mention still counts as a mention moved a reading from 0.59 to 0.95 on the same state.",
+      "reads": "question",
+      "action": "rewrite",
+      "advice": "Read this one before acting on it. The rewrite it asks for is measured on one question; how often it points at a query that is already fine is not."
+    },
+    {
       "id": "question/indirection",
       "title": "The question reaches its subject through another thing",
       "mode": "model",
@@ -849,7 +880,7 @@
           "false": "Answering the question needs something this field holds."
         }
       },
-      "hint": "Unrelated detail acts as a distractor, and a larger state makes a wrong answer harder to trace. Accept it where the field is carried for something other than this query - an audit trail, a downstream consumer, a field you are about to start reading.",
+      "hint": "Unrelated detail acts as a distractor, and a larger state makes a wrong answer harder to trace. Size is not what costs an answer: on decision-v7's policy cases the answers hold at one line of spare field, at 14,000 characters of it, and where the field holds another claim reading like the one being asked about, and a language router holds at 4,851 characters of unrelated English. The same router loses eight of its thirteen accepted-correct answers to 414 characters of Japanese, because it asks which language a text is written in and the spare field is text. Nothing here reads that pairing, so this is advice at every size, and a field worth acting on is one whose content is what the question judges. Accept it where the field is carried for something other than this query - an audit trail, a downstream consumer, a field you are about to start reading.",
       "docs": "https://docs.typesafe.ai/model-jaggedness/jev-1.13#large-state-full-of-irrelevant-detail",
       "message": "The field `{field}` holds nothing the questions read.",
       "suggest": "Leave `{field}` out of the state, or build the state from the fields each question needs.",

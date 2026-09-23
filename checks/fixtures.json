@@ -915,6 +915,61 @@
         "type": "noul",
         "instructions": "Was the parcel delivered?"
       }
+    },
+    {
+      "check": "question/unsettled-case",
+      "clean": {
+        "question": "Does the customer ask for a refund?",
+        "state": {
+          "message": "I was charged twice for order A-104. Please refund the duplicate."
+        }
+      },
+      "broken": {
+        "question": "Does the message mention a refund?",
+        "state": {
+          "message": "I am not asking for a refund, I want the duplicate charge reversed."
+        }
+      },
+      "fixed": {
+        "question": {
+          "instructions": "Does the message mention a refund?",
+          "criteria": {
+            "true": "The message uses the word refund, including where it says that a refund is not what is wanted.",
+            "false": "The message does not use the word refund anywhere."
+          }
+        },
+        "state": {
+          "message": "I am not asking for a refund, I want the duplicate charge reversed."
+        }
+      }
+    },
+    {
+      "check": "question/unsettled-case",
+      "domain": "parcels",
+      "clean": {
+        "question": "Does the label say the parcel is a return?",
+        "state": {
+          "label": "Return to sender, RMA 8812, collected from the depot on Tuesday."
+        }
+      },
+      "broken": {
+        "question": "Does the label say the parcel is fragile?",
+        "state": {
+          "label": "Handle with care where the contents are fragile. No fragile marking was applied to this consignment."
+        }
+      },
+      "fixed": {
+        "question": {
+          "instructions": "Does the label say the parcel is fragile?",
+          "criteria": {
+            "true": "The label marks this consignment as fragile.",
+            "false": "The label does not mark this consignment as fragile, including where it explains what would happen if the contents were fragile."
+          }
+        },
+        "state": {
+          "label": "Handle with care where the contents are fragile. No fragile marking was applied to this consignment."
+        }
+      }
     }
   ]
 }

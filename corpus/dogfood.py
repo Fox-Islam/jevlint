@@ -33,10 +33,17 @@ question_scope = {
     "questions": {}
 }
 
-# What a state-scoped check is shown: the question, and the real state behind it.
+# What a state-scoped check is shown: the question in full, criteria included,
+# and the real state behind it. `Query::stateWith` builds the same shape.
 state_scope = {
     "state": {
-        "question": "Does the customer ask for a refund?",
+        "question": {
+            "instructions": "Does the customer ask for a refund?",
+            "criteria": {
+                "true": "The customer asks for money back, a refund, or a charge to be reversed.",
+                "false": "The customer reports a problem without asking for money back."
+            }
+        },
         "state": {
             "ticket": "I was charged twice for order A-104. Please refund the duplicate.",
             "routing": {"cdn_pop": "lhr-3", "shard": 7}

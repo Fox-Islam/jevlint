@@ -152,8 +152,13 @@ final class SelfTest
             return ['questions' => $example['pair'] ?? []];
         }
 
+        // The same shape a run shows a state-scoped check. A fixture writes its
+        // question as text where it carries no criteria, and as an object where
+        // it does, so the two cannot drift apart.
+        $question = $example['question'] ?? '';
+
         return [
-            'question' => $example['question'] ?? '',
+            'question' => is_array($question) ? $question : ['instructions' => $question],
             'state' => $example['state'] ?? null,
         ];
     }

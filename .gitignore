@@ -4,3 +4,4 @@
 /js/dist/
 .env
 .phpunit.result.cache
+__pycache__/
