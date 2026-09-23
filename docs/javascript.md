@@ -18,7 +18,7 @@ through it, so a caller here gets the report the CLI prints instead of a second 
 of it.
 
 ```ts
-import { Linter, Query } from 'jevlint';
+import { Linter, Query } from '@phox-js/jevlint';
 
 const report = await Linter.fromEnvironment().check(Query.fromObject({
     state: { ticket: 'I was charged twice for order A-104.' },
@@ -59,7 +59,7 @@ a patch that rebuilds `criteria` — keeps it.
 model path runs in a test against a function instead of a network:
 
 ```ts
-import { Client, Linter } from 'jevlint';
+import { Client, Linter } from '@phox-js/jevlint';
 
 const client = Client.make({
     apiKey: 'not-used',
