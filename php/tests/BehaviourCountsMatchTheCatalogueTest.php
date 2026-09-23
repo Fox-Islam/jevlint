@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class BehaviourCountsMatchTheCatalogueTest extends TestCase
 {
-    private const WORDS = [6 => 'six', 18 => '18', 21 => '21', 42 => '42', 124 => '124'];
+    private const WORDS = [7 => 'seven', 18 => '18', 21 => '21', 42 => '42', 124 => '124'];
 
     /**
      * Each figure with the words the page sets it in, so a constant changed to

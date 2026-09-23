@@ -34,27 +34,30 @@ produces it again, at the cost of the calls.
 
 | check | clean | broken | fixed | span |
 | --- | --- | --- | --- | --- |
-| `question/type-mismatch` | 0.03 | 0.99 | 0.01 | 0.96 |
+| `question/type-mismatch` | 0.03 | 0.99 | 0.00 | 0.96 |
 | `state/irrelevant-field` | 0.03 | 0.96 | 0.03 | 0.93 |
-| `noul/negated-phrasing` | 0.04 | 0.94 | 0.05 | 0.90 |
-| `question/criteria-off-topic` | 0.07 | 0.97 | 0.06 | 0.90 |
-| `question/date-comparison` | 0.08 | 0.96 | 0.05 | 0.88 |
+| `noul/negated-phrasing` | 0.07 | 0.96 | 0.06 | 0.89 |
+| `question/criteria-off-topic` | 0.07 | 0.96 | 0.05 | 0.89 |
+| `question/date-comparison` | 0.08 | 0.96 | 0.06 | 0.88 |
 | `score/degree-levels` | 0.05 | 0.92 | 0.06 | 0.87 |
-| `question/double-negative` | 0.03 | 0.87 | 0.03 | 0.84 |
-| `question/undefined-boundary` | 0.09 | 0.92 | 0.17 | 0.83 |
-| `question/numeric-representation` | 0.17 | 0.96 | 0.08 | 0.79 |
-| `question/criteria-contradiction` | 0.17 | 0.94 | 0.05 | 0.77 |
-| `state/adversarial-content` | 0.22 | 0.97 | n/a | 0.75 |
-| `query/overlapping-questions` | 0.02 | 0.76 | 0.02 | 0.74 |
-| `score/multi-dimension` | 0.18 | 0.86 | 0.26 | 0.68 |
-| `question/compound-judgment` | 0.19 | 0.84 | 0.16 | 0.65 |
-| `question/indirection` | 0.22 | 0.83 | 0.48 | 0.61 |
-| `question/arithmetic` | 0.07 | 0.66 | 0.07 | 0.59 |
-| `question/unsettled-case` | 0.17 | 0.72 | 0.14 | 0.55 |
-| `score/overlapping-levels` | 0.27 | 0.80 | 0.14 | 0.53 |
-| `choice/overlapping-options` | 0.39 | 0.84 | 0.36 | 0.46 |
-| `question/generation` | 0.26 | 0.69 | 0.15 | 0.43 |
-| `state/answer-absent` | 0.47 | 0.78 | 0.14 | 0.31 |
+| `question/undefined-boundary` | 0.08 | 0.92 | 0.16 | 0.84 |
+| `question/refers-to-sibling` | 0.10 | 0.94 | 0.41 | 0.84 |
+| `question/criteria-contradiction` | 0.13 | 0.94 | 0.05 | 0.81 |
+| `choice/undetermined-outcome` | 0.10 | 0.91 | 0.07 | 0.81 |
+| `question/numeric-representation` | 0.17 | 0.95 | 0.08 | 0.78 |
+| `question/double-negative` | 0.03 | 0.80 | 0.03 | 0.77 |
+| `query/overlapping-questions` | 0.02 | 0.75 | 0.03 | 0.73 |
+| `state/adversarial-content` | 0.27 | 0.97 | n/a | 0.70 |
+| `score/multi-dimension` | 0.19 | 0.87 | 0.23 | 0.68 |
+| `question/compound-judgment` | 0.18 | 0.83 | 0.17 | 0.65 |
+| `question/indirection` | 0.21 | 0.85 | 0.47 | 0.64 |
+| `question/arithmetic` | 0.06 | 0.67 | 0.07 | 0.61 |
+| `question/answerable-in-code` | 0.35 | 0.89 | 0.20 | 0.54 |
+| `question/unsettled-case` | 0.16 | 0.69 | 0.14 | 0.53 |
+| `score/overlapping-levels` | 0.29 | 0.81 | 0.14 | 0.52 |
+| `choice/overlapping-options` | 0.20 | 0.72 | 0.21 | 0.52 |
+| `question/generation` | 0.24 | 0.71 | 0.18 | 0.46 |
+| `state/answer-absent` | 0.45 | 0.79 | 0.12 | 0.35 |
 
 **Every column here is one reading.** A fixture is asked once, on a model whose repeat spread is
 about 0.035, and the verdict is decided by comparing that single draw against the trigger. Where a
@@ -68,6 +71,16 @@ one safety concern" - read 0.61 to 0.63 against a matched rubric at 0.27. Both c
 but containment clears it by 0.02 and duplication by 0.22, so a containment finding is the one to
 read rather than gate on. Where a narrower level can be read as excluding the wider one, as
 "cleaned" can be read as "cleaned and not bevelled", it reads 0.46 and does not fire.
+
+**A check that names one level names one of several, and which one follows the listing
+order.** `corpus/locators.py` asks each `locate_mode: pick` locator over its broken example
+twice, with the elements as written and reversed. `choice/overlapping-options` names the same
+option either way round in both domains. The four `score` examples do not: reversing the levels
+moves the level named on three of them and on one of the two repeats of the fourth. In every one
+of the four, more than one level carries the fault the locator is choosing between - both members
+of an overlapping pair overlap, and every level of a rubric mixing qualities mixes them - so each
+answer is right and the order decides which right answer comes back. Read a located level as
+where to start.
 
 `state/answer-absent` has the narrowest span, 0.31, because its clean example in the
 parcel domain reads 0.47: a question answerable from a two-field state still reads as nearly a
@@ -95,12 +108,14 @@ against: one over the whole file, and one over what the checks ask. `corpus/meas
 the triggers from the catalogue on disk and compares the second, because rewording a hint leaves
 the answers untouched while rewording a check's own question does not. Where the two ask
 different things it prints the mismatch and names both, since a rate is then a threshold applied
-to answers nobody gave it. The table below was harvested on 2026-09-22 over 250 calls by
-`corpus/harvest.py`, from a catalogue asking `17ef6c4e731f`.
+to answers nobody gave it. The table below was harvested by `corpus/harvest.py` over 959 calls, the
+last of them on 2026-09-23 folding in `choice/undetermined-outcome` and leaving every other
+reading where it was, from a catalogue asking `e2c57c15a55c`.
 
 | check | catches the docs' own example | of those, quoted | fires on a question labelled clean | fires on a field query |
 | --- | --- | --- | --- | --- |
 | `choice/overlapping-options` | no gold example | - | 0 of 14 | 1 of 17, 1 of them shaky |
+| `choice/undetermined-outcome` | no gold example | - | 0 of 7 | not asked |
 | `noul/negated-phrasing` | 1 of 1 | 1 of 1 | 0 of 26 | 0 of 35 |
 | `query/overlapping-questions` | no gold example | - | 0 of 9 | 1 of 47, 1 of them shaky |
 | `question/arithmetic` | 1 of 1 | 1 of 1 | 0 of 52 | 0 of 62 |
@@ -109,6 +124,8 @@ to answers nobody gave it. The table below was harvested on 2026-09-22 over 250 
 | `question/double-negative` | 1 of 1 | - | 0 of 52 | 0 of 62 |
 | `question/indirection` | 1 of 1 | - | 0 of 52 | 0 of 62 |
 | `question/numeric-representation` | 1 of 1 | 1 of 1 | 0 of 52 | 0 of 62 |
+| `question/refers-to-sibling` | no gold example | - | 0 of 52 | 0 of 62 |
+| `question/answerable-in-code` | no gold example | - | 0 of 52 | 0 of 62 |
 | `question/type-mismatch` | no gold example | - | 0 of 50 | 4 of 56 |
 | `score/overlapping-levels` | no gold example | - | 0 of 13 | 0 of 10 |
 | `state/adversarial-content` | no gold example | - | 0 of 9 | not asked |
@@ -180,8 +197,8 @@ say how often it speaks, not how often it is right. Treat its advice as a prompt
 
 The field tier carries no labels, so a rate on it is a rate and not an error rate.
 
-The corpus holds readings for all 21 model checks, and a labelled defect to catch for eleven
-of them; the other 10 are measured only by how often they fire on material labelled clean. That
+The corpus holds readings for all 24 model checks, and a labelled defect to catch for eleven
+of them; the other thirteen are measured only by how often they fire on material labelled clean. That
 is the shape of the evidence: every check has been asked about somebody else's material, and
 fewer than half have been shown catching a defect somebody else named.
 
@@ -341,6 +358,24 @@ confidently.
 **The advice does not make the query right, it makes it answerable.** Even with the catch-all,
 half the cases still pick a wrong label. A finding cleared is not a question answered.
 
+**Where the catch-all is listed does not account for this.** A published account of the model
+reports a position bias, the correct option picked 16 of 16 times listed last against 12 of 16
+first, which would make an appended `other` a favoured slot rather than a better query.
+decision-v7 scatters its catch-all through the option list instead of appending it, so the
+figures above are not taken from one position, and `corpus/position.py` moves only the catch-all
+over 24 cases of each kind.
+
+| the catch-all is | the answer is none of the options | the answer is among them |
+| --- | --- | --- |
+| where decision-v7 put it | 14 of 24 | 20 of 24 |
+| listed first | 14 of 24 | 20 of 24 |
+| listed last | 14 of 24 | 21 of 24 |
+
+On the rows where the catch-all is the labelled answer, moving it from first to last changes
+which option is picked on **0 of 24** cases, and the mean reading on the label by 0.016. On the
+rows where it is wrong it changes one case of 24, a question with 78 options, and that one moves
+towards the label. Whatever the bias is measured on, it is not what `choice/no-fallback` buys.
+
 `choice/no-fallback`, `question/criteria-contradiction`, `score/multi-dimension`,
 `score/degree-levels`, `question/compound-judgment`, `question/double-negative` and
 `question/indirection` each have a measurement of this kind, scored against labels from outside
@@ -463,7 +498,7 @@ bug in the caller, not a worse answer, so measuring answer quality is the wrong 
 figure for it is reported here. It keeps its severity for the same reason `question/generation`
 keeps its own: what it guards against is real and is not a thing this corpus can see.
 
-## Two checks whose defect costs less than it looks
+## Three checks whose defect costs less than it looks
 
 **`question/undefined-boundary` finds its defect and the defect does not move the answer.** The
 contrastive states put the line in the policy, so the question as written has one; the panel
@@ -490,9 +525,31 @@ hex, with the answer computed rather than judged:
 Every answer right either way. That is a reason not to build the state-scoped sibling this check
 seems to want, and the reason it is `advice` with a title naming what it reads.
 
+**`question/answerable-in-code` names a defect that costs money and determinism, not answers.**
+Eight rules - an equality, a membership, a threshold, a list membership, an emptiness, a suffix,
+a case test and a literal substring - over twelve states generated by `corpus/mechanical.py`, so
+the answers are computed and nobody judges them:
+
+| | answers right | Brier |
+| --- | --- | --- |
+| all eight rules, twelve states | 96 of 96 | 0.001 |
+
+Every one right, and seven of the eight rules read past 0.9 on every state. Asking Jev to compare
+a field against a value is not a query that goes wrong; it is a call, a round trip and a
+probability where `==` gives a fact, paid on every request. That is why the check is `advice`,
+and why its suggestion is to take the question out rather than reword it.
+
+**Its boundary with two other checks is not clean.** Asked both ways over nineteen questions, a
+field lookup reads 0.73 and up and a question needing a reading of the material reads 0.42 and
+down, which is the separation the check is for. But a date comparison reads 0.64 and a colour
+written as hex reads 0.69, against a 0.70 trigger and a repeat spread of about 0.035: both are
+genuinely answerable in code, both already have a check of their own, and a run can report this
+one alongside. The `false` criteria name those defects as separate, which moved them down from
+0.74 and 0.70 without settling it.
+
 ## The checks with no labelled defect to catch
 
-Ten model checks have no gold negative. Two of them have a public dataset that is the defect,
+Thirteen model checks have no gold negative. Two of them have a public dataset that is the defect,
 and one can be labelled from the readings the corpus already holds.
 
 **`question/unsettled-case`, on paragraphs with an edge planted in them.** The check asks
@@ -659,6 +716,64 @@ conclusion the decision-v7 arms reach, on material nobody here planted.
 These figures are twelve sentences in one query language against three spare languages. They
 are enough to separate what costs an answer from what does not; they are not a rate.
 
+## The evidence behind two checks written from an outside measurement
+
+`jev-does-not-play-dice` is an independent project that asked Jev to name the result of a hidden
+fair draw. Its recorded numbers are in its own repository, not measured here: a Choice put a mean
+0.83 on the face it picked against a chance of 0.17, with accuracy at 19.0% over 400 calls, and
+0.92 on a coin at 52.0% accuracy. The same die asked as a Noul read 0.19 against 16.7%, so the
+confident number is a property of the primitive. Its forecast documents, which state a probability
+in the state itself, come back from a Choice at 6.6% for a stated 45% and 95.9% for a stated 55%.
+The requests are not in TypeSafe's shape - the Noul arm sends `"type": "boolean"`, which
+`question/unknown-type` rejects - and they ran on an unnamed hosted build through an AI gateway,
+so they say what one deployment did and not what the API guarantees.
+
+**The queries were run through jevlint before anything was written.** On the forecast query, the
+binary case, `question/type-mismatch` reads 0.96 and says to make it a Noul, which is the fix that
+project reached independently. On the die, a Choice over six options, every model check cleared:
+the closest were `question/type-mismatch` at 0.46, `state/answer-absent` at 0.43 and
+`question/unsettled-case` at 0.34, and the only finding was the static rule for a missing
+catch-all. That gap is what `choice/undetermined-outcome` was written for.
+
+**A trigger could not close it.** `corpus/undetermined.py` puts the nearest check and the new one
+over the same twenty cases: the four draws that project recorded, two outcomes written here, and
+every Choice question in the corpus docs tier that carries a state, plus this repository's own
+clean example.
+
+| | undetermined outcomes | the material settles | band |
+| --- | --- | --- | --- |
+| `state/answer-absent`, both wordings | 0.37 to 0.57 | 0.06 to 0.38 | they overlap |
+| `choice/undetermined-outcome` | 0.83 to 0.97 | 0.04 to 0.53 | 0.30 |
+
+`state/answer-absent` reads a hidden die roll at 0.40 and a corpus question at 0.38, so no
+threshold on it separates the two. The check is right to clear: a die state carries the record the
+question is built on. What is missing is the outcome, not the record.
+
+**The wording that separates them** asks whether picking between the options is guessing, as far
+as the material goes. Its highest reading on material that settles its own question is 0.53, on
+"What does the customer want to happen?" over a complaint that does not say. That is the shape
+this check comes closest to reporting wrongly, and it is why a finding near the trigger is one to
+read rather than act on. The wider corpus agrees: over 13 Choice questions harvested with every
+other check, none fires.
+
+**It overlaps `state/answer-absent` enough for the catalogue's own rule to say so.** On the
+dogfood state file `query/overlapping-questions` reads 0.63 against a 0.60 trigger for the pair.
+The two separate the material that matters by half a point - 0.42 against 0.91 on the die - so
+what the reading catches is that both ask about a state that cannot answer, not that either is
+redundant.
+
+**`choice/index-like-options` was found by writing the rule and running it.** A JavaScript object
+lists a key that looks like an array index before every other key, in ascending numeric order, so
+the options can reach the API in an order the file does not carry. The rule compares the two
+orders and reports the difference, so a Choice keyed `1, 2, 3` in that order is left alone: the
+key looks like an index and nothing moves. Run over every query file in this repository it fires
+once, on a fixture in `checks/fixtures.json` keyed
+`06, 07, 08, 09, 10, 11, not_stated`: `06` to `09` are not array indices and `10` and `11` are, so
+a JavaScript caller sends `10, 11, 06, 07, 08, 09, not_stated`. That fixture has been renamed. How
+far option order moves a Choice answer is not settled here - reversing the options changed no pick
+over the 24 cases in `corpus/position.py` - so the defect the rule reports is that the query sent
+is not the query written, which holds whatever the order is worth.
+
 ## Measured against a corpus nobody here wrote
 
 `decision-v7` and SQuAD 2.0 carry what this repository could not write for itself: material to
@@ -684,6 +799,29 @@ The same run records what Jev answers those questions as written: a **Brier scor
 over forty cases, 33 of 40 called correctly, against 0.25 for a coin flip. That is the baseline
 an arm applying a finding has to beat, and "Does acting on a finding improve the answer?" above
 is where it is beaten and where it is not.
+
+**`decision-v7` prices a question written to depend on another one.** The documentation says
+questions in one request are independent, and that one answer does not become context for
+another. The same contrastive rows put a figure on what that costs somebody who wrote a query
+the other way: the policy the question needs comes out of the state and goes into another
+question's instructions in the same request, with the question, the case and the label left
+alone. `corpus/sibling.py` runs the three arms over thirty cases.
+
+| where the policy is | answers the label | Brier |
+| --- | --- | --- |
+| in the state | 27 of 30 | **0.064** |
+| in another question in the same request | 20 of 30 | 0.237 |
+| nowhere | 20 of 30 | 0.242 |
+
+**A sibling question carries nothing.** Putting the policy in one costs the same seven answers
+as deleting it, and the two Brier scores differ by 0.005. That is what makes
+`question/refers-to-sibling` an error and not a warning: the question is not answered less well,
+it is answered without the material it names.
+
+The check itself fires on no question in the docs tier or the field tier. Its `fixed` example
+reads 0.40, the highest in the self-test table, on a repaired question pointing at a decision
+recorded in the state: a named earlier decision reads as close to a named earlier question even
+where the state holds it.
 
 ## Measured against SQuAD 2.0
 

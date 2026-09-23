@@ -45,7 +45,8 @@ order however they were written, so a Choice you decoded yourself as
 <code>{&quot;30&quot;: &quot;A month&quot;, &quot;7&quot;: &quot;A week&quot;}</code> has already been reordered before jevlint sees it. Option
 order changes answers. <code>fromJson</code> reads the text with a parser that records what the file
 wrote, and everything downstream — the request that goes out, the probe's <code>options-reversed</code>,
-a patch that rebuilds <code>criteria</code> — keeps it.</p>
+a patch that rebuilds <code>criteria</code> — keeps it. <code>choice/index-like-options</code> reports a Choice whose
+keys the reordering would move, whichever way the query reached jevlint.</p>
 <h2 id="starting-one">Starting one</h2>
 <div class="scroll"><table>
 <thead>

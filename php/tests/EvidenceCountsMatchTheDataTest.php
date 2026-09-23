@@ -36,7 +36,7 @@ final class EvidenceCountsMatchTheDataTest extends TestCase
             static fn ($check): bool => isset($named[$check->id]),
         ));
 
-        $words = [9 => 'nine', 11 => 'eleven', 20 => 'twenty'];
+        $words = [9 => 'nine', 11 => 'eleven', 12 => 'twelve', 13 => 'thirteen', 20 => 'twenty'];
         $evidence = (string) file_get_contents(__DIR__.'/../../docs/evidence.md');
 
         self::assertStringContainsString(

@@ -133,6 +133,26 @@ describe('the rules that need no call', () => {
         assert.ok(report.findings().map((found) => found.checkId).includes('choice/undescribed-options'));
     });
 
+    it('says which options a JavaScript object would reorder', () => {
+        const finding = check(query('{"a":{"type":"choice","instructions":"Which hour does the log give?",'
+            + '"criteria":{"06":"Six","07":"Seven","10":"Ten","11":"Eleven","other":"Anything else"}}}'))
+            .findings().find((found) => found.checkId === 'choice/index-like-options');
+
+        assert.equal(finding?.evidence, 'Written 06, 07, 10, 11, other; a JavaScript caller sends 10, 11, 06, 07, other.');
+    });
+
+    it('says nothing where the index keys are already written in order', () => {
+        assert.ok(!ids(query('{"a":{"type":"choice","instructions":"How many attempts are logged?",'
+            + '"criteria":{"1":"One","2":"Two","3":"Three","other":"Anything else"}}}'))
+            .includes('choice/index-like-options'));
+    });
+
+    it('says nothing where a key is a number no object reads as an index', () => {
+        assert.ok(!ids(query('{"a":{"type":"choice","instructions":"Which release is named?",'
+            + '"criteria":{"2.5":"The 2.5 line","1.0":"The 1.0 line","other":"Anything else"}}}'))
+            .includes('choice/index-like-options'));
+    });
+
     it('reports a Score written as a numeric map, and orders the rubric by its keys', () => {
         const finding = check(query('{"a":{"type":"score","instructions":"How ready are they?","criteria":{"2":"Ready","0":"Not ready","1":"Nearly"}}}'))
             .findings().find((found) => found.checkId === 'score/criteria-shape');

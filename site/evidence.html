@@ -21,7 +21,7 @@ catalogue is written for <code>jev-1.13</code>. Running the whole self-test agai
 <code>jevlint self-test --openrouter --model=typesafe/jev-1.13</code> - moved 112 paired readings by a median
 of 0.000 and at most 0.07, changed no verdict, and moved no span by more than 0.04, which is
 inside the repeat spread. On this workload the two are the same build.</p>
-<p><a href="index.html#is-it-any-good">The read me</a> has the summary. <a href="behaviour.html">Behaviour</a> has what the
+<p><a href="index.html#is-it-any-good">README.md</a> has the summary. <a href="behaviour.html">Behaviour</a> has what the
 tool does on itself. This is the per-check evidence behind both.</p>
 <h2 id="what-each-check-scores-against-its-own-examples">What each check scores against its own examples</h2>
 <p>This table is a regression detector, not a validity gate: the same person wrote each check and
@@ -51,7 +51,7 @@ produces it again, at the cost of the calls.</p>
 <td><code>question/type-mismatch</code></td>
 <td>0.03</td>
 <td>0.99</td>
-<td>0.01</td>
+<td>0.00</td>
 <td>0.96</td>
 </tr>
 <tr>
@@ -63,23 +63,23 @@ produces it again, at the cost of the calls.</p>
 </tr>
 <tr>
 <td><code>noul/negated-phrasing</code></td>
-<td>0.04</td>
-<td>0.94</td>
-<td>0.05</td>
-<td>0.90</td>
+<td>0.07</td>
+<td>0.96</td>
+<td>0.06</td>
+<td>0.89</td>
 </tr>
 <tr>
 <td><code>question/criteria-off-topic</code></td>
 <td>0.07</td>
-<td>0.97</td>
-<td>0.06</td>
-<td>0.90</td>
+<td>0.96</td>
+<td>0.05</td>
+<td>0.89</td>
 </tr>
 <tr>
 <td><code>question/date-comparison</code></td>
 <td>0.08</td>
 <td>0.96</td>
-<td>0.05</td>
+<td>0.06</td>
 <td>0.88</td>
 </tr>
 <tr>
@@ -90,109 +90,130 @@ produces it again, at the cost of the calls.</p>
 <td>0.87</td>
 </tr>
 <tr>
-<td><code>question/double-negative</code></td>
-<td>0.03</td>
-<td>0.87</td>
-<td>0.03</td>
+<td><code>question/undefined-boundary</code></td>
+<td>0.08</td>
+<td>0.92</td>
+<td>0.16</td>
 <td>0.84</td>
 </tr>
 <tr>
-<td><code>question/undefined-boundary</code></td>
-<td>0.09</td>
-<td>0.92</td>
-<td>0.17</td>
-<td>0.83</td>
+<td><code>question/refers-to-sibling</code></td>
+<td>0.10</td>
+<td>0.94</td>
+<td>0.41</td>
+<td>0.84</td>
+</tr>
+<tr>
+<td><code>question/criteria-contradiction</code></td>
+<td>0.13</td>
+<td>0.94</td>
+<td>0.05</td>
+<td>0.81</td>
+</tr>
+<tr>
+<td><code>choice/undetermined-outcome</code></td>
+<td>0.10</td>
+<td>0.91</td>
+<td>0.07</td>
+<td>0.81</td>
 </tr>
 <tr>
 <td><code>question/numeric-representation</code></td>
 <td>0.17</td>
-<td>0.96</td>
+<td>0.95</td>
 <td>0.08</td>
-<td>0.79</td>
+<td>0.78</td>
 </tr>
 <tr>
-<td><code>question/criteria-contradiction</code></td>
-<td>0.17</td>
-<td>0.94</td>
-<td>0.05</td>
+<td><code>question/double-negative</code></td>
+<td>0.03</td>
+<td>0.80</td>
+<td>0.03</td>
 <td>0.77</td>
-</tr>
-<tr>
-<td><code>state/adversarial-content</code></td>
-<td>0.22</td>
-<td>0.97</td>
-<td>n/a</td>
-<td>0.75</td>
 </tr>
 <tr>
 <td><code>query/overlapping-questions</code></td>
 <td>0.02</td>
-<td>0.76</td>
-<td>0.02</td>
-<td>0.74</td>
+<td>0.75</td>
+<td>0.03</td>
+<td>0.73</td>
+</tr>
+<tr>
+<td><code>state/adversarial-content</code></td>
+<td>0.27</td>
+<td>0.97</td>
+<td>n/a</td>
+<td>0.70</td>
 </tr>
 <tr>
 <td><code>score/multi-dimension</code></td>
-<td>0.18</td>
-<td>0.86</td>
-<td>0.26</td>
+<td>0.19</td>
+<td>0.87</td>
+<td>0.23</td>
 <td>0.68</td>
 </tr>
 <tr>
 <td><code>question/compound-judgment</code></td>
-<td>0.19</td>
-<td>0.84</td>
-<td>0.16</td>
+<td>0.18</td>
+<td>0.83</td>
+<td>0.17</td>
 <td>0.65</td>
 </tr>
 <tr>
 <td><code>question/indirection</code></td>
-<td>0.22</td>
-<td>0.83</td>
-<td>0.48</td>
-<td>0.61</td>
+<td>0.21</td>
+<td>0.85</td>
+<td>0.47</td>
+<td>0.64</td>
 </tr>
 <tr>
 <td><code>question/arithmetic</code></td>
+<td>0.06</td>
+<td>0.67</td>
 <td>0.07</td>
-<td>0.66</td>
-<td>0.07</td>
-<td>0.59</td>
+<td>0.61</td>
+</tr>
+<tr>
+<td><code>question/answerable-in-code</code></td>
+<td>0.35</td>
+<td>0.89</td>
+<td>0.20</td>
+<td>0.54</td>
 </tr>
 <tr>
 <td><code>question/unsettled-case</code></td>
-<td>0.17</td>
-<td>0.72</td>
-<td>0.14</td>
-<td>0.55</td>
-</tr>
-<tr>
-<td><code>score/overlapping-levels</code></td>
-<td>0.27</td>
-<td>0.80</td>
+<td>0.16</td>
+<td>0.69</td>
 <td>0.14</td>
 <td>0.53</td>
 </tr>
 <tr>
+<td><code>score/overlapping-levels</code></td>
+<td>0.29</td>
+<td>0.81</td>
+<td>0.14</td>
+<td>0.52</td>
+</tr>
+<tr>
 <td><code>choice/overlapping-options</code></td>
-<td>0.39</td>
-<td>0.84</td>
-<td>0.36</td>
-<td>0.46</td>
+<td>0.20</td>
+<td>0.72</td>
+<td>0.21</td>
+<td>0.52</td>
 </tr>
 <tr>
 <td><code>question/generation</code></td>
-<td>0.26</td>
-<td>0.69</td>
-<td>0.15</td>
-<td>0.43</td>
+<td>0.24</td>
+<td>0.71</td>
+<td>0.18</td>
+<td>0.46</td>
 </tr>
 <tr>
 <td><code>state/answer-absent</code></td>
-<td>0.47</td>
-<td>0.78</td>
-<td>0.14</td>
-<td>0.31</td>
+<td>0.45</td>
+<td>0.79</td>
+<td>0.12</td>
+<td>0.35</td>
 </tr>
 </tbody>
 </table></div>
@@ -207,6 +228,15 @@ one safety concern&quot; - read 0.61 to 0.63 against a matched rubric at 0.27. B
 but containment clears it by 0.02 and duplication by 0.22, so a containment finding is the one to
 read rather than gate on. Where a narrower level can be read as excluding the wider one, as
 &quot;cleaned&quot; can be read as &quot;cleaned and not bevelled&quot;, it reads 0.46 and does not fire.</p>
+<p><strong>A check that names one level names one of several, and which one follows the listing
+order.</strong> <code>corpus/locators.py</code> asks each <code>locate_mode: pick</code> locator over its broken example
+twice, with the elements as written and reversed. <code>choice/overlapping-options</code> names the same
+option either way round in both domains. The four <code>score</code> examples do not: reversing the levels
+moves the level named on three of them and on one of the two repeats of the fourth. In every one
+of the four, more than one level carries the fault the locator is choosing between - both members
+of an overlapping pair overlap, and every level of a rubric mixing qualities mixes them - so each
+answer is right and the order decides which right answer comes back. Read a located level as
+where to start.</p>
 <p><code>state/answer-absent</code> has the narrowest span, 0.31, because its clean example in the
 parcel domain reads 0.47: a question answerable from a two-field state still reads as nearly a
 question the state cannot answer. <code>state/adversarial-content</code> has no fixed column because its
@@ -229,8 +259,9 @@ against: one over the whole file, and one over what the checks ask. <code>corpus
 the triggers from the catalogue on disk and compares the second, because rewording a hint leaves
 the answers untouched while rewording a check's own question does not. Where the two ask
 different things it prints the mismatch and names both, since a rate is then a threshold applied
-to answers nobody gave it. The table below was harvested on 2026-09-22 over 250 calls by
-<code>corpus/harvest.py</code>, from a catalogue asking <code>17ef6c4e731f</code>.</p>
+to answers nobody gave it. The table below was harvested by <code>corpus/harvest.py</code> over 959 calls, the
+last of them on 2026-09-23 folding in <code>choice/undetermined-outcome</code> and leaving every other
+reading where it was, from a catalogue asking <code>e2c57c15a55c</code>.</p>
 <div class="scroll"><table>
 <thead>
 <tr>
@@ -248,6 +279,13 @@ to answers nobody gave it. The table below was harvested on 2026-09-22 over 250 
 <td>-</td>
 <td>0 of 14</td>
 <td>1 of 17, 1 of them shaky</td>
+</tr>
+<tr>
+<td><code>choice/undetermined-outcome</code></td>
+<td>no gold example</td>
+<td>-</td>
+<td>0 of 7</td>
+<td>not asked</td>
 </tr>
 <tr>
 <td><code>noul/negated-phrasing</code></td>
@@ -302,6 +340,20 @@ to answers nobody gave it. The table below was harvested on 2026-09-22 over 250 
 <td><code>question/numeric-representation</code></td>
 <td>1 of 1</td>
 <td>1 of 1</td>
+<td>0 of 52</td>
+<td>0 of 62</td>
+</tr>
+<tr>
+<td><code>question/refers-to-sibling</code></td>
+<td>no gold example</td>
+<td>-</td>
+<td>0 of 52</td>
+<td>0 of 62</td>
+</tr>
+<tr>
+<td><code>question/answerable-in-code</code></td>
+<td>no gold example</td>
+<td>-</td>
 <td>0 of 52</td>
 <td>0 of 62</td>
 </tr>
@@ -414,8 +466,8 @@ were made with different wordings for several checks.</p>
 state can be asked about one, and <code>states.py</code> recovers a state for 32 of the 76 docs entries, so
 <code>state/answer-absent</code> has 32 readings here, <code>state/adversarial-content</code> 9 and
 <code>state/irrelevant-field</code> 1. A denominator of 1 supports nothing. The measurements those three
-rest on are <code>planted.py</code>, <code>unread.py</code>, <code>fields.py</code>, <code>flores.py</code>, <code>squad.py</code> and <code>decision.py</code>, further down,
-not this table. <code>query/overlapping-questions</code> is not one of them - it reads the question set, not the
+rest on are <code>planted.py</code>, <code>unread.py</code>, <code>fields.py</code>, <code>flores.py</code>, <code>squad.py</code> and <code>decision.py</code>,
+further down, not this table. <code>query/overlapping-questions</code> is not one of them - it reads the question set, not the
 state - but it fires per pair and attaches to the second question, and <code>harvest.py</code> keeps the
 strongest reading per target, so its field column understates how often it spoke.</p>
 <p><strong>What they do to a state that is already right</strong> is the other half, and every arm further down
@@ -474,8 +526,8 @@ trial?&quot; is the shape the documentation tells you to decompose.</p>
 <p><code>question/type-mismatch</code> has no gold example to calibrate against, so its 0 of 50 and 4 of 56
 say how often it speaks, not how often it is right. Treat its advice as a prompt to look.</p>
 <p>The field tier carries no labels, so a rate on it is a rate and not an error rate.</p>
-<p>The corpus holds readings for all 21 model checks, and a labelled defect to catch for eleven
-of them; the other 10 are measured only by how often they fire on material labelled clean. That
+<p>The corpus holds readings for all 24 model checks, and a labelled defect to catch for eleven
+of them; the other thirteen are measured only by how often they fire on material labelled clean. That
 is the shape of the evidence: every check has been asked about somebody else's material, and
 fewer than half have been shown catching a defect somebody else named.</p>
 <h2 id="a-documented-failure-mode-that-cost-nothing-here">A documented failure mode that cost nothing here</h2>
@@ -766,6 +818,42 @@ above 0.9 on 12. The probability does not spread over the wrong options; it land
 confidently.</p>
 <p><strong>The advice does not make the query right, it makes it answerable.</strong> Even with the catch-all,
 half the cases still pick a wrong label. A finding cleared is not a question answered.</p>
+<p><strong>Where the catch-all is listed does not account for this.</strong> A published account of the model
+reports a position bias, the correct option picked 16 of 16 times listed last against 12 of 16
+first, which would make an appended <code>other</code> a favoured slot rather than a better query.
+decision-v7 scatters its catch-all through the option list instead of appending it, so the
+figures above are not taken from one position, and <code>corpus/position.py</code> moves only the catch-all
+over 24 cases of each kind.</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>the catch-all is</th>
+<th>the answer is none of the options</th>
+<th>the answer is among them</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>where decision-v7 put it</td>
+<td>14 of 24</td>
+<td>20 of 24</td>
+</tr>
+<tr>
+<td>listed first</td>
+<td>14 of 24</td>
+<td>20 of 24</td>
+</tr>
+<tr>
+<td>listed last</td>
+<td>14 of 24</td>
+<td>21 of 24</td>
+</tr>
+</tbody>
+</table></div>
+<p>On the rows where the catch-all is the labelled answer, moving it from first to last changes
+which option is picked on <strong>0 of 24</strong> cases, and the mean reading on the label by 0.016. On the
+rows where it is wrong it changes one case of 24, a question with 78 options, and that one moves
+towards the label. Whatever the bias is measured on, it is not what <code>choice/no-fallback</code> buys.</p>
 <p><code>choice/no-fallback</code>, <code>question/criteria-contradiction</code>, <code>score/multi-dimension</code>,
 <code>score/degree-levels</code>, <code>question/compound-judgment</code>, <code>question/double-negative</code> and
 <code>question/indirection</code> each have a measurement of this kind, scored against labels from outside
@@ -989,11 +1077,11 @@ and <code>--min</code> raises the floor for anyone who disagrees.</p>
 change it is material where the wording is doing more work than it does in a policy case or a
 Wikipedia passage.</p>
 <p><strong><code>noul/negated-phrasing</code> cannot be tested this way at all.</strong> What it names is a <code>yes</code> that means
-the thing is absent, which reads backwards <em>in the code that consumes the answer</em>. The harm is a
+the thing is absent, which reads backwards *in the code that consumes the answer*. The harm is a
 bug in the caller, not a worse answer, so measuring answer quality is the wrong instrument and no
 figure for it is reported here. It keeps its severity for the same reason <code>question/generation</code>
 keeps its own: what it guards against is real and is not a thing this corpus can see.</p>
-<h2 id="two-checks-whose-defect-costs-less-than-it-looks">Two checks whose defect costs less than it looks</h2>
+<h2 id="three-checks-whose-defect-costs-less-than-it-looks">Three checks whose defect costs less than it looks</h2>
 <p><strong><code>question/undefined-boundary</code> finds its defect and the defect does not move the answer.</strong> The
 contrastive states put the line in the policy, so the question as written has one; the panel
 wrote a vague version blind, with no cut-off stated. Eight states, five repeats each:</p>
@@ -1047,8 +1135,39 @@ hex, with the answer computed rather than judged:</p>
 </table></div>
 <p>Every answer right either way. That is a reason not to build the state-scoped sibling this check
 seems to want, and the reason it is <code>advice</code> with a title naming what it reads.</p>
+<p><strong><code>question/answerable-in-code</code> names a defect that costs money and determinism, not answers.</strong>
+Eight rules - an equality, a membership, a threshold, a list membership, an emptiness, a suffix,
+a case test and a literal substring - over twelve states generated by <code>corpus/mechanical.py</code>, so
+the answers are computed and nobody judges them:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th>answers right</th>
+<th>Brier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>all eight rules, twelve states</td>
+<td>96 of 96</td>
+<td>0.001</td>
+</tr>
+</tbody>
+</table></div>
+<p>Every one right, and seven of the eight rules read past 0.9 on every state. Asking Jev to compare
+a field against a value is not a query that goes wrong; it is a call, a round trip and a
+probability where <code>==</code> gives a fact, paid on every request. That is why the check is <code>advice</code>,
+and why its suggestion is to take the question out rather than reword it.</p>
+<p><strong>Its boundary with two other checks is not clean.</strong> Asked both ways over nineteen questions, a
+field lookup reads 0.73 and up and a question needing a reading of the material reads 0.42 and
+down, which is the separation the check is for. But a date comparison reads 0.64 and a colour
+written as hex reads 0.69, against a 0.70 trigger and a repeat spread of about 0.035: both are
+genuinely answerable in code, both already have a check of their own, and a run can report this
+one alongside. The <code>false</code> criteria name those defects as separate, which moved them down from
+0.74 and 0.70 without settling it.</p>
 <h2 id="the-checks-with-no-labelled-defect-to-catch">The checks with no labelled defect to catch</h2>
-<p>Ten model checks have no gold negative. Two of them have a public dataset that is the defect,
+<p>Thirteen model checks have no gold negative. Two of them have a public dataset that is the defect,
 and one can be labelled from the readings the corpus already holds.</p>
 <p><strong><code>question/unsettled-case</code>, on paragraphs with an edge planted in them.</strong> The check asks
 whether the state holds a case on the edge of the question that the question never settles.
@@ -1366,6 +1485,75 @@ that differ most. It finds the field and cannot rank what the field costs, which
 conclusion the decision-v7 arms reach, on material nobody here planted.</p>
 <p>These figures are twelve sentences in one query language against three spare languages. They
 are enough to separate what costs an answer from what does not; they are not a rate.</p>
+<h2 id="the-evidence-behind-two-checks-written-from-an-outside-measurement">The evidence behind two checks written from an outside measurement</h2>
+<p><code>jev-does-not-play-dice</code> is an independent project that asked Jev to name the result of a hidden
+fair draw. Its recorded numbers are in its own repository, not measured here: a Choice put a mean
+0.83 on the face it picked against a chance of 0.17, with accuracy at 19.0% over 400 calls, and
+0.92 on a coin at 52.0% accuracy. The same die asked as a Noul read 0.19 against 16.7%, so the
+confident number is a property of the primitive. Its forecast documents, which state a probability
+in the state itself, come back from a Choice at 6.6% for a stated 45% and 95.9% for a stated 55%.
+The requests are not in TypeSafe's shape - the Noul arm sends <code>&quot;type&quot;: &quot;boolean&quot;</code>, which
+<code>question/unknown-type</code> rejects - and they ran on an unnamed hosted build through an AI gateway,
+so they say what one deployment did and not what the API guarantees.</p>
+<p><strong>The queries were run through jevlint before anything was written.</strong> On the forecast query, the
+binary case, <code>question/type-mismatch</code> reads 0.96 and says to make it a Noul, which is the fix that
+project reached independently. On the die, a Choice over six options, every model check cleared:
+the closest were <code>question/type-mismatch</code> at 0.46, <code>state/answer-absent</code> at 0.43 and
+<code>question/unsettled-case</code> at 0.34, and the only finding was the static rule for a missing
+catch-all. That gap is what <code>choice/undetermined-outcome</code> was written for.</p>
+<p><strong>A trigger could not close it.</strong> <code>corpus/undetermined.py</code> puts the nearest check and the new one
+over the same twenty cases: the four draws that project recorded, two outcomes written here, and
+every Choice question in the corpus docs tier that carries a state, plus this repository's own
+clean example.</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th>undetermined outcomes</th>
+<th>the material settles</th>
+<th>band</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state/answer-absent</code>, both wordings</td>
+<td>0.37 to 0.57</td>
+<td>0.06 to 0.38</td>
+<td>they overlap</td>
+</tr>
+<tr>
+<td><code>choice/undetermined-outcome</code></td>
+<td>0.83 to 0.97</td>
+<td>0.04 to 0.53</td>
+<td>0.30</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>state/answer-absent</code> reads a hidden die roll at 0.40 and a corpus question at 0.38, so no
+threshold on it separates the two. The check is right to clear: a die state carries the record the
+question is built on. What is missing is the outcome, not the record.</p>
+<p><strong>The wording that separates them</strong> asks whether picking between the options is guessing, as far
+as the material goes. Its highest reading on material that settles its own question is 0.53, on
+&quot;What does the customer want to happen?&quot; over a complaint that does not say. That is the shape
+this check comes closest to reporting wrongly, and it is why a finding near the trigger is one to
+read rather than act on. The wider corpus agrees: over 13 Choice questions harvested with every
+other check, none fires.</p>
+<p><strong>It overlaps <code>state/answer-absent</code> enough for the catalogue's own rule to say so.</strong> On the
+dogfood state file <code>query/overlapping-questions</code> reads 0.63 against a 0.60 trigger for the pair.
+The two separate the material that matters by half a point - 0.42 against 0.91 on the die - so
+what the reading catches is that both ask about a state that cannot answer, not that either is
+redundant.</p>
+<p><strong><code>choice/index-like-options</code> was found by writing the rule and running it.</strong> A JavaScript object
+lists a key that looks like an array index before every other key, in ascending numeric order, so
+the options can reach the API in an order the file does not carry. The rule compares the two
+orders and reports the difference, so a Choice keyed <code>1, 2, 3</code> in that order is left alone: the
+key looks like an index and nothing moves. Run over every query file in this repository it fires
+once, on a fixture in <code>checks/fixtures.json</code> keyed
+<code>06, 07, 08, 09, 10, 11, not_stated</code>: <code>06</code> to <code>09</code> are not array indices and <code>10</code> and <code>11</code> are, so
+a JavaScript caller sends <code>10, 11, 06, 07, 08, 09, not_stated</code>. That fixture has been renamed. How
+far option order moves a Choice answer is not settled here - reversing the options changed no pick
+over the 24 cases in <code>corpus/position.py</code> - so the defect the rule reports is that the query sent
+is not the query written, which holds whatever the order is worth.</p>
 <h2 id="measured-against-a-corpus-nobody-here-wrote">Measured against a corpus nobody here wrote</h2>
 <p><code>decision-v7</code> and SQuAD 2.0 carry what this repository could not write for itself: material to
 judge, and the answer each question should get. FLORES-200 does the same for
@@ -1403,7 +1591,47 @@ for it is the best evidenced check in the catalogue.</p>
 over forty cases, 33 of 40 called correctly, against 0.25 for a coin flip. That is the baseline
 an arm applying a finding has to beat, and &quot;Does acting on a finding improve the answer?&quot; above
 is where it is beaten and where it is not.</p>
-<h2 id="measured-against-squad-20">Measured against SQuAD 2.0</h2>
+<p><strong><code>decision-v7</code> prices a question written to depend on another one.</strong> The documentation says
+questions in one request are independent, and that one answer does not become context for
+another. The same contrastive rows put a figure on what that costs somebody who wrote a query
+the other way: the policy the question needs comes out of the state and goes into another
+question's instructions in the same request, with the question, the case and the label left
+alone. <code>corpus/sibling.py</code> runs the three arms over thirty cases.</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>where the policy is</th>
+<th>answers the label</th>
+<th>Brier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>in the state</td>
+<td>27 of 30</td>
+<td><strong>0.064</strong></td>
+</tr>
+<tr>
+<td>in another question in the same request</td>
+<td>20 of 30</td>
+<td>0.237</td>
+</tr>
+<tr>
+<td>nowhere</td>
+<td>20 of 30</td>
+<td>0.242</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>A sibling question carries nothing.</strong> Putting the policy in one costs the same seven answers
+as deleting it, and the two Brier scores differ by 0.005. That is what makes
+<code>question/refers-to-sibling</code> an error and not a warning: the question is not answered less well,
+it is answered without the material it names.</p>
+<p>The check itself fires on no question in the docs tier or the field tier. Its <code>fixed</code> example
+reads 0.40, the highest in the self-test table, on a repaired question pointing at a decision
+recorded in the state: a named earlier decision reads as close to a named earlier question even
+where the state holds it.</p>
+<h2 id="measured-against-squad-2-0">Measured against SQuAD 2.0</h2>
 <p>SQuAD 2.0 asks the same of <code>state/answer-absent</code> on harder material: paragraphs with questions
 marked answerable or not from that paragraph alone, labelled by people who have never seen this
 catalogue. <code>corpus/squad.py</code> samples it, sends each paragraph as the state and its

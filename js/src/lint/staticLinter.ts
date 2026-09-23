@@ -20,6 +20,31 @@ import { entriesOf, keysOf, ordered } from '../support/ordered.js';
  * sent or is broken in a way no amount of rephrasing fixes, and finding that
  * out should not cost a round trip
  */
+/** What the API takes, as `Too many choices. Must have at most 255 choices.` on a 400 */
+const MOST_OPTIONS = 255;
+
+/** The largest number a JavaScript object treats as an array index */
+const LARGEST_INDEX = 4294967294;
+
+const INDEX_LIKE = /^(0|[1-9][0-9]*)$/;
+
+function isIndex(label: string): boolean {
+    return INDEX_LIKE.test(label) && Number(label) <= LARGEST_INDEX;
+}
+
+/**
+ * The options in the order a JavaScript object would list them.
+ *
+ * A key holding the plain decimal form of a number up to 2^32 - 2 is an array
+ * index, and an object lists every one of those first, in ascending order,
+ * before the keys it was written with.
+ */
+function asJavaScriptSends(labels: string[]): string[] {
+    const indexes = labels.filter(isIndex).sort((a, b) => Number(a) - Number(b));
+
+    return [...indexes, ...labels.filter((label) => !isIndex(label))];
+}
+
 export class StaticLinter {
     static readonly RULES = RULES;
 
@@ -298,6 +323,10 @@ export class StaticLinter {
             this.raise('choice.tooFewOptions', question.id, report, Text.of('evidence.option_count', { count: labels.length }));
         }
 
+        if (labels.length > MOST_OPTIONS) {
+            this.raise('choice.tooManyOptions', question.id, report, Text.of('evidence.option_count', { count: labels.length }));
+        }
+
         const notText = entries
             .map(([, value]) => value)
             .filter((value) => value !== null && typeof value !== 'string');
@@ -339,6 +368,15 @@ export class StaticLinter {
 
         if (described.length === 0) {
             this.raise('choice.undescribedOptions', question.id, report);
+        }
+
+        const sent = asJavaScriptSends(labels);
+
+        if (sent.join('\u0000') !== labels.join('\u0000')) {
+            this.raise('choice.indexLikeOptions', question.id, report, Text.of('evidence.reordered_options', {
+                written: labels.join(', '),
+                sent: sent.join(', '),
+            }));
         }
     }
 

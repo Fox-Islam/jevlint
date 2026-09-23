@@ -38,9 +38,11 @@ final class StaticLinter
     public const RULES = [
         'choice.criteriaShape',
         'choice.descriptionNotText',
+        'choice.indexLikeOptions',
         'choice.noCriteria',
         'choice.noFallback',
         'choice.tooFewOptions',
+        'choice.tooManyOptions',
         'choice.undescribedOptions',
         'noul.criteriaShape',
         'noul.noCriteria',
@@ -63,6 +65,12 @@ final class StaticLinter
         'state.missing',
         'state.oversized',
     ];
+
+    /** What the API takes, as `Too many choices. Must have at most 255 choices.` on a 400 */
+    private const MOST_OPTIONS = 255;
+
+    /** The largest number a JavaScript object treats as an array index */
+    private const LARGEST_INDEX = 4294967294;
 
     /**
      * @param list<string> $only check ids to run, or all of them when empty
@@ -357,6 +365,10 @@ final class StaticLinter
             $this->raise('choice.tooFewOptions', $question->id, $report, Text::of('evidence.option_count', ['count' => count($labels)]));
         }
 
+        if (count($labels) > self::MOST_OPTIONS) {
+            $this->raise('choice.tooManyOptions', $question->id, $report, Text::of('evidence.option_count', ['count' => count($labels)]));
+        }
+
         $lowered = array_map(mb_strtolower(...), $labels);
 
         $notText = array_values(array_filter(
@@ -395,6 +407,38 @@ final class StaticLinter
         if ($described === []) {
             $this->raise('choice.undescribedOptions', $question->id, $report);
         }
+
+        $sent = self::asJavaScriptSends($labels);
+
+        if ($sent !== $labels) {
+            $this->raise('choice.indexLikeOptions', $question->id, $report, Text::of('evidence.reordered_options', [
+                'written' => implode(', ', $labels),
+                'sent' => implode(', ', $sent),
+            ]));
+        }
+    }
+
+    /**
+     * The options in the order a JavaScript object would list them.
+     *
+     * A key holding the plain decimal form of a number up to 2^32 - 2 is an
+     * array index, and an object lists every one of those first, in ascending
+     * order, before the keys it was written with.
+     *
+     * @param  list<string>  $labels
+     * @return list<string>
+     */
+    private static function asJavaScriptSends(array $labels): array
+    {
+        $isIndex = static fn (string $label): bool => preg_match('/^(0|[1-9][0-9]*)$/', $label) === 1
+            && (float) $label <= self::LARGEST_INDEX;
+
+        $indexes = array_values(array_filter($labels, $isIndex));
+        $rest = array_values(array_filter($labels, static fn (string $label): bool => ! $isIndex($label)));
+
+        usort($indexes, static fn (string $a, string $b): int => (float) $a <=> (float) $b);
+
+        return array_merge($indexes, $rest);
     }
 
     private function scoreRules(ReviewedQuestion $question, Report $report): void

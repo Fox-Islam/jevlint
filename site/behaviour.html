@@ -59,15 +59,20 @@ API quote it exactly:</p>
 ran, which is what the self-test comparison against the pinned build inferred from readings.</p>
 <h2 id="the-catalogue-passes-its-own-checks">The catalogue passes its own checks</h2>
 <p>The checks are Jev questions, so the linter runs on them, every wording of every one:</p>
-<p>The 18 question-scoped wordings come back with one finding, over 40 calls. It is
-<code>question/type-mismatch</code> at 0.76, reading <code>question/arithmetic</code>'s own wording as better suited
+<p>The 21 question-scoped wordings come back with one finding, over 46 calls. It is
+<code>question/type-mismatch</code> at 0.77, reading <code>question/arithmetic</code>'s own wording as better suited
 to another primitive, which is an artefact of putting a check in the position of a query instead
 of a defect in the catalogue. The run also notes that the checks comparing questions did not
-run, because 18 questions make more pairs than one call carries - a limitation of this file, not
+run, because 21 questions make more pairs than one call carries - a limitation of this file, not
 of the catalogue.</p>
-<p>The six wordings in the state file come back with one finding, over 16 calls: a distractor field
-planted so the state checks have something to read, which <code>state/irrelevant-field</code> reports at
-0.86. Both call counts move with how many readings land near a trigger and are asked again.</p>
+<p>The seven wordings in the state file come back with two findings, over 19 calls. One is a
+distractor field planted so the state checks have something to read, which
+<code>state/irrelevant-field</code> reports at 0.88. The other is <code>query/overlapping-questions</code> at 0.63
+against its 0.60 trigger, pairing <code>choice/undetermined-outcome</code> with the second wording of
+<code>state/answer-absent</code>: both ask about a state that cannot answer the question put to it. The two
+separate the material that matters - 0.42 against 0.91 on a hidden die roll - so the reading is
+the overlap and not a duplicate. Both call counts move with how many readings land near a trigger
+and are asked again.</p>
 <p><code>state/answer-absent</code> is the check that comes closest to firing on the catalogue without doing
 so. Its highest reading over the question file is 0.56 against a 0.60 trigger, on one wording of
 <code>choice/overlapping-options</code>. Which side of the trigger a reading that close lands on is
@@ -158,9 +163,9 @@ using the product on one reading and not on another, and the question settles ne
 </tr>
 <tr>
 <td><code>self-test</code>, whole catalogue</td>
-<td>124</td>
+<td>142</td>
 <td>-</td>
-<td>21 checks, 42 example sets, all <code>ok</code></td>
+<td>24 checks, 48 example sets, all <code>ok</code></td>
 </tr>
 </tbody>
 </table></div>

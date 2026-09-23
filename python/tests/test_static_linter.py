@@ -224,3 +224,27 @@ def test_gives_every_static_check_a_severity_the_report_knows():
     names = [severity.value for severity in Severity.cases()]
 
     assert [check.id for check in catalogue.written() if check.severity not in names] == []
+
+
+def test_reports_choice_keys_a_javascript_object_would_reorder():
+    finding = found(check(query(
+        '{"a":{"type":"choice","instructions":"Which hour does the log give?",'
+        '"criteria":{"06":"Six","07":"Seven","10":"Ten","11":"Eleven","other":"Anything else"}}}',
+    )), 'choice/index-like-options')
+
+    assert 'Written 06, 07, 10, 11, other' in finding.evidence
+    assert 'sends 10, 11, 06, 07, other' in finding.evidence
+
+
+def test_reports_no_reordering_where_the_index_keys_are_already_written_in_order():
+    assert 'choice/index-like-options' not in ids(query(
+        '{"a":{"type":"choice","instructions":"How many attempts are logged?",'
+        '"criteria":{"1":"One","2":"Two","3":"Three","other":"Anything else"}}}',
+    ))
+
+
+def test_reports_no_reordering_where_a_key_is_a_number_no_object_reads_as_an_index():
+    assert 'choice/index-like-options' not in ids(query(
+        '{"a":{"type":"choice","instructions":"Which release is named?",'
+        '"criteria":{"2.5":"The 2.5 line","1.0":"The 1.0 line","other":"Anything else"}}}',
+    ))

@@ -130,6 +130,49 @@ final class StaticLinterTest extends TestCase
         ]));
     }
 
+    public function test_it_says_which_options_a_javascript_object_would_reorder(): void
+    {
+        $finding = $this->finding('{"state":"x","questions":{"a":{"type":"choice",'
+            .'"instructions":"Which hour does the log give?","criteria":'
+            .'{"06":"Six","07":"Seven","10":"Ten","11":"Eleven","other":"Anything else"}}}}',
+            'choice/index-like-options');
+
+        self::assertNotNull($finding);
+        self::assertSame('Written 06, 07, 10, 11, other; a JavaScript caller sends 10, 11, 06, 07, other.', $finding->evidence);
+    }
+
+    public function test_it_says_nothing_where_the_index_keys_are_already_written_in_order(): void
+    {
+        self::assertNull($this->finding('{"state":"x","questions":{"a":{"type":"choice",'
+            .'"instructions":"How many attempts are logged?","criteria":'
+            .'{"1":"One","2":"Two","3":"Three","other":"Anything else"}}}}',
+            'choice/index-like-options'));
+    }
+
+    public function test_it_says_nothing_where_a_key_is_a_number_no_object_reads_as_an_index(): void
+    {
+        self::assertNull($this->finding('{"state":"x","questions":{"a":{"type":"choice",'
+            .'"instructions":"Which release is named?","criteria":'
+            .'{"2.5":"The 2.5 line","1.0":"The 1.0 line","other":"Anything else"}}}}',
+            'choice/index-like-options'));
+    }
+
+    private function finding(string $json, string $checkId): ?Finding
+    {
+        $catalogue = Catalogue::load();
+        $report = new Report('test', $catalogue->version);
+
+        (new StaticLinter($catalogue))->run(Query::fromJson($json), $report);
+
+        foreach ($report->findings() as $finding) {
+            if ($finding->checkId === $checkId) {
+                return $finding;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @param  array<string, mixed> $query
      * @return list<string>

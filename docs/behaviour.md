@@ -33,16 +33,21 @@ ran, which is what the self-test comparison against the pinned build inferred fr
 
 The checks are Jev questions, so the linter runs on them, every wording of every one:
 
-The 18 question-scoped wordings come back with one finding, over 40 calls. It is
-`question/type-mismatch` at 0.76, reading `question/arithmetic`'s own wording as better suited
+The 21 question-scoped wordings come back with one finding, over 46 calls. It is
+`question/type-mismatch` at 0.77, reading `question/arithmetic`'s own wording as better suited
 to another primitive, which is an artefact of putting a check in the position of a query instead
 of a defect in the catalogue. The run also notes that the checks comparing questions did not
-run, because 18 questions make more pairs than one call carries - a limitation of this file, not
+run, because 21 questions make more pairs than one call carries - a limitation of this file, not
 of the catalogue.
 
-The six wordings in the state file come back with one finding, over 16 calls: a distractor field
-planted so the state checks have something to read, which `state/irrelevant-field` reports at
-0.86. Both call counts move with how many readings land near a trigger and are asked again.
+The seven wordings in the state file come back with two findings, over 19 calls. One is a
+distractor field planted so the state checks have something to read, which
+`state/irrelevant-field` reports at 0.88. The other is `query/overlapping-questions` at 0.63
+against its 0.60 trigger, pairing `choice/undetermined-outcome` with the second wording of
+`state/answer-absent`: both ask about a state that cannot answer the question put to it. The two
+separate the material that matters - 0.42 against 0.91 on a hidden die roll - so the reading is
+the overlap and not a duplicate. Both call counts move with how many readings land near a trigger
+and are asked again.
 
 `state/answer-absent` is the check that comes closest to firing on the catalogue without doing
 so. Its highest reading over the question file is 0.56 against a 0.60 trigger, on one wording of
@@ -96,7 +101,7 @@ using the product on one reading and not on another, and the question settles ne
 | `check` on the four-question clean example | 11 | 16,980 | 2 advice |
 | `check` on the five-question broken example | 14 | 23,140 | 4 errors, 6 warnings, 11 advice |
 | `probe`, four questions, five repeats | 9 | 5,275 | one question moved |
-| `self-test`, whole catalogue | 124 | - | 21 checks, 42 example sets, all `ok` |
+| `self-test`, whole catalogue | 142 | - | 24 checks, 48 example sets, all `ok` |
 
 TypeSafe reports no cost on a call, so these are token counts. `--no-state` removes the second
 call per question. The call counts move between runs: a reading that lands within 0.05 of its

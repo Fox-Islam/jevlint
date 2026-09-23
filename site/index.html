@@ -13,23 +13,31 @@
 <p>A linter for <a href="https://docs.typesafe.ai">Jev</a> queries. It takes the request you would send
 to System One - a state and the questions asked about it - and reports where the query is
 written in a way the model is documented to handle badly.</p>
-<p><strong>Start:</strong> <a href="#quickstart">Quickstart</a> · <a href="#install">Install</a> ·
-<a href="#what-a-query-file-looks-like">What a query file looks like</a> · <a href="#what-it-checks">What it checks</a></p>
-<p><strong>Reading the output:</strong> <a href="#is-it-any-good">Is it any good?</a> ·
-<a href="#severity-and-probability-say-different-things">Severity and probability</a> ·
-<a href="#reading-a-finding">Reading a finding</a> · <a href="#exit-codes">Exit codes</a> ·
-<a href="#for-a-program-reading-the-output">For a program reading the output</a> ·
-<a href="#what-this-cannot-tell-you">What this cannot tell you</a></p>
-<p><strong>Going further:</strong> <a href="#the-probe">The probe</a> · <a href="#accepting-a-finding">Accepting a finding</a> ·
-<a href="#which-jev-build-the-rules-are-for">Which Jev build the rules are for</a> ·
-<a href="#the-catalogue-is-not-a-language">The catalogue is not a language</a></p>
-<p><strong>Beyond this page:</strong> <a href="evidence.html">Evidence</a>, how good each check is ·
-<a href="output.html">Output</a>, reading the output from a program ·
-<a href="library.html">From PHP</a>, calling it from PHP ·
-<a href="javascript.html">From JavaScript</a>, calling it from JavaScript ·
-<a href="python.html">From Python</a>, calling it from Python ·
-<a href="languages.html">Languages</a>, how to add a language ·
-<a href="behaviour.html">Behaviour</a>, what the tool does on itself</p>
+<p class="contents"><strong>Start:</strong>
+<span><a href="#quickstart">Quickstart</a></span> ·
+<span><a href="#install">Install</a></span> ·
+<span><a href="#what-a-query-file-looks-like">What a query file looks like</a></span> ·
+<span><a href="#what-it-checks">What it checks</a></span></p>
+<p class="contents"><strong>Reading the output:</strong>
+<span><a href="#is-it-any-good">Is it any good?</a></span> ·
+<span><a href="#severity-and-probability-say-different-things">Severity and probability</a></span> ·
+<span><a href="#reading-a-finding">Reading a finding</a></span> ·
+<span><a href="#exit-codes">Exit codes</a></span> ·
+<span><a href="#for-a-program-reading-the-output">For a program reading the output</a></span> ·
+<span><a href="#what-this-cannot-tell-you">What this cannot tell you</a></span></p>
+<p class="contents"><strong>Going further:</strong>
+<span><a href="#the-probe">The probe</a></span> ·
+<span><a href="#accepting-a-finding">Accepting a finding</a></span> ·
+<span><a href="#which-jev-build-the-rules-are-for">Which Jev build the rules are for</a></span> ·
+<span><a href="#the-catalogue-is-not-a-language">The catalogue is not a language</a></span></p>
+<p class="contents"><strong>Beyond this page:</strong>
+<span><a href="evidence.html">Evidence</a>, how good each check is</span> ·
+<span><a href="output.html">Output</a>, reading the output from a program</span> ·
+<span><a href="library.html">From PHP</a>, calling it from PHP</span> ·
+<span><a href="javascript.html">From JavaScript</a>, calling it from JavaScript</span> ·
+<span><a href="python.html">From Python</a>, calling it from Python</span> ·
+<span><a href="languages.html">Languages</a>, how to add a language</span> ·
+<span><a href="behaviour.html">Behaviour</a>, what the tool does on itself</span></p>
 <h2 id="quickstart">Quickstart</h2>
 <pre><code class="language-sh">composer install
 ./jevlint check examples/broken-triage.json --static-only
@@ -174,12 +182,24 @@ low on its broken one, which is the <code>inverted</code> verdict, and the run f
 <td><code>choice/overlapping-options</code>, <code>question/type-mismatch</code></td>
 </tr>
 <tr>
+<td><a href="https://docs.typesafe.ai/primitives/choice">Choice</a></td>
+<td><code>choice/undetermined-outcome</code></td>
+</tr>
+<tr>
 <td><a href="https://docs.typesafe.ai/concepts/state">The state has to hold the answer</a></td>
 <td><code>state/answer-absent</code></td>
 </tr>
 <tr>
 <td><a href="https://docs.typesafe.ai/primitives#ask-multiple-questions-together">Ask multiple questions together</a></td>
 <td><code>query/overlapping-questions</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/primitives#when-one-question-depends-on-another">When one question depends on another</a></td>
+<td><code>question/refers-to-sibling</code></td>
+</tr>
+<tr>
+<td><a href="https://docs.typesafe.ai/primitives#define-a-question">Defining a question</a></td>
+<td><code>question/answerable-in-code</code></td>
 </tr>
 </tbody>
 </table></div>

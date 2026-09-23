@@ -112,6 +112,7 @@ export const messages: Record<string, string | string[]> = {
     'evidence.keys': 'Keys: {keys}.',
     'evidence.none': 'none',
     'evidence.options': 'Options: {options}.',
+    'evidence.reordered_options': 'Written {written}; a JavaScript caller sends {sent}.',
     'evidence.option_count': '{count, plural, one {# option} other {# options}}.',
     'evidence.levels': 'Levels: {levels}.',
     'evidence.level_count': '{count, plural, one {# level} other {# levels}}.',

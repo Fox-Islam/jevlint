@@ -38,7 +38,7 @@
 <tr>
 <td><code>scores.json</code></td>
 <td>what every check put on every one of them</td>
-<td>runs of <code>harvest.py</code>, 286 calls so far</td>
+<td>runs of <code>harvest.py</code>, 959 calls so far</td>
 </tr>
 <tr>
 <td><code>build.py</code></td>
@@ -69,6 +69,31 @@
 <td><code>advice.py</code></td>
 <td>whether following <code>choice/no-fallback</code> improves the answer, not just the report</td>
 <td>by decision-v7</td>
+</tr>
+<tr>
+<td><code>position.py</code></td>
+<td>whether where the catch-all is listed changes the answer <code>advice.py</code> measures</td>
+<td>by decision-v7</td>
+</tr>
+<tr>
+<td><code>locators.py</code></td>
+<td>whether the order of a question's levels changes which one a <code>locate_mode: pick</code> check names</td>
+<td>none needed</td>
+</tr>
+<tr>
+<td><code>sibling.py</code></td>
+<td>what it costs to put what a question needs into another question instead of the state</td>
+<td>by decision-v7</td>
+</tr>
+<tr>
+<td><code>mechanical.py</code></td>
+<td>whether Jev answers a question code could answer, over states generated here</td>
+<td>computed, not judged</td>
+</tr>
+<tr>
+<td><code>undetermined.py</code></td>
+<td><code>choice/undetermined-outcome</code> and <code>state/answer-absent</code> over the hidden draws <code>jev-does-not-play-dice</code> recorded, fetched on demand</td>
+<td>the draw is hidden by construction</td>
 </tr>
 <tr>
 <td><code>rewrite.py</code></td>
@@ -111,6 +136,11 @@
 <td>by the field being known</td>
 </tr>
 <tr>
+<td><code>fields.py</code></td>
+<td>how often the state-scoped checks fire on states nobody changed</td>
+<td>by decision-v7, whose fields the question needs</td>
+</tr>
+<tr>
 <td><code>boundary.py</code></td>
 <td>what a vague boundary costs in how steadily the answer repeats</td>
 <td>none needed</td>
@@ -124,6 +154,11 @@
 <td><code>encoded.py</code></td>
 <td>whether a value written as hex costs an answer</td>
 <td>computed, not judged</td>
+</tr>
+<tr>
+<td><code>flores.py</code></td>
+<td>what a spare field costs by the language it is written in</td>
+<td>the language each FLORES-200 file holds</td>
 </tr>
 <tr>
 <td><code>drift.py</code></td>
@@ -158,6 +193,8 @@ python3 corpus/drift.py                # this harvest against the one it replace
 python3 corpus/states.py --write      # recover each docs example's state from its page
 python3 corpus/decision.py --items=40 # the policy ablation, three calls per case
 python3 corpus/advice.py --items=30   # does the advice improve the answer, two calls per arm
+python3 corpus/position.py --items=24 # the catch-all where it was, listed first, listed last
+python3 corpus/sibling.py --items=30  # the policy in the state, in a sibling question, and nowhere
 python3 corpus/rewrite.py             # the same for a wording check, five arms
 python3 corpus/wording.py --items=20  # three wording checks, seven arms
 python3 corpus/families.py --items=6  # do the error-severity checks fire where answers fail
@@ -165,7 +202,8 @@ python3 corpus/levels.py              # does a Score check's advice improve wher
 python3 corpus/levels.py --check=score/multi-dimension   # with the arms in local/score-arms.json
 </code></pre>
 <p><code>decision.py</code> fetches decision-v7 into <code>local/</code> on first run, and <code>advice.py</code>, <code>boundary.py</code>,
-<code>families.py</code>, <code>planted.py</code> and <code>unread.py</code> read it from there, so run <code>decision.py</code> before them.
+<code>families.py</code>, <code>fields.py</code>, <code>planted.py</code> and <code>unread.py</code> read it from there, so run <code>decision.py</code>
+before them.
 The arm experiments - <code>contradiction.py</code>, <code>rewrite.py</code>, <code>levels.py</code>, <code>wording.py</code> - read their
 sample and their rewrites from <code>corpus/arms/</code>, which is committed because those files are the
 experiment's inputs rather than its output: the rewrites were written blind by a panel and cannot
@@ -175,13 +213,23 @@ rewrite is tried without touching the committed one.</p>
 wrote, or by fetching a dataset that is the defect:</p>
 <pre><code class="language-sh">python3 corpus/planted.py --items=20  # a line addressed to the reviewer, put into a document
 python3 corpus/unread.py --items=20   # a field added to a state that no question reads
+python3 corpus/fields.py --items=20   # the same checks over states with nothing to find
 python3 corpus/external.py --check=query/overlapping-questions --items=30   # Quora's pairs
 python3 corpus/contradiction.py       # criteria inverted against the instruction they belong to
 python3 corpus/boundary.py            # a boundary taken out of the policy that defines it
 python3 corpus/encoded.py             # the same comparison over a value written plainly and as hex
+python3 corpus/mechanical.py          # eight rules over generated states, one call per state
 python3 corpus/dogfood.py             # the catalogue's own wordings, as queries jevlint can read
+python3 corpus/locators.py            # each pick locator over its own broken example, both ways round
+python3 corpus/undetermined.py        # a Choice over a hidden draw, against the Choice questions the corpus holds
 python3 corpus/borderline.py --items=12   # an edge planted in a paragraph, six arms over each
+python3 corpus/flores.py --items=12   # one spare field per arm, the same sentences in another language
 </code></pre>
+<p><code>flores.py</code> fetches FLORES-200 into <code>local/</code> on first run and unpacks it there, 25 MB
+compressed and 77 MB on disk. It is the only measurement here whose spare field can be written
+in a chosen language while its content is held still, because FLORES-200 translates one set of
+sentences into 204 languages line for line. <a href="evidence.html">docs/evidence.md</a> carries the
+result.</p>
 <p><code>borderline.py</code> measures <code>question/unsettled-case</code>, which reads the reviewed question's
 <code>criteria</code> beside the state. That is what <code>scope: state</code> shows a check, and it is the reason it
 can work at all: shown the instruction line alone it reads 0.31 on a defect and 0.49 on the
@@ -195,7 +243,7 @@ also records what Jev answers as written, scored against the label, which is the
 <p><code>squad.py</code> is the only other measurement here whose labels come from outside this repository for a
 state-scoped check. It fetches SQuAD 2.0 into <code>local/</code> on first run, samples a seeded balanced
 set so two runs measure the same material, sends each paragraph as the state and its question as
-the question, and records what <code>state/answer-absent</code> read. <a href="evidence.html">Evidence</a>
+the question, and records what <code>state/answer-absent</code> read. <a href="evidence.html">docs/evidence.md</a>
 carries
 the result.</p>
 <p><code>harvest.py --only=&lt;check ids&gt;</code> scores those checks and merges them into the readings already
@@ -246,7 +294,7 @@ more than two of the eight, so the column adds at most two to a denominator: 52 
 questions plus two gold positives is the 54 the widest checks are out of. The two tiers are
 labelled clean by the same standard, and the column is a rate over everything labelled clean.</p>
 <p><strong>The field tier has no labels.</strong> A firing rate on it is a rate, not an error rate. Where a
-finding there has been checked by hand, <a href="evidence.html">Evidence</a> says so.</p>
+finding there has been checked by hand, <a href="evidence.html">docs/evidence.md</a> says so.</p>
 <p><strong>A denominator is the questions the check was asked about.</strong> A check that applies only to
 Choice questions is asked about the Choice questions and no others, so its rate is out of
 those, not out of the tier. Counting a question the check never saw as a question it cleared

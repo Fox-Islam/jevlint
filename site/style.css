@@ -7,6 +7,8 @@
     --link: #1c5d99;
     --error: #a8322d;
     --warning: #8a5a00;
+    --measure: 64rem;
+    --gutter: 2rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -40,9 +42,9 @@ header {
 }
 
 nav {
-    max-width: 52rem;
+    max-width: var(--measure);
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 var(--gutter);
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem 1.1rem;
@@ -64,9 +66,9 @@ nav a[aria-current="page"] {
 }
 
 main {
-    max-width: 52rem;
+    max-width: var(--measure);
     margin: 0 auto;
-    padding: 1.5rem 1rem 4rem;
+    padding: 2rem var(--gutter) 5rem;
 }
 
 h1, h2, h3 { line-height: 1.25; }
@@ -144,9 +146,13 @@ th, td {
     border-bottom: 1px solid var(--line);
 }
 
+td:first-child code, th:first-child code { white-space: nowrap; }
+
 th { font-weight: 600; }
 thead th { border-bottom: 2px solid var(--line); }
 tbody tr:hover { background: var(--panel); }
+
+.contents span { white-space: nowrap; }
 
 blockquote {
     margin: 1.2rem 0;
@@ -163,11 +169,13 @@ footer {
     font-size: 0.88rem;
 }
 
-footer p { max-width: 52rem; margin: 0 auto; padding: 1.2rem 1rem; }
+footer p { max-width: var(--measure); margin: 0 auto; padding: 1.4rem var(--gutter); }
 
-@media (max-width: 40rem) {
+@media (max-width: 46rem) {
+    :root { --gutter: 1.1rem; }
     body { font-size: 15px; }
-    main { padding: 1rem 1rem 3rem; }
+    main { padding: 1.25rem var(--gutter) 3rem; }
+    .contents span { white-space: normal; }
     h1 { font-size: 1.6rem; }
     table { font-size: 0.84rem; }
 }

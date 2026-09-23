@@ -23,6 +23,30 @@ _PINNED_BUILD = re.compile(r'^jev-\d+(?:\.\d+)*$')
 
 _WHOLE_NUMBER = re.compile(r'^-?\d+$')
 
+# What the API takes, as `Too many choices. Must have at most 255 choices.` on a 400.
+_MOST_OPTIONS = 255
+
+# The largest number a JavaScript object treats as an array index.
+_LARGEST_INDEX = 4294967294
+
+_INDEX_LIKE = re.compile(r'^(0|[1-9][0-9]*)$')
+
+
+def _is_index(label: str) -> bool:
+    return _INDEX_LIKE.match(label) is not None and int(label) <= _LARGEST_INDEX
+
+
+def _as_javascript_sends(labels: list[str]) -> list[str]:
+    """The options in the order a JavaScript object would list them.
+
+    A key holding the plain decimal form of a number up to 2^32 - 2 is an array
+    index, and an object lists every one of those first, in ascending order,
+    before the keys it was written with.
+    """
+    indexes = sorted((label for label in labels if _is_index(label)), key=int)
+
+    return indexes + [label for label in labels if not _is_index(label)]
+
 
 class StaticLinter:
     RULES = RULES
@@ -279,6 +303,14 @@ class StaticLinter:
                 Text.of('evidence.option_count', {'count': len(labels)}),
             )
 
+        if len(labels) > _MOST_OPTIONS:
+            self._raise(
+                'choice.tooManyOptions',
+                question.id,
+                report,
+                Text.of('evidence.option_count', {'count': len(labels)}),
+            )
+
         not_text = [value for _, value in entries if value is not None and not isinstance(value, str)]
 
         if len(not_text) > 0:
@@ -317,6 +349,19 @@ class StaticLinter:
 
         if len(described) == 0:
             self._raise('choice.undescribedOptions', question.id, report)
+
+        sent = _as_javascript_sends(labels)
+
+        if sent != labels:
+            self._raise(
+                'choice.indexLikeOptions',
+                question.id,
+                report,
+                Text.of('evidence.reordered_options', {
+                    'written': ', '.join(labels),
+                    'sent': ', '.join(sent),
+                }),
+            )
 
     def _score_rules(self, question: ReviewedQuestion, report: Report) -> None:
         criteria = question.criteria

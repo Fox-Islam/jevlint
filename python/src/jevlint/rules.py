@@ -12,9 +12,11 @@ that raises them reads the catalogue.
 RULES = (
     'choice.criteriaShape',
     'choice.descriptionNotText',
+    'choice.indexLikeOptions',
     'choice.noCriteria',
     'choice.noFallback',
     'choice.tooFewOptions',
+    'choice.tooManyOptions',
     'choice.undescribedOptions',
     'noul.criteriaShape',
     'noul.noCriteria',

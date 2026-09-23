@@ -138,7 +138,7 @@ same.</p>
 at fault. A fault every element can carry at once, such as levels written as degrees, is asked
 one element at a time and <code>paths</code> lists all of them. A fault one element carries relative to the
 others is asked as a single choice across them, because asked in isolation every level that
-describes a situation reads as naming several things.</p>
+describes a situation reads as naming several things. Where more than one element carries that fault, the choice names one of them, and which one it names follows the order they are listed in, so a located level is where to start and not the only one.</p>
 <p>A finding whose fix is deleting one node carries a <code>remove</code> patch: <code>question/arithmetic</code> on a
 question that asks for a tally emits <code>{&quot;op&quot;:&quot;remove&quot;,&quot;path&quot;:&quot;/questions/charge_count&quot;}</code>, and
 <code>state/irrelevant-field</code> emits the pointer to the field. <code>question/type-mismatch</code> carries

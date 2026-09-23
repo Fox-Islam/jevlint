@@ -537,12 +537,12 @@
         "type": "choice",
         "instructions": "Does the tracking log state the time the parcel was collected?",
         "criteria": {
-          "06": "The collection time is in the 06 hour",
-          "07": "The collection time is in the 07 hour",
-          "08": "The collection time is in the 08 hour",
-          "09": "The collection time is in the 09 hour",
-          "10": "The collection time is in the 10 hour",
-          "11": "The collection time is in the 11 hour",
+          "hour_06": "The collection time is in the 06 hour",
+          "hour_07": "The collection time is in the 07 hour",
+          "hour_08": "The collection time is in the 08 hour",
+          "hour_09": "The collection time is in the 09 hour",
+          "hour_10": "The collection time is in the 10 hour",
+          "hour_11": "The collection time is in the 11 hour",
           "not_stated": "The booking gives no collection time"
         }
       }
@@ -968,6 +968,231 @@
         },
         "state": {
           "label": "Handle with care where the contents are fragile. No fragile marking was applied to this consignment."
+        }
+      }
+    },
+    {
+      "check": "question/refers-to-sibling",
+      "clean": {
+        "type": "noul",
+        "instructions": "Is this return request inside the return window the policy sets?",
+        "criteria": {
+          "true": "The request was submitted within the window the policy states.",
+          "false": "The request was submitted after the window had closed."
+        }
+      },
+      "broken": {
+        "type": "noul",
+        "instructions": "Given your answer to the eligibility question, is this return request inside the return window?",
+        "criteria": {
+          "true": "The request was submitted within the window the policy states.",
+          "false": "The request was submitted after the window had closed."
+        }
+      },
+      "fixed": {
+        "type": "noul",
+        "instructions": "Using the eligibility decision recorded in the state, is this return request inside the return window?",
+        "criteria": {
+          "true": "The request was submitted within the window the policy states.",
+          "false": "The request was submitted after the window had closed."
+        }
+      }
+    },
+    {
+      "check": "question/refers-to-sibling",
+      "domain": "parcels",
+      "clean": {
+        "type": "noul",
+        "instructions": "Is this parcel inside the size limit for the destination zone on the label?",
+        "criteria": {
+          "true": "The parcel's measurements are inside the limit set for that destination zone.",
+          "false": "The parcel is larger than the limit set for that destination zone."
+        }
+      },
+      "broken": {
+        "type": "noul",
+        "instructions": "Taking the destination zone the previous question worked out, is this parcel inside the size limit for it?",
+        "criteria": {
+          "true": "The parcel's measurements are inside the limit set for that destination zone.",
+          "false": "The parcel is larger than the limit set for that destination zone."
+        }
+      },
+      "fixed": {
+        "type": "noul",
+        "instructions": "Taking the destination zone given in the shipment record, is this parcel inside the size limit for it?",
+        "criteria": {
+          "true": "The parcel's measurements are inside the limit set for that destination zone.",
+          "false": "The parcel is larger than the limit set for that destination zone."
+        }
+      }
+    },
+    {
+      "check": "question/answerable-in-code",
+      "clean": {
+        "type": "noul",
+        "instructions": "Does the customer say the problem is still unresolved?",
+        "criteria": {
+          "true": "The customer states the problem is continuing.",
+          "false": "The customer treats the problem as settled."
+        }
+      },
+      "broken": {
+        "type": "noul",
+        "instructions": "Is the ticket's `status` field exactly `escalated`?",
+        "criteria": {
+          "true": "The field holds that value.",
+          "false": "The field holds some other value."
+        }
+      },
+      "fixed": {
+        "type": "noul",
+        "instructions": "Does the customer describe the problem as having been escalated to a manager?",
+        "criteria": {
+          "true": "The customer says a manager has taken it on.",
+          "false": "Nothing in the message puts a manager on it."
+        }
+      }
+    },
+    {
+      "check": "question/answerable-in-code",
+      "domain": "parcels",
+      "clean": {
+        "type": "noul",
+        "instructions": "Does the delivery note describe the parcel as damaged on arrival?",
+        "criteria": {
+          "true": "The note says the parcel arrived damaged.",
+          "false": "The note describes the parcel as sound."
+        }
+      },
+      "broken": {
+        "type": "noul",
+        "instructions": "Is the parcel's `weight_grams` field greater than 30000?",
+        "criteria": {
+          "true": "The field holds a number above that.",
+          "false": "The field holds that number or less."
+        }
+      },
+      "fixed": {
+        "type": "noul",
+        "instructions": "Does the delivery note describe the parcel as too heavy for one person to carry?",
+        "criteria": {
+          "true": "The note says it took more than one person or special handling.",
+          "false": "The note describes an ordinary single-handed delivery."
+        }
+      }
+    },
+    {
+      "check": "choice/undetermined-outcome",
+      "clean": {
+        "question": {
+          "type": "choice",
+          "instructions": "Which team does the problem in this ticket belong to?",
+          "criteria": {
+            "billing": "Money, invoices or charges",
+            "engineering": "The software is not doing what it should",
+            "shipping": "Where a parcel is or when it arrives",
+            "other": "Anything the other options do not cover"
+          }
+        },
+        "state": {
+          "ticket": "The export button does nothing when I click it. Nothing downloads.",
+          "opened": "This morning",
+          "assigned_to": "Nobody has picked it up yet",
+          "quality_audit": "This week's sample has not been drawn"
+        }
+      },
+      "broken": {
+        "question": {
+          "type": "choice",
+          "instructions": "Which reviewer will the weekly quality audit draw this ticket for?",
+          "criteria": {
+            "okonkwo": "Reviewer Okonkwo",
+            "halvorsen": "Reviewer Halvorsen",
+            "whitfield": "Reviewer Whitfield",
+            "other": "Anything the other options do not cover"
+          }
+        },
+        "state": {
+          "ticket": "The export button does nothing when I click it. Nothing downloads.",
+          "opened": "This morning",
+          "assigned_to": "Nobody has picked it up yet",
+          "quality_audit": "This week's sample has not been drawn"
+        }
+      },
+      "fixed": {
+        "question": {
+          "type": "choice",
+          "instructions": "Which team's work does the ticket describe going wrong?",
+          "criteria": {
+            "billing": "Money, invoices or charges",
+            "engineering": "The software is not doing what it should",
+            "shipping": "Where a parcel is or when it arrives",
+            "other": "Anything the other options do not cover"
+          }
+        },
+        "state": {
+          "ticket": "The export button does nothing when I click it. Nothing downloads.",
+          "opened": "This morning",
+          "assigned_to": "Nobody has picked it up yet",
+          "quality_audit": "This week's sample has not been drawn"
+        }
+      }
+    },
+    {
+      "check": "choice/undetermined-outcome",
+      "domain": "parcels",
+      "clean": {
+        "question": {
+          "type": "choice",
+          "instructions": "Which depot does the record name as the origin?",
+          "criteria": {
+            "leeds": "Leeds",
+            "bristol": "Bristol",
+            "glasgow": "Glasgow",
+            "other": "Anything the other options do not cover"
+          }
+        },
+        "state": {
+          "parcel": "88213",
+          "left_depot": "Leeds, 18:40 on Tuesday",
+          "attempts": "None recorded",
+          "route": "Nine other drops before this one"
+        }
+      },
+      "broken": {
+        "question": {
+          "type": "choice",
+          "instructions": "Which of these will happen on the next delivery attempt?",
+          "criteria": {
+            "delivered": "The parcel is handed over",
+            "carded": "Nobody is in and a card is left",
+            "refused": "The recipient refuses it",
+            "other": "Anything the other options do not cover"
+          }
+        },
+        "state": {
+          "parcel": "88213",
+          "left_depot": "Leeds, 18:40 on Tuesday",
+          "attempts": "None recorded",
+          "route": "Nine other drops before this one"
+        }
+      },
+      "fixed": {
+        "question": {
+          "type": "choice",
+          "instructions": "Which event does the record give as the latest one for this parcel?",
+          "criteria": {
+            "left_depot": "It has left the depot",
+            "attempted": "A delivery has been attempted",
+            "delivered": "It has been delivered",
+            "other": "Anything the other options do not cover"
+          }
+        },
+        "state": {
+          "parcel": "88213",
+          "left_depot": "Leeds, 18:40 on Tuesday",
+          "attempts": "None recorded",
+          "route": "Nine other drops before this one"
         }
       }
     }

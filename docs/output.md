@@ -89,6 +89,9 @@ at fault. A fault every element can carry at once, such as levels written as deg
 one element at a time and `paths` lists all of them. A fault one element carries relative to the
 others is asked as a single choice across them, because asked in isolation every level that
 describes a situation reads as naming several things.
+Where more than one element carries that fault, the choice
+names one of them, and which one it names follows the order they are listed in, so a located
+level is where to start and not the only one.
 
 A finding whose fix is deleting one node carries a `remove` patch: `question/arithmetic` on a
 question that asks for a tally emits `{"op":"remove","path":"/questions/charge_count"}`, and

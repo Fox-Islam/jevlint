@@ -151,8 +151,11 @@ low on its broken one, which is the `inverted` verdict, and the run fails.
 | [One snap judgment per question](https://docs.typesafe.ai/primitives#ask-for-one-snap-judgment-per-question) | `question/compound-judgment`, `score/multi-dimension` |
 | [Writing good levels](https://docs.typesafe.ai/primitives/score#writing-good-levels) | `score/degree-levels`, `score/overlapping-levels` |
 | [Choosing a question type](https://docs.typesafe.ai/primitives#choose-a-question-type) | `choice/overlapping-options`, `question/type-mismatch` |
+| [Choice](https://docs.typesafe.ai/primitives/choice) | `choice/undetermined-outcome` |
 | [The state has to hold the answer](https://docs.typesafe.ai/concepts/state) | `state/answer-absent` |
 | [Ask multiple questions together](https://docs.typesafe.ai/primitives#ask-multiple-questions-together) | `query/overlapping-questions` |
+| [When one question depends on another](https://docs.typesafe.ai/primitives#when-one-question-depends-on-another) | `question/refers-to-sibling` |
+| [Defining a question](https://docs.typesafe.ai/primitives#define-a-question) | `question/answerable-in-code` |
 
 Some checks are asked more than one way. A catalogue entry with `questions` instead of
 `question` carries several wordings that mean the same thing; they go in the same call, the

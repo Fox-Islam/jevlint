@@ -1161,6 +1161,126 @@
       "reads": "criteria",
       "action": "restructure",
       "docs": "https://docs.typesafe.ai/primitives/choice"
+    },
+    {
+      "id": "question/refers-to-sibling",
+      "title": "Question depends on another question's answer",
+      "mode": "model",
+      "scope": "question",
+      "applies_to": [
+        "*"
+      ],
+      "severity": "error",
+      "trigger": 0.6,
+      "message": "This question is written to use something another question in the same request produces.",
+      "hint": "Questions in one request are independent, so what this names is not there to be read and the question is answered as though the material were absent. Measured on decision-v7's contrastive rows: with the policy the question needs moved out of the state and into another question's instructions, the label is answered 20 of 30 against 27 of 30 with it in the state, at a Brier score of 0.237 against 0.064. Deleting the policy outright reads 20 of 30 and 0.242, so a sibling carries nothing. Accept it where the phrase points at the material rather than at an answer the request has to produce.",
+      "suggest": "Put what the question needs into the state. Where the second question cannot be built until the first is answered, send it as a second request.",
+      "question": {
+        "type": "noul",
+        "instructions": "The question names another question in the request, or an answer to one.",
+        "criteria": {
+          "true": "Answering it needs a result the request has to produce first, such as an earlier answer, a classification already made, or a question named by its id.",
+          "false": "It asks only about the material it is given. A phrase pointing at that material, such as the policy above or the case as described, is the material and not another question."
+        }
+      },
+      "docs": "https://docs.typesafe.ai/primitives#when-one-question-depends-on-another",
+      "reads": "instructions",
+      "action": "restructure"
+    },
+    {
+      "id": "choice/too-many-options",
+      "title": "Choice has more than 255 options",
+      "mode": "static",
+      "rule": "choice.tooManyOptions",
+      "scope": "question",
+      "applies_to": [
+        "choice"
+      ],
+      "severity": "error",
+      "message": "A Choice takes at most 255 options and this one has more.",
+      "hint": "The request is refused before the model sees it, with a 400 and `Too many choices. Must have at most 255 choices.` A list this long is usually a table the code already holds, and the question is which row the material points at.",
+      "docs": "https://docs.typesafe.ai/primitives/choice",
+      "suggest": "Narrow the list to the labels this material can take, or ask in two steps: a Choice over the groups, then one over the members of the group it picked.",
+      "reads": "criteria",
+      "action": "remove"
+    },
+    {
+      "id": "question/answerable-in-code",
+      "title": "The answer follows from the material by a rule",
+      "mode": "model",
+      "scope": "question",
+      "applies_to": [
+        "*"
+      ],
+      "severity": "advice",
+      "trigger": 0.7,
+      "message": "Code holding the material could answer this without a model.",
+      "hint": "Measured over 96 answers on generated states, Jev got every one right, so what this costs is not accuracy: it is a call, a round trip and a probability where code gives a fact, paid on every request for as long as the question is in the query. Asked both ways over nineteen questions, a field lookup reads 0.73 and up and a question needing a reading of the material reads 0.42 and down. A date comparison reads 0.64 and an encoded value 0.69, so a question carrying one of those defects can draw this as well as the check written for it. Accept it where the field the rule would read is not reliably there or not reliably shaped, and where the value is stated in prose rather than carried in a field, because then code has to read the material before it can apply any rule.",
+      "suggest": "Take the question out and apply the rule in code to the field it reads.",
+      "docs": "https://docs.typesafe.ai/primitives#define-a-question",
+      "reads": "instructions",
+      "action": "remove",
+      "removes": "question",
+      "questions": [
+        {
+          "type": "noul",
+          "instructions": "Code holding the material could answer this question by itself, with no model.",
+          "criteria": {
+            "true": "The question names a value and a test to apply to it, so the answer is looked up or compared rather than judged.",
+            "false": "The question asks what the material means, describes or amounts to. Naming a field does not make it mechanical: asking what a field says about something is still a judgement. Arithmetic to work out, a date or time comparison, and a value written in an encoding a reader would decode are each a different defect with a check of their own."
+          }
+        },
+        {
+          "type": "noul",
+          "instructions": "Answering this means applying a rule to a value, not reading the material.",
+          "criteria": {
+            "true": "The question names a field or a value in the material and a test to apply to it - an equality, a threshold, a membership, a substring, whether it is filled in - so the answer is that test applied to that value.",
+            "false": "Answering means reading the material rather than testing a value in it: what it means, what it describes, or a fact somebody has to find in prose before they can state it. One right answer does not make a question mechanical, and neither does naming a field: code can apply a rule to a value handed to it, not read a document to find the value first. Arithmetic to work out, a date or time comparison, and a value written in an encoding a reader would decode are each a different defect with a check of their own."
+          }
+        }
+      ]
+    },
+    {
+      "id": "choice/index-like-options",
+      "title": "Option keys a JavaScript caller reorders",
+      "mode": "static",
+      "rule": "choice.indexLikeOptions",
+      "scope": "question",
+      "applies_to": [
+        "choice"
+      ],
+      "severity": "advice",
+      "message": "An option key is written the way an array index is, so a JavaScript caller sends the options in an order this file does not carry.",
+      "hint": "A JavaScript object lists a key that looks like an array index before every other key, and lists those in ascending numeric order however they were written. jevlint reads your file with a parser that keeps the order you wrote, so the order it checks is not the order such a caller sends. How far option order moves a Choice answer is not settled: reversing the options changed no pick over the 24 cases measured for this catalogue. Accept it where nothing between this file and the API builds the options as a JavaScript object.",
+      "docs": "https://docs.typesafe.ai/primitives/choice",
+      "suggest": "Give each key a form no language reads as a number, as `hour_06` for `06`, and leave the descriptions as they are.",
+      "reads": "criteria",
+      "action": "rewrite"
+    },
+    {
+      "id": "choice/undetermined-outcome",
+      "title": "A Choice over an outcome the material does not settle",
+      "mode": "model",
+      "scope": "state",
+      "applies_to": [
+        "choice"
+      ],
+      "severity": "warning",
+      "trigger": 0.7,
+      "message": "The options name an outcome the material does not settle, so the probability beside the answer is not a likelihood.",
+      "hint": "A Choice reports a probability for the option it picks, and over an outcome the material cannot settle that number is not a likelihood. Measured outside this repository, by jev-does-not-play-dice: on a hidden fair die roll a mean 0.83 on the picked face against a chance of 0.17, with accuracy at 19.0% over 400 calls, and on a coin 0.92 at 52.0% accuracy. The same die asked as a Noul read 0.19, so what the number is worth follows from the primitive and not from the question. The trigger is 0.70 because over the four draws that project recorded and two outcomes written here this reads 0.83 and up, while over fourteen Choice questions whose material does settle them it reads 0.53 and down. The reading nearest the line is a question about what somebody wants, which the material leaves unstated, so a finding on one of those is the one to read rather than act on. Accept it where you read the label and never the number beside it.",
+      "suggest": "Where you act on the probability, take the question out: no primitive reports a likelihood for an outcome the material does not settle. Where you act on the label alone, keep the question and leave the number unread.",
+      "question": {
+        "type": "noul",
+        "instructions": "Picking between the options in `question` is guessing, as far as the material in `state` goes.",
+        "criteria": {
+          "true": "The options name results of something the material presents as still open, or as already settled and withheld from whoever reads it, so one option is as good a pick as another.",
+          "false": "The material bears on the answer, so picking between the options is reading it. A question about what somebody wants, intends, means or is likely to do is such a case, however little the material says about it, and so is one whose answer the material states as a number or a forecast."
+        }
+      },
+      "docs": "https://docs.typesafe.ai/primitives/choice",
+      "reads": "question",
+      "action": "remove"
     }
   ]
 }
