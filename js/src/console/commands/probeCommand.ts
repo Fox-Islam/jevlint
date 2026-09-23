@@ -120,6 +120,8 @@ function toObject(
             type: question.question.type,
             reading: question.reading,
             moved: question.readings.filter((reading) => question.moved(reading)).length > 0,
+            undecided: question.undecided(),
+            flips: question.flips(),
             baseline: question.baseline(),
             repeats: question.repeats,
             noise: question.noise(),
@@ -140,6 +142,9 @@ function toObject(
     const moved = rows
         .filter(([, question]) => (question as { moved: boolean }).moved)
         .map(([id]) => id);
+    const undecided = rows
+        .filter(([, question]) => (question as { undecided: boolean }).undecided)
+        .map(([id]) => id);
 
     return {
         source,
@@ -152,9 +157,12 @@ function toObject(
             questions: rows.length,
             moved: moved.length,
             moved_questions: moved,
+            undecided: undecided.length,
+            undecided_questions: undecided,
             unreachable: probe.unreachable(),
             complete: probe.isComplete(),
             rule: Text.of('probe.moved_definition', { floor: QuestionProbe.NEGLIGIBLE }),
+            undecided_rule: Text.of('probe.undecided_definition', { band: QuestionProbe.UNDECIDED }),
             floor: Text.of('probe.floor_definition', { noise: Probe.PUBLISHED_NOISE }),
         },
         questions,

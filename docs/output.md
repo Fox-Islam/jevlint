@@ -98,7 +98,11 @@ It is absent when the check judged that none of the three fits, which is a findi
 acting on and not a type to retype to.
 
 `probe --format=json` carries `moved` on every reading and a `summary` naming which
-questions moved and the rule that decided it.
+questions moved and the rule that decided it. Each question also carries `undecided`, true
+where the unchanged answer landed near the middle of a yes/no question, and `flips`, true where
+its repeats fell on both sides of that middle. `summary.undecided_questions` lists them and
+`summary.undecided_rule` states the band. Neither changes the exit code: a probe is not a gate,
+and an answer near the middle can be the right answer to material that is ambiguous.
 
 ## Versions, in full
 

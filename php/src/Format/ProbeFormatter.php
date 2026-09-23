@@ -55,7 +55,10 @@ final class ProbeFormatter
         // whichever variant was the reason the run failed.
         $movers = $this->moversIn($probes);
 
+        $undecided = count(array_filter($probes, static fn (QuestionProbe $p): bool => $p->undecided()));
+
         $lines[] = Text::of('probe.summary', ['moved' => $moved, 'questions' => count($probes)])
+            .($undecided === 0 ? '' : Text::of('probe.undecided_summary', ['count' => $undecided]))
             .($movers === [] ? '' : Text::of('probe.movers', [
                 'count' => count($movers),
                 'names' => implode(', ', array_map(static fn (string $v): string => '`'.$v.'`', $movers)),
@@ -124,6 +127,14 @@ final class ProbeFormatter
                 'below' => $noise < Probe::PUBLISHED_NOISE ? 'yes' : 'no',
             ])),
         );
+
+        // Under the unchanged row, because it is a fact about that reading and
+        // not about any of the rewrites below it.
+        if ($probe->undecided()) {
+            $lines[] = '    '.$this->paint(Text::of('probe.undecided', [
+                'flips' => $probe->flips() ? 'yes' : 'no',
+            ]), '33');
+        }
 
         foreach ($probe->readings as $reading) {
             $lines[] = $this->reading($probe, $reading);

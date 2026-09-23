@@ -139,6 +139,8 @@ final class ProbeCommand
                 'type' => $question->question->type,
                 'reading' => $question->reading,
                 'moved' => count(array_filter($question->readings, $question->moved(...))) > 0,
+                'undecided' => $question->undecided(),
+                'flips' => $question->flips(),
                 'baseline' => $question->baseline(),
                 'repeats' => $question->repeats,
                 'noise' => $question->noise(),
@@ -150,6 +152,10 @@ final class ProbeCommand
         $moved = array_keys(array_filter(
             $questions,
             static fn (array $q): bool => $q['moved'] === true,
+        ));
+        $undecided = array_keys(array_filter(
+            $questions,
+            static fn (array $q): bool => $q['undecided'] === true,
         ));
 
         return [
@@ -163,9 +169,12 @@ final class ProbeCommand
                 'questions' => count($questions),
                 'moved' => count($moved),
                 'moved_questions' => $moved,
+                'undecided' => count($undecided),
+                'undecided_questions' => $undecided,
                 'unreachable' => $probe->unreachable(),
                 'complete' => $probe->isComplete(),
                 'rule' => Text::of('probe.moved_definition', ['floor' => QuestionProbe::NEGLIGIBLE]),
+                'undecided_rule' => Text::of('probe.undecided_definition', ['band' => QuestionProbe::UNDECIDED]),
                 'floor' => Text::of('probe.floor_definition', ['noise' => Probe::PUBLISHED_NOISE]),
             ],
             'questions' => $questions,

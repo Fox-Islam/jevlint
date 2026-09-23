@@ -59,7 +59,9 @@ export class ModelLinter {
     static readonly WORTH_SEEING = 0.1;
 
     /** field to question id to probability */
-    private fields = new Map<string, Map<string, number>>();
+    /** check id to field to question id to probability */
+    private fields = new Map<string, Map<string, Map<string, number>>>();
+
 
     /** How many questions the query under review holds */
     private questionCount = 0;
@@ -388,13 +390,14 @@ export class ModelLinter {
 
     /** One finding per state field, however many questions were asked about it */
     private reportFields(asked: string[], report: Report): void {
-        const check = this.catalogue.find('state/irrelevant-field');
-
-        if (check === null) {
-            return;
+        for (const check of this.catalogue.modelChecks('state-field')) {
+            this.reportField(check, this.fields.get(check.id) ?? new Map(), asked, report);
         }
+    }
 
-        for (const [field, byQuestion] of this.fields) {
+    /** One finding per state field, for one check asked about every field */
+    private reportField(check: Check, fields: Map<string, Map<string, number>>, asked: string[], report: Report): void {
+        for (const [field, byQuestion] of fields) {
             if (byQuestion.size === 0) {
                 continue;
             }
@@ -785,9 +788,11 @@ export class ModelLinter {
         report.reached(check.id, target);
 
         if (check.scope === 'state-field' && field !== null) {
-            const byQuestion = this.fields.get(field) ?? new Map<string, number>();
+            const byField = this.fields.get(check.id) ?? new Map<string, Map<string, number>>();
+            const byQuestion = byField.get(field) ?? new Map<string, number>();
             byQuestion.set(target, average);
-            this.fields.set(field, byQuestion);
+            byField.set(field, byQuestion);
+            this.fields.set(check.id, byField);
 
             return;
         }

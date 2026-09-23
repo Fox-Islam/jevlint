@@ -146,7 +146,11 @@ question that asks for a tally emits <code>{&quot;op&quot;:&quot;remove&quot;,&q
 It is absent when the check judged that none of the three fits, which is a finding worth
 acting on and not a type to retype to.</p>
 <p><code>probe --format=json</code> carries <code>moved</code> on every reading and a <code>summary</code> naming which
-questions moved and the rule that decided it.</p>
+questions moved and the rule that decided it. Each question also carries <code>undecided</code>, true
+where the unchanged answer landed near the middle of a yes/no question, and <code>flips</code>, true where
+its repeats fell on both sides of that middle. <code>summary.undecided_questions</code> lists them and
+<code>summary.undecided_rule</code> states the band. Neither changes the exit code: a probe is not a gate,
+and an answer near the middle can be the right answer to material that is ambiguous.</p>
 <h2 id="versions-in-full">Versions, in full</h2>
 <p>A version the catalogue holds nothing for is refused, because the alternative is a query
 checked against a different build's rules and reported as clean. Where the resolved version

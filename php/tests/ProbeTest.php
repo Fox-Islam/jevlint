@@ -28,6 +28,77 @@ final class ProbeTest extends TestCase
         $this->assertEqualsWithDelta(0.25, $probe->delta($this->reading($probe, 'asked-as-choice')), 0.0001);
     }
 
+    /**
+     * A yes/no answer near the middle is the threshold's answer and not the
+     * query's, whatever the rewrites do to it
+     */
+    public function test_it_names_a_yes_no_question_the_query_did_not_decide(): void
+    {
+        $fake = FakeTypeSafe::make();
+        $fake->reply(FakeAnswers::make()->noul('refund', 0.58)->only(), times: 6);
+        $fake->reply(FakeAnswers::make()->choice('refund', 'yes', ['yes' => 0.58, 'no' => 0.42])->only());
+
+        $probe = (new Probe($fake->client()))->run($this->noulQuery(), repeats: 5)['refund'];
+
+        self::assertTrue($probe->undecided());
+        self::assertFalse($probe->flips(), 'Every repeat answered the same side of the middle.');
+    }
+
+    public function test_a_decided_answer_is_left_alone(): void
+    {
+        $fake = FakeTypeSafe::make();
+        $fake->reply(FakeAnswers::make()->noul('refund', 0.90)->only(), times: 6);
+        $fake->reply(FakeAnswers::make()->choice('refund', 'yes', ['yes' => 0.90, 'no' => 0.10])->only());
+
+        $probe = (new Probe($fake->client()))->run($this->noulQuery(), repeats: 5)['refund'];
+
+        self::assertFalse($probe->undecided());
+    }
+
+    /**
+     * The repeats landing on both sides of the middle is the stronger fact: the
+     * answer did not hold still from one send to the next
+     */
+    public function test_the_repeats_falling_on_both_sides_is_reported(): void
+    {
+        $fake = FakeTypeSafe::make();
+
+        foreach ([0.48, 0.55, 0.47, 0.52, 0.49] as $reading) {
+            $fake->reply(FakeAnswers::make()->noul('refund', $reading)->only());
+        }
+
+        $fake->reply(FakeAnswers::make()->noul('refund', 0.50)->only());
+        $fake->reply(FakeAnswers::make()->choice('refund', 'yes', ['yes' => 0.50, 'no' => 0.50])->only());
+
+        $probe = (new Probe($fake->client()))->run($this->noulQuery(), repeats: 5)['refund'];
+
+        self::assertTrue($probe->undecided());
+        self::assertTrue($probe->flips());
+    }
+
+    /**
+     * A Choice reports its winning label's own probability and a Score a
+     * position on its scale, so neither is undecided for sitting halfway
+     */
+    public function test_only_a_yes_no_question_has_a_middle(): void
+    {
+        $fake = FakeTypeSafe::make();
+        $fake->alwaysReply(FakeAnswers::make()->score('urgency', 1.0, 0.8)->only());
+
+        $probe = (new Probe($fake->client()))->run(Query::fromArray([
+            'state' => ['ticket' => 'x'],
+            'questions' => ['urgency' => [
+                'type' => 'score',
+                'instructions' => 'How urgent is this ticket?',
+                'criteria' => ['Not urgent at all', 'Somewhat urgent', 'Blocking work right now'],
+            ]],
+        ]), repeats: 3)['urgency'];
+
+        self::assertSame(0.5, $probe->baseline());
+        self::assertFalse($probe->undecided(), 'Halfway up a rubric is an answer, not an undecided one.');
+        self::assertFalse($probe->flips());
+    }
+
     public function test_a_query_that_never_moves_reports_the_published_noise_floor(): void
     {
         $fake = FakeTypeSafe::make();

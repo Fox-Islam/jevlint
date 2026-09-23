@@ -50,8 +50,11 @@ export class ProbeFormatter {
         // whichever variant was the reason the run failed.
         const movers = moversIn(probes);
 
+        const undecided = [...probes.values()].filter((probe) => probe.undecided()).length;
+
         lines.push(
             Text.of('probe.summary', { moved, questions: probes.size })
+            + (undecided === 0 ? '' : Text.of('probe.undecided_summary', { count: undecided }))
             + (movers.length === 0 ? '' : Text.of('probe.movers', {
                 count: movers.length,
                 names: movers.map((variant) => `\`${variant}\``).join(', '),
@@ -105,6 +108,14 @@ export class ProbeFormatter {
             noise,
             below: noise < Probe.PUBLISHED_NOISE ? 'yes' : 'no',
         }))}`);
+
+        // Under the unchanged row, because it is a fact about that reading and
+        // not about any of the rewrites below it.
+        if (probe.undecided()) {
+            lines.push(`    ${paint(this.colour, Text.of('probe.undecided', {
+                flips: probe.flips() ? 'yes' : 'no',
+            }), '33')}`);
+        }
 
         for (const reading of probe.readings) {
             lines.push(this.reading(probe, reading));

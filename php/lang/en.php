@@ -240,6 +240,9 @@ return [
     'probe.no_reading' => 'no reading',
     'probe.noise' => '± {noise, number, ::.0000} over the repeats{below, select, yes {, below the published floor} other {}}',
     'probe.noise_ratio' => '{ratio, number, ::.} × the noise floor',
+    'probe.undecided' => 'near enough to the middle that your threshold decides this question and not the query{flips, select, yes {, and the repeats fell on both sides of it} other {}}',
+    'probe.undecided_summary' => ' {count, plural, one {# question} other {# questions}} answered near the middle as written.',
+    'probe.undecided_definition' => 'A yes/no answer within {band, number, ::.00} of 0.5, where a threshold anywhere a caller would put it falls on either side. A Choice reports its winning label and a Score a position on its scale, so neither is counted.',
 
     'self_test.heading' => 'Each check asked about a question it should fire on, one it should not, and the broken one with its own suggestion applied.',
     'self_test.footer' => 'A check that does not separate them measures something other than what its title claims, whatever it reports about your query.',

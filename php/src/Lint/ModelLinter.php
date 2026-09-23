@@ -75,8 +75,9 @@ final class ModelLinter
         return $this->only === [] || in_array($check->id, $this->only, true);
     }
 
-    /** @var array<string, array<string, float>> field to question id to probability */
+    /** @var array<string, array<string, array<string, float>>> check id to field to question id to probability */
     private array $fields = [];
+
 
     /** How many questions the query under review holds */
     private int $questionCount = 0;
@@ -448,13 +449,20 @@ final class ModelLinter
      */
     private function reportFields(array $asked, Report $report): void
     {
-        $check = $this->catalogue->find('state/irrelevant-field');
-
-        if (! $check instanceof Check) {
-            return;
+        foreach ($this->catalogue->modelChecks('state-field') as $check) {
+            $this->reportField($check, $this->fields[$check->id] ?? [], $asked, $report);
         }
+    }
 
-        foreach ($this->fields as $field => $byQuestion) {
+    /**
+     * One finding per state field, for one check asked about every field
+     *
+     * @param array<string, array<string, float>> $fields field to question id to probability
+     * @param list<string>                        $asked
+     */
+    private function reportField(Check $check, array $fields, array $asked, Report $report): void
+    {
+        foreach ($fields as $field => $byQuestion) {
             if ($byQuestion === []) {
                 continue;
             }
@@ -871,7 +879,7 @@ final class ModelLinter
         $report->reached($check->id, $target);
 
         if ($check->scope === 'state-field' && $field !== null) {
-            $this->fields[$field][$target] = $mean;
+            $this->fields[$check->id][$field][$target] = $mean;
 
             return;
         }
