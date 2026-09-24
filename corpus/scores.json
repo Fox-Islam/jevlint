@@ -1,12 +1,12 @@
 {
   "catalogue": {
     "version": "1",
-    "fingerprint": "02905ca6a4b5",
-    "asked": "e2c57c15a55c",
+    "fingerprint": "e758766803ad",
+    "asked": "62cb6190d529",
     "model": "jev-1.13"
   },
-  "measured": "2026-09-23",
-  "calls": 959,
+  "measured": "2026-09-24",
+  "calls": 1000,
   "scores": {
     "atarim-passages/candidate_2": {
       "query/overlapping-questions": 0.63,
@@ -72,7 +72,8 @@
       "choice/overlapping-options": 0.16,
       "query/overlapping-questions": 0.23,
       "question/refers-to-sibling": 0.16,
-      "question/answerable-in-code": 0.375
+      "question/answerable-in-code": 0.375,
+      "choice/label-contradicts-description": 0.2
     },
     "atarim-site-match/candidate_0": {
       "question/compound-judgment": 0.34,
@@ -138,7 +139,8 @@
       "choice/overlapping-options": 0.315,
       "query/overlapping-questions": 0.24,
       "question/refers-to-sibling": 0.18,
-      "question/answerable-in-code": 0.355
+      "question/answerable-in-code": 0.355,
+      "choice/label-contradicts-description": 0.16
     },
     "atarim-skills/candidate_0": {
       "question/compound-judgment": 0.23,
@@ -204,7 +206,8 @@
       "choice/overlapping-options": 0.155,
       "query/overlapping-questions": 0.12,
       "question/refers-to-sibling": 0.13,
-      "question/answerable-in-code": 0.245
+      "question/answerable-in-code": 0.245,
+      "choice/label-contradicts-description": 0.19
     },
     "atarim-tasks/candidate_0": {
       "question/compound-judgment": 0.2,
@@ -270,7 +273,8 @@
       "choice/overlapping-options": 0.145,
       "query/overlapping-questions": 0.13,
       "question/refers-to-sibling": 0.11,
-      "question/answerable-in-code": 0.225
+      "question/answerable-in-code": 0.225,
+      "choice/label-contradicts-description": 0.18
     },
     "atarim-wp-tools/candidate_0": {
       "question/compound-judgment": 0.22,
@@ -336,7 +340,8 @@
       "choice/overlapping-options": 0.205,
       "query/overlapping-questions": 0.12,
       "question/refers-to-sibling": 0.12,
-      "question/answerable-in-code": 0.29
+      "question/answerable-in-code": 0.29,
+      "choice/label-contradicts-description": 0.205
     },
     "bench-admissions/admit": {
       "question/compound-judgment": 0.85,
@@ -386,7 +391,8 @@
       "choice/overlapping-options": 0.415,
       "query/overlapping-questions": 0.11,
       "question/refers-to-sibling": 0.12,
-      "question/answerable-in-code": 0.295
+      "question/answerable-in-code": 0.295,
+      "choice/label-contradicts-description": 0.12
     },
     "bench-admissions/interview_first": {
       "question/compound-judgment": 0.64,
@@ -419,7 +425,8 @@
       "choice/overlapping-options": 0.285,
       "query/overlapping-questions": 0.13,
       "question/refers-to-sibling": 0.1,
-      "question/answerable-in-code": 0.22
+      "question/answerable-in-code": 0.22,
+      "choice/label-contradicts-description": 0.085
     },
     "bench-clinical_triage/urgency": {
       "question/compound-judgment": 0.74,
@@ -468,7 +475,8 @@
       "question/criteria-off-topic": 0.2,
       "choice/overlapping-options": 0.35,
       "question/refers-to-sibling": 0.17,
-      "question/answerable-in-code": 0.36
+      "question/answerable-in-code": 0.36,
+      "choice/label-contradicts-description": 0.16
     },
     "bench-clinical_triage/investigate": {
       "question/compound-judgment": 0.64,
@@ -535,7 +543,8 @@
       "choice/overlapping-options": 0.475,
       "query/overlapping-questions": 0.15,
       "question/refers-to-sibling": 0.13,
-      "question/answerable-in-code": 0.31
+      "question/answerable-in-code": 0.31,
+      "choice/label-contradicts-description": 0.115
     },
     "bench-content_moderation/good_faith": {
       "question/compound-judgment": 0.61,
@@ -585,7 +594,8 @@
       "choice/overlapping-options": 0.535,
       "query/overlapping-questions": 0.16,
       "question/refers-to-sibling": 0.14,
-      "question/answerable-in-code": 0.3
+      "question/answerable-in-code": 0.3,
+      "choice/label-contradicts-description": 0.115
     },
     "bench-credibility/request_more": {
       "question/undefined-boundary": 0.84,
@@ -668,7 +678,8 @@
       "choice/overlapping-options": 0.325,
       "query/overlapping-questions": 0.2,
       "question/refers-to-sibling": 0.13,
-      "question/answerable-in-code": 0.31
+      "question/answerable-in-code": 0.31,
+      "choice/label-contradicts-description": 0.09
     },
     "bench-hiring_screen/advance": {
       "question/compound-judgment": 0.89,
@@ -734,7 +745,8 @@
       "choice/overlapping-options": 0.31,
       "query/overlapping-questions": 0.22,
       "question/refers-to-sibling": 0.09,
-      "question/answerable-in-code": 0.265
+      "question/answerable-in-code": 0.265,
+      "choice/label-contradicts-description": 0.08
     },
     "bench-hiring_screen/culture_concern": {
       "question/compound-judgment": 0.665,
@@ -801,7 +813,8 @@
       "choice/overlapping-options": 0.46,
       "query/overlapping-questions": 0.16,
       "question/refers-to-sibling": 0.1,
-      "question/answerable-in-code": 0.245
+      "question/answerable-in-code": 0.245,
+      "choice/label-contradicts-description": 0.115
     },
     "bench-justice_bail/flight_risk": {
       "question/compound-judgment": 0.84,
@@ -867,7 +880,8 @@
       "choice/overlapping-options": 0.27,
       "query/overlapping-questions": 0.27,
       "question/refers-to-sibling": 0.11,
-      "question/answerable-in-code": 0.35
+      "question/answerable-in-code": 0.35,
+      "choice/label-contradicts-description": 0.115
     },
     "bench-lending/limit": {
       "question/compound-judgment": 0.84,
@@ -883,7 +897,8 @@
       "choice/overlapping-options": 0.195,
       "query/overlapping-questions": 0.17,
       "question/refers-to-sibling": 0.13,
-      "question/answerable-in-code": 0.3
+      "question/answerable-in-code": 0.3,
+      "choice/label-contradicts-description": 0.135
     },
     "bench-lending/manual_review": {
       "question/compound-judgment": 0.58,
@@ -932,7 +947,8 @@
       "question/criteria-off-topic": 0.22,
       "query/overlapping-questions": 0.13,
       "question/refers-to-sibling": 0.19,
-      "question/answerable-in-code": 0.265
+      "question/answerable-in-code": 0.265,
+      "choice/label-contradicts-description": 0.155
     },
     "bench-support_triage/priority": {
       "question/compound-judgment": 0.53,
@@ -1032,7 +1048,8 @@
       "choice/overlapping-options": 0.45,
       "query/overlapping-questions": 0.21,
       "question/refers-to-sibling": 0.11,
-      "question/answerable-in-code": 0.33
+      "question/answerable-in-code": 0.33,
+      "choice/label-contradicts-description": 0.285
     },
     "docs_ex/cookbooks_autoresearch_feature_discovery_2": {
       "question/compound-judgment": 0.735,
@@ -1090,7 +1107,8 @@
       "question/numeric-representation": 0.06,
       "choice/overlapping-options": 0.435,
       "question/refers-to-sibling": 0.09,
-      "question/answerable-in-code": 0.36
+      "question/answerable-in-code": 0.36,
+      "choice/label-contradicts-description": 0.34
     },
     "docs_ex/cookbooks_rerank_typesafe_1": {
       "question/compound-judgment": 0.76,
@@ -1153,7 +1171,8 @@
       "question/type-mismatch": 0.01,
       "choice/overlapping-options": 0.405,
       "question/refers-to-sibling": 0.15,
-      "question/answerable-in-code": 0.25
+      "question/answerable-in-code": 0.25,
+      "choice/label-contradicts-description": 0.165
     },
     "docs_ex/cookbooks_citation_check_0": {
       "question/compound-judgment": 0.19,
@@ -1168,7 +1187,8 @@
       "question/type-mismatch": 0.07,
       "choice/overlapping-options": 0.175,
       "question/refers-to-sibling": 0.19,
-      "question/answerable-in-code": 0.14
+      "question/answerable-in-code": 0.14,
+      "choice/label-contradicts-description": 0.075
     },
     "docs_ex/cookbooks_classifying_rag_passages_0": {
       "question/compound-judgment": 0.2,
@@ -1279,7 +1299,8 @@
       "question/type-mismatch": 0.3,
       "choice/overlapping-options": 0.46,
       "question/refers-to-sibling": 0.12,
-      "question/answerable-in-code": 0.28
+      "question/answerable-in-code": 0.28,
+      "choice/label-contradicts-description": 0.31
     },
     "docs_ex/cookbooks_llm_guardrails_1": {
       "question/compound-judgment": 0.59,
@@ -1423,7 +1444,8 @@
       "question/type-mismatch": 0.03,
       "choice/overlapping-options": 0.085,
       "question/refers-to-sibling": 0.07,
-      "question/answerable-in-code": 0.515
+      "question/answerable-in-code": 0.515,
+      "choice/label-contradicts-description": 0.05
     },
     "docs_ex/cookbooks_parallel_questions_9": {
       "question/compound-judgment": 0.2,
@@ -1438,7 +1460,8 @@
       "question/type-mismatch": 0.39,
       "choice/overlapping-options": 0.185,
       "question/refers-to-sibling": 0.11,
-      "question/answerable-in-code": 0.32
+      "question/answerable-in-code": 0.32,
+      "choice/label-contradicts-description": 0.17
     },
     "docs_ex/cookbooks_parallel_questions_11": {
       "question/compound-judgment": 0.49,
@@ -1529,7 +1552,8 @@
       "question/type-mismatch": 0.0,
       "choice/overlapping-options": 0.345,
       "question/refers-to-sibling": 0.15,
-      "question/answerable-in-code": 0.165
+      "question/answerable-in-code": 0.165,
+      "choice/label-contradicts-description": 0.07
     },
     "docs_ex/primitives_3": {
       "question/compound-judgment": 0.36,
@@ -1575,7 +1599,8 @@
       "question/type-mismatch": 0.51,
       "choice/overlapping-options": 0.175,
       "question/refers-to-sibling": 0.13,
-      "question/answerable-in-code": 0.26
+      "question/answerable-in-code": 0.26,
+      "choice/label-contradicts-description": 0.27
     },
     "docs_ex/sdk_python_usage_3": {
       "question/compound-judgment": 0.14,
@@ -1604,7 +1629,8 @@
       "question/type-mismatch": 0.53,
       "choice/overlapping-options": 0.195,
       "question/refers-to-sibling": 0.14,
-      "question/answerable-in-code": 0.24
+      "question/answerable-in-code": 0.24,
+      "choice/label-contradicts-description": 0.25
     },
     "docs_ex/sdk_python_usage_6": {
       "question/compound-judgment": 0.12,
@@ -1751,7 +1777,8 @@
       "question/unsettled-case": 0.17,
       "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.36,
-      "choice/undetermined-outcome": 0.06
+      "choice/undetermined-outcome": 0.06,
+      "choice/label-contradicts-description": 0.065
     },
     "docs_ex_state_01/introduction_quickstart_1": {
       "question/compound-judgment": 0.35,
@@ -1898,7 +1925,8 @@
       "question/unsettled-case": 0.37,
       "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.24,
-      "choice/undetermined-outcome": 0.22
+      "choice/undetermined-outcome": 0.22,
+      "choice/label-contradicts-description": 0.24
     },
     "docs_ex_state_04/sdk_python_api_clients_sync_0": {
       "query/overlapping-questions": 0.98,
@@ -1934,7 +1962,8 @@
       "question/unsettled-case": 0.33,
       "question/refers-to-sibling": 0.16,
       "question/answerable-in-code": 0.25,
-      "choice/undetermined-outcome": 0.2
+      "choice/undetermined-outcome": 0.2,
+      "choice/label-contradicts-description": 0.27
     },
     "docs_ex_state_04/sdk_python_api_clients_sync_2": {
       "query/overlapping-questions": 0.98,
@@ -1970,7 +1999,8 @@
       "question/unsettled-case": 0.33,
       "question/refers-to-sibling": 0.15,
       "question/answerable-in-code": 0.255,
-      "choice/undetermined-outcome": 0.24
+      "choice/undetermined-outcome": 0.24,
+      "choice/label-contradicts-description": 0.235
     },
     "docs_ex_state_04/sdk_python_api_clients_async_0": {
       "question/compound-judgment": 0.12,
@@ -2005,7 +2035,8 @@
       "question/unsettled-case": 0.35,
       "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.25,
-      "choice/undetermined-outcome": 0.21
+      "choice/undetermined-outcome": 0.21,
+      "choice/label-contradicts-description": 0.245
     },
     "docs_ex_state_04/state": {
       "state/adversarial-content": 0.12
@@ -2027,7 +2058,8 @@
       "question/unsettled-case": 0.08,
       "question/refers-to-sibling": 0.12,
       "question/answerable-in-code": 0.415,
-      "choice/undetermined-outcome": 0.05
+      "choice/undetermined-outcome": 0.05,
+      "choice/label-contradicts-description": 0.08
     },
     "docs_ex_state_05/primitives_choice_0": {
       "question/compound-judgment": 0.31,
@@ -2045,7 +2077,8 @@
       "question/unsettled-case": 0.07,
       "question/refers-to-sibling": 0.13,
       "question/answerable-in-code": 0.405,
-      "choice/undetermined-outcome": 0.05
+      "choice/undetermined-outcome": 0.05,
+      "choice/label-contradicts-description": 0.095
     },
     "docs_ex_state_05/state": {
       "state/adversarial-content": 0.06
@@ -2066,7 +2099,8 @@
       "question/unsettled-case": 0.44,
       "question/refers-to-sibling": 0.11,
       "question/answerable-in-code": 0.33,
-      "choice/undetermined-outcome": 0.18
+      "choice/undetermined-outcome": 0.18,
+      "choice/label-contradicts-description": 0.075
     },
     "docs_ex_state_06/primitives_choice_3": {
       "question/compound-judgment": 0.16,
@@ -2085,7 +2119,8 @@
       "question/unsettled-case": 0.76,
       "question/refers-to-sibling": 0.15,
       "question/answerable-in-code": 0.355,
-      "choice/undetermined-outcome": 0.11
+      "choice/undetermined-outcome": 0.11,
+      "choice/label-contradicts-description": 0.065
     },
     "docs_ex_state_06/primitives_choice_4": {
       "question/compound-judgment": 0.19,
@@ -2104,7 +2139,8 @@
       "question/unsettled-case": 0.67,
       "question/refers-to-sibling": 0.16,
       "question/answerable-in-code": 0.205,
-      "choice/undetermined-outcome": 0.57
+      "choice/undetermined-outcome": 0.57,
+      "choice/label-contradicts-description": 0.08
     },
     "docs_ex_state_06/primitives_choice_5": {
       "question/compound-judgment": 0.27,
@@ -2122,7 +2158,8 @@
       "question/unsettled-case": 0.39,
       "question/refers-to-sibling": 0.15,
       "question/answerable-in-code": 0.165,
-      "choice/undetermined-outcome": 0.11
+      "choice/undetermined-outcome": 0.11,
+      "choice/label-contradicts-description": 0.165
     },
     "docs_ex_state_06/state": {
       "state/adversarial-content": 0.06
@@ -2203,7 +2240,8 @@
       "question/unsettled-case": 0.34,
       "question/refers-to-sibling": 0.15,
       "question/answerable-in-code": 0.16,
-      "choice/undetermined-outcome": 0.15
+      "choice/undetermined-outcome": 0.15,
+      "choice/label-contradicts-description": 0.185
     },
     "docs_ex_state_08/sdk_python_5": {
       "query/overlapping-questions": 0.99,
@@ -2258,7 +2296,8 @@
       "question/unsettled-case": 0.36,
       "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.165,
-      "choice/undetermined-outcome": 0.13
+      "choice/undetermined-outcome": 0.13,
+      "choice/label-contradicts-description": 0.18
     },
     "docs_ex_state_08/sdk_python_2": {
       "question/compound-judgment": 0.51,
@@ -2587,7 +2626,8 @@
       "question/type-mismatch": 0.12,
       "choice/overlapping-options": 0.1,
       "question/refers-to-sibling": 0.13,
-      "question/answerable-in-code": 0.59
+      "question/answerable-in-code": 0.59,
+      "choice/label-contradicts-description": 0.145
     },
     "gold/gold_month_extraction": {
       "question/compound-judgment": 0.07,
@@ -2602,7 +2642,8 @@
       "question/type-mismatch": 0.02,
       "choice/overlapping-options": 0.07,
       "question/refers-to-sibling": 0.09,
-      "question/answerable-in-code": 0.47
+      "question/answerable-in-code": 0.47,
+      "choice/label-contradicts-description": 0.05
     }
   }
 }

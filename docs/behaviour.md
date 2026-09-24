@@ -33,11 +33,13 @@ ran, which is what the self-test comparison against the pinned build inferred fr
 
 The checks are Jev questions, so the linter runs on them, every wording of every one:
 
-The 21 question-scoped wordings come back with one finding, over 46 calls. It is
-`question/type-mismatch` at 0.77, reading `question/arithmetic`'s own wording as better suited
-to another primitive, which is an artefact of putting a check in the position of a query instead
-of a defect in the catalogue. The run also notes that the checks comparing questions did not
-run, because 21 questions make more pairs than one call carries - a limitation of this file, not
+The 23 question-scoped wordings come back with one finding, over 50 calls. It is
+`question/type-mismatch` at 0.77 to 0.80, reading `question/arithmetic`'s own wording as better
+suited to another primitive, which is an artefact of putting a check in the position of a query
+instead of a defect in the catalogue. Two of three runs on 2026-09-24 add a second:
+`question/generation` at 0.60 on its own first wording, against a 0.60 trigger, reported as a
+reading that may not repeat. The run also notes that the checks comparing questions did not
+run, because 23 questions make more pairs than one call carries - a limitation of this file, not
 of the catalogue.
 
 The seven wordings in the state file come back with two findings, over 19 calls. One is a
@@ -101,7 +103,7 @@ using the product on one reading and not on another, and the question settles ne
 | `check` on the four-question clean example | 11 | 16,980 | 2 advice |
 | `check` on the five-question broken example | 14 | 23,140 | 4 errors, 6 warnings, 11 advice |
 | `probe`, four questions, five repeats | 9 | 5,275 | one question moved |
-| `self-test`, whole catalogue | 142 | - | 24 checks, 48 example sets, all `ok` |
+| `self-test`, whole catalogue | 148 | - | 25 checks, 50 example sets, all `ok` |
 
 TypeSafe reports no cost on a call, so these are token counts. `--no-state` removes the second
 call per question. The call counts move between runs: a reading that lands within 0.05 of its

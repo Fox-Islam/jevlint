@@ -8,10 +8,14 @@ export class SelfTestFormatter {
     constructor(private readonly colour = true) {}
 
     format(scores: CheckScore[]): string {
+        const name = (score: CheckScore): string => (score.domain === '' ? score.check.id : `${score.check.id} (${score.domain})`);
+        // Wide enough for the longest id with its domain, so a long one does not push its row out of line.
+        const width = Math.max(44, ...scores.map((score) => name(score).length));
         const lines = [
             dim(this.colour, Text.of('self_test.heading')),
             '',
             paint(this.colour, row(
+                width,
                 Text.of('self_test.column_check'),
                 Text.of('self_test.column_clean'),
                 Text.of('self_test.column_broken'),
@@ -23,7 +27,8 @@ export class SelfTestFormatter {
 
         for (const score of scores) {
             lines.push(row(
-                score.domain === '' ? score.check.id : `${score.check.id} (${score.domain})`,
+                width,
+                name(score),
                 number(score.clean),
                 number(score.broken),
                 number(score.fixed),
@@ -61,8 +66,8 @@ export class SelfTestFormatter {
     }
 }
 
-function row(check: string, clean: string, broken: string, fix: string, span: string, verdict: string): string {
-    return `${pad(check, 44)} ${padLeft(clean, 7)} ${padLeft(broken, 7)} ${padLeft(fix, 7)} ${padLeft(span, 7)}  ${verdict}`;
+function row(width: number, check: string, clean: string, broken: string, fix: string, span: string, verdict: string): string {
+    return `${pad(check, width)} ${padLeft(clean, 7)} ${padLeft(broken, 7)} ${padLeft(fix, 7)} ${padLeft(span, 7)}  ${verdict}`;
 }
 
 function number(value: number | null): string {

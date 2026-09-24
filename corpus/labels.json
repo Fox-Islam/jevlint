@@ -1,0 +1,182 @@
+{
+  "purpose": "Option sets for corpus/labels.py that no corpus file holds. `negative` are clean sets written here to cover label shapes the corpus lacks: opaque team numbers and disposition codes. `positive` are labels that contradict their descriptions the way a query drifts in use: a key kept after its description was rewritten, two keys swapped, a legacy name left behind. `discord` is the query that raised the question, as it was reported. Each positive's `contradicts` lists the labels that carry the contradiction, which is what the check's locator is scored against. `letters` is a query sent in to ask how a label and its description combine: six questions over one state, with the slots swapped between pairs.",
+  "negative": {
+    "opaque_teams": {
+      "instructions": "Which team takes this?",
+      "criteria": {
+        "team_1": "Charges and invoices",
+        "team_2": "Something is broken",
+        "team_3": "Anything else"
+      }
+    },
+    "codes": {
+      "instructions": "Which disposition code applies?",
+      "criteria": {
+        "D1": "Resolved on first contact",
+        "D2": "Escalated to a specialist",
+        "D3": "Customer did not respond"
+      }
+    }
+  },
+  "positive": {
+    "discord": {
+      "instructions": "Which of these options describes the state?",
+      "criteria": {
+        "discord": "Jev is mentioned in the state",
+        "jev": "Youtube is mentioned in the state",
+        "youtube": "Discord is mentioned in the state"
+      },
+      "contradicts": [
+        "discord",
+        "jev",
+        "youtube"
+      ]
+    },
+    "stale_refunds": {
+      "instructions": "Which team takes this?",
+      "criteria": {
+        "refunds": "The customer needs technical help with the app",
+        "payments_team": "The customer has a billing or charging problem",
+        "other": "Anything the other options do not cover"
+      },
+      "contradicts": [
+        "refunds"
+      ]
+    },
+    "priority_shuffled": {
+      "instructions": "How urgent is this ticket?",
+      "criteria": {
+        "urgent": "Can wait until next week",
+        "normal": "Handle today",
+        "low": "Needs attention within the hour"
+      },
+      "contradicts": [
+        "urgent",
+        "low"
+      ]
+    },
+    "approve_reject": {
+      "instructions": "What should happen to the application?",
+      "criteria": {
+        "approve": "Reject the application",
+        "reject": "Approve the application",
+        "refer": "Refer it to a human underwriter"
+      },
+      "contradicts": [
+        "approve",
+        "reject"
+      ]
+    },
+    "sentiment": {
+      "instructions": "What is the sentiment of the review?",
+      "criteria": {
+        "positive": "The reviewer is unhappy with the product",
+        "negative": "The reviewer is happy with the product",
+        "mixed": "The review has both praise and complaints"
+      },
+      "contradicts": [
+        "positive",
+        "negative"
+      ]
+    },
+    "legacy_product": {
+      "instructions": "Which product is this about?",
+      "criteria": {
+        "legacy_desktop": "Questions about the new mobile app",
+        "mobile": "Questions about the old desktop client",
+        "other": "Anything the other options do not cover"
+      },
+      "contradicts": [
+        "legacy_desktop",
+        "mobile"
+      ]
+    },
+    "spam": {
+      "instructions": "Is this message spam?",
+      "criteria": {
+        "spam": "A genuine message from a customer",
+        "ham": "Unsolicited advertising or phishing"
+      },
+      "contradicts": [
+        "spam",
+        "ham"
+      ]
+    },
+    "one_wrong_of_four": {
+      "instructions": "Which team takes this?",
+      "criteria": {
+        "billing": "Charges and invoices",
+        "shipping": "Password resets and login problems",
+        "technical": "Something is broken",
+        "other": "Anything the other options do not cover"
+      },
+      "contradicts": [
+        "shipping"
+      ]
+    },
+    "language": {
+      "instructions": "Which language is the message in?",
+      "criteria": {
+        "english": "The message is in English",
+        "french": "The message is in German",
+        "spanish": "The message is in Spanish"
+      },
+      "contradicts": [
+        "french"
+      ]
+    }
+  },
+  "letters": {
+    "state": "A is mentioned here",
+    "questions": {
+      "question_1": {
+        "type": "choice",
+        "instructions": "Which of these options describes the state?",
+        "criteria": {
+          "option A": "B is mentioned in the state",
+          "option B": "A is mentioned in the state"
+        }
+      },
+      "question_2": {
+        "type": "choice",
+        "instructions": "Which of these options describes the state?",
+        "criteria": {
+          "option A": "B is mentioned in the state",
+          "option B": "C is mentioned in the state"
+        }
+      },
+      "question_3": {
+        "type": "choice",
+        "instructions": "Which of these options describes the state?",
+        "criteria": {
+          "B is mentioned in the state": "option A",
+          "C is mentioned in the state": "option B"
+        }
+      },
+      "question_4": {
+        "type": "choice",
+        "instructions": "Which of these options describes the state?",
+        "criteria": {
+          "A": "is mentioned in the state",
+          "B": "is mentioned in the state"
+        }
+      },
+      "question_5": {
+        "type": "choice",
+        "instructions": "Which of these options describes the state?",
+        "criteria": {
+          "A": "is not mentioned in the state",
+          "B": "is mentioned in the state"
+        }
+      },
+      "question_6": {
+        "type": "choice",
+        "instructions": "Which of these options describes the state?",
+        "criteria": {
+          "is not mentioned in the state": "A",
+          "is mentioned in the state": "B"
+        }
+      }
+    }
+  }
+}

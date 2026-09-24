@@ -858,6 +858,43 @@
       "locate_mode": "pick"
     },
     {
+      "id": "choice/label-contradicts-description",
+      "title": "An option's label names something its description does not",
+      "mode": "model",
+      "scope": "question",
+      "applies_to": [
+        "choice"
+      ],
+      "severity": "warning",
+      "trigger": 0.5,
+      "hint": "Jev reads an option's label as part of what the option means, not as an id. Where one option plainly fits, the description wins; where none does, or the input sits between two, the label decides. A Choice labelled `discord`, `jev` and `youtube` whose descriptions each name a different one of the three answered `discord` at 0.99 on a state mentioning Discord once the option describing Discord was taken out, and 0.80 to 0.84 with a true catch-all offered beside it. Accept it where the labels are fixed values another system stores and the descriptions are what you mean; `keys-hidden` in `jevlint probe` shows how far the labels move the answer on a given state.",
+      "docs": "https://docs.typesafe.ai/primitives/choice",
+      "questions": [
+        {
+          "type": "noul",
+          "instructions": "An option's key in `criteria` names something different from what that option's description says.",
+          "criteria": {
+            "true": "At least one key, read as a label, points at a different thing from its own description: the key names one category and the description describes another, so a reader going by the key and one going by the description would file the same input differently.",
+            "false": "Every key is a fair short name for its own description. A key that is terse, abbreviated or opaque, such as `a` or `team_2`, is not a contradiction; only a key that names something else is."
+          }
+        },
+        {
+          "type": "noul",
+          "instructions": "Reading only the keys of `criteria` would sort some input differently from reading only the descriptions.",
+          "criteria": {
+            "true": "Some key suggests a category that its description does not describe, for example a key naming one topic whose description is about another topic, so the keys and the descriptions disagree about what an option means.",
+            "false": "The keys and descriptions agree about what each option means. Short, generic or numbered keys agree by default, because they suggest nothing of their own."
+          }
+        }
+      ],
+      "message": "An option's label names something other than what its description says.",
+      "suggest": "Rename the label to match its description, or rewrite the description to match the label, whichever you meant. Where the label has to stay because something downstream stores it, give it a neutral name such as `option_2` and map it back in code.",
+      "reads": "criteria",
+      "action": "rewrite",
+      "locate": "Which option's key names something different from what its own description says?",
+      "locate_mode": "pick"
+    },
+    {
       "id": "state/irrelevant-field",
       "title": "A state field no question needs: `{field}`",
       "mode": "model",

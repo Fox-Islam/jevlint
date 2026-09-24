@@ -132,3 +132,39 @@ def test_the_readme_prints_the_figure_the_code_uses(name, value, places, sentenc
     assert sentence.replace('%s', printed) in README, (
         'The README explains this threshold with a figure the code does not use.'
     )
+
+
+def team(technical):
+    return Query.from_dict({
+        'state': {'ticket': 'I was charged twice. Please refund the duplicate.'},
+        'questions': {
+            'team': {
+                'type': 'choice',
+                'instructions': 'Which team takes this ticket?',
+                'criteria': {'billing': 'Charges and invoices', 'technical': technical},
+            },
+        },
+    }, 'test')
+
+
+def answered(choice, probabilities):
+    return lambda *_: {'type': 'choice', 'choice': choice, 'confidence': 0.8, 'probabilities': probabilities}
+
+
+def test_a_choice_with_its_labels_hidden_is_read_back_at_the_winners_position():
+    # The winner is second, so a readback that ignored position and took the
+    # first option would read 0.35 here instead of 0.65.
+    probe = Probe(replying([
+        *[answered('technical', {'billing': 0.2, 'technical': 0.8})] * 6,
+        answered('option_2', {'option_1': 0.35, 'option_2': 0.65}),
+    ])).run(team('Something is broken'), 5)['team']
+    reading = next(each for each in probe.readings if each.variant == 'keys-hidden')
+
+    assert probe.delta(reading) == pytest.approx(-0.15)
+
+
+def test_a_choice_with_an_undescribed_option_keeps_its_labels():
+    # A label with no description is all that option means, so it is not hidden.
+    probe = Probe(replying([answered('billing', {'billing': 0.8, 'technical': 0.2})])).run(team(None), 5)['team']
+
+    assert [each.variant for each in probe.readings] == ['options-reversed']

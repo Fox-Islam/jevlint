@@ -141,3 +141,44 @@ describe('the figures the README prints', () => {
         });
     }
 });
+
+describe('a choice asked with its labels hidden', () => {
+    const team = (technical: string | null): Query => Query.fromObject({
+        state: { ticket: 'I was charged twice. Please refund the duplicate.' },
+        questions: {
+            team: {
+                type: 'choice',
+                instructions: 'Which team takes this ticket?',
+                criteria: { billing: 'Charges and invoices', technical },
+            },
+        },
+    }, 'test');
+    const answered = (choice: string, probabilities: Record<string, number>) => () => ({
+        type: 'choice', choice, confidence: 0.8, probabilities,
+    });
+
+    /**
+     * The winner is second, so a readback that ignored position and took the
+     * first option would read 0.35 here instead of 0.65
+     */
+    it('is read back at the winner\'s position', async () => {
+        const probes = await new Probe(replying([
+            ...Array<() => unknown>(6).fill(answered('technical', { billing: 0.2, technical: 0.8 })),
+            answered('option_2', { option_1: 0.35, option_2: 0.65 }),
+        ])).run(team('Something is broken'), 5);
+        const probe = probes.get('team');
+        const reading = probe?.readings.find((each) => each.variant === 'keys-hidden');
+
+        assert.ok(probe && reading);
+        assert.ok(Math.abs((probe.delta(reading) ?? 0) + 0.15) < 0.0001);
+    });
+
+    /** A label with no description is all that option means, so it is not hidden */
+    it('is not asked when an option has no description', async () => {
+        const probes = await new Probe(replying([
+            answered('billing', { billing: 0.8, technical: 0.2 }),
+        ])).run(team(null), 5);
+
+        assert.deepEqual(probes.get('team')?.readings.map((each) => each.variant), ['options-reversed']);
+    });
+});

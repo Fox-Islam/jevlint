@@ -28,9 +28,10 @@ rewritten the way the check's own suggestion says. All three differ, so the fixe
 measures the advice instead of re-reading the clean question. Each check carries two such sets,
 one in a support-desk domain and one in a parcel-delivery domain, so a wording that latches
 onto the subject instead of the defect shows up as a set it cannot separate. The table reports
-whichever set the check does worse on. It is one `jevlint self-test` run, on 2026-09-23, and
-`local/` is not committed, so the run behind it is not in the repository: `jevlint self-test`
-produces it again, at the cost of the calls.
+whichever set the check does worse on. It is one `jevlint self-test` run, on 2026-09-23, except
+the `choice/label-contradicts-description` row, which comes from a whole-catalogue run on
+2026-09-24 in which every set came back `ok` again. `local/` is not committed, so the run behind
+it is not in the repository: `jevlint self-test` produces it again, at the cost of the calls.
 
 | check | clean | broken | fixed | span |
 | --- | --- | --- | --- | --- |
@@ -40,6 +41,7 @@ produces it again, at the cost of the calls.
 | `question/criteria-off-topic` | 0.07 | 0.96 | 0.05 | 0.89 |
 | `question/date-comparison` | 0.08 | 0.96 | 0.06 | 0.88 |
 | `score/degree-levels` | 0.05 | 0.92 | 0.06 | 0.87 |
+| `choice/label-contradicts-description` | 0.10 | 0.95 | 0.10 | 0.85 |
 | `question/undefined-boundary` | 0.08 | 0.92 | 0.16 | 0.84 |
 | `question/refers-to-sibling` | 0.10 | 0.94 | 0.41 | 0.84 |
 | `question/criteria-contradiction` | 0.13 | 0.94 | 0.05 | 0.81 |
@@ -108,12 +110,13 @@ against: one over the whole file, and one over what the checks ask. `corpus/meas
 the triggers from the catalogue on disk and compares the second, because rewording a hint leaves
 the answers untouched while rewording a check's own question does not. Where the two ask
 different things it prints the mismatch and names both, since a rate is then a threshold applied
-to answers nobody gave it. The table below was harvested by `corpus/harvest.py` over 959 calls, the
-last of them on 2026-09-23 folding in `choice/undetermined-outcome` and leaving every other
-reading where it was, from a catalogue asking `e2c57c15a55c`.
+to answers nobody gave it. The table below was harvested by `corpus/harvest.py` over 1000 calls, the
+last of them on 2026-09-24 folding in `choice/label-contradicts-description` and leaving every
+other reading where it was, from a catalogue asking `62cb6190d529`.
 
 | check | catches the docs' own example | of those, quoted | fires on a question labelled clean | fires on a field query |
 | --- | --- | --- | --- | --- |
+| `choice/label-contradicts-description` | no gold example | - | 0 of 14 | 0 of 17 |
 | `choice/overlapping-options` | no gold example | - | 0 of 14 | 1 of 17, 1 of them shaky |
 | `choice/undetermined-outcome` | no gold example | - | 0 of 7 | not asked |
 | `noul/negated-phrasing` | 1 of 1 | 1 of 1 | 0 of 26 | 0 of 35 |
@@ -197,9 +200,9 @@ say how often it speaks, not how often it is right. Treat its advice as a prompt
 
 The field tier carries no labels, so a rate on it is a rate and not an error rate.
 
-The corpus holds readings for all 24 model checks, and a labelled defect to catch for eleven
-of them; the other thirteen are measured only by how often they fire on material labelled clean. That
-is the shape of the evidence: every check has been asked about somebody else's material, and
+The corpus holds readings for all 25 model checks, and a labelled defect to catch for eleven
+of them; the other fourteen are measured only by how often they fire on material labelled clean.
+That is the shape of the evidence: every check has been asked about somebody else's material, and
 fewer than half have been shown catching a defect somebody else named.
 
 ## A documented failure mode that cost nothing here
@@ -549,8 +552,10 @@ one alongside. The `false` criteria name those defects as separate, which moved 
 
 ## The checks with no labelled defect to catch
 
-Thirteen model checks have no gold negative. Two of them have a public dataset that is the defect,
+Fourteen model checks have no gold negative. Two of them have a public dataset that is the defect,
 and one can be labelled from the readings the corpus already holds.
+`choice/label-contradicts-description` is measured on labels planted to contradict, in
+[Labels that contradict their descriptions](#labels-that-contradict-their-descriptions).
 
 **`question/unsettled-case`, on paragraphs with an edge planted in them.** The check asks
 whether the state holds a case on the edge of the question that the question never settles.
@@ -773,6 +778,84 @@ a JavaScript caller sends `10, 11, 06, 07, 08, 09, not_stated`. That fixture has
 far option order moves a Choice answer is not settled here - reversing the options changed no pick
 over the 24 cases in `corpus/position.py` - so the defect the rule reports is that the query sent
 is not the query written, which holds whatever the order is worth.
+
+## Labels that contradict their descriptions
+
+Jev reads an option's label as part of what the option means. `corpus/labels.py names` asks the
+query that raised this: a state saying "I'm using Discord", options labelled `discord`, `jev` and
+`youtube`, and each description naming a different one of the three. The table spans two runs of
+three calls per arm.
+
+| the options | what comes back |
+| --- | --- |
+| as reported | `youtube`, whose description is Discord, 0.77 to 0.85; `discord` 0.15 to 0.23 |
+| the option describing Discord taken out | `discord` 0.99, on a description naming Jev |
+| the same, labels replaced by `option_1` and `option_2` | 0.68 to 0.77 and 0.23 to 0.32 |
+| the same, with "None of the other options is true" added | `discord` 0.80 to 0.84, the catch-all 0.16 to 0.20 |
+
+**Where one description plainly fits, it wins; where none does, the label decides**, confidently
+and over a catch-all that is the only true option. That is the defect
+`choice/label-contradicts-description` reports and the movement `keys-hidden` measures.
+
+**The check, on labels planted to contradict.** `corpus/labels.py check` asks the check's two
+wordings, from the catalogue, the way the linter asks them. The clean sets are the 39 distinct,
+fully described Choice option sets somebody else wrote or this repository ships for other checks:
+decision-v7's, the corpus tiers', the other fixtures and examples, and two in
+`corpus/labels.json`. The planted arms are each of those with every label moved one along, or
+with the first two swapped. The written arm is nine contradictions `corpus/labels.json` holds, the
+reported query among them.
+
+| the labels | fires at the 0.5 trigger | readings |
+| --- | --- | --- |
+| as written | 1 of 39 | 0.04 to 0.64 |
+| every label moved one along | 32 of 39 | 0.14 to 0.96 |
+| the first two swapped | 29 of 39 | 0.12 to 0.96 |
+| written to contradict | 8 of 9 | 0.48 to 0.96 |
+
+Four of the planted misses in each arm are sets whose labels say nothing - `band_a`, `tier_a`,
+`team_1`, `D1` - where moving a label contradicts nothing, and clearing is right. Leaving those
+out, it catches 32 of 35 moved and 29 of 35 swapped. Most of the rest are neighbours on one
+scale, such as `pay` and `pay_after_checks` or `within_limit` and `slightly_over`, where the
+swapped label names the next point along instead of something else. The other two are one triage
+set, in two fixtures, whose catch-all description lands under `billing`; they read 0.48 and 0.50.
+
+**Its one clean fire is another defect.** The fixed example of `question/date-comparison` asks
+"Does the incident record state the date the incident started?" over options naming renewal
+months, and reads 0.54 and 0.64 in two runs. The labels agree with their descriptions; the
+instruction disagrees with both. **Its one written miss sits on the trigger**, 0.49 and 0.48, on a
+label `refunds` kept after its description was rewritten as "The customer needs technical help
+with the app". A reading that close is reported as one that may not repeat.
+
+**A label that looks neutral can still pull, and the check does not see it.** The `names` run
+also asks six questions over the state "A is mentioned here". Over options keyed `option A` and
+`option B`, described as "B is mentioned in the state" and "C is mentioned in the state", Jev
+answers `option A` at 0.95 to 0.96: the letter is enough. The check reads the same options at
+0.25, because its wordings count a terse or numbered label as agreeing with anything.
+`keys-hidden` names its options `option_1` and on, so on a state full of small numbers the
+replacement labels can pull as well; that is not measured here.
+
+**The locator names the option.** On the nine written contradictions the locator, asked in the
+same call, picks a label carrying the contradiction on 9 of 9, so a finding on one wrong label
+among four points at that label: `/questions/<id>/criteria/<label>`.
+
+**`keys-hidden`, on decision-v7.** `corpus/labels.py probe` asks decision-v7 Choice questions
+whose options are all described five times as written and once with the labels hidden, and counts
+a move the way `jevlint probe` does. decision-v7 has five such option sets, so this is five query
+designs sampled many times, not many designs.
+
+| the labels | counted as moved |
+| --- | --- |
+| as written | 5 of 59 |
+| every label moved one along | 21 of 30 |
+| the first two swapped, the labelled answer among them | 15 of 17 |
+| the first two swapped, the labelled answer not among them | 3 of 13 |
+
+The variant answers for the state it is given: a swap that leaves this input's answer alone
+leaves the answer alone. **The five clean moves are real, not noise.** Each question's five
+repeats span 0.02 to 0.08, and the moves are 0.05 to 0.25. They sit on inputs between two options,
+in the question-type, news-topic and entailment sets, whose labels such as `entity` and `scitech`
+carry meaning of their own, and on four of the five the answer as written is the labelled one. A
+move measures how much the labels decided the answer, not whether they decided it wrongly.
 
 ## Measured against a corpus nobody here wrote
 

@@ -169,6 +169,33 @@ final class ProbeTest extends TestCase
         ]));
     }
 
+    /**
+     * The winner is second, so a readback that ignored position and took the
+     * first option would read 0.35 here instead of 0.65
+     */
+    public function test_a_choice_with_its_labels_hidden_is_read_back_at_the_winners_position(): void
+    {
+        $fake = FakeTypeSafe::make();
+        $fake->reply(FakeAnswers::make()->choice('team', 'technical', ['billing' => 0.20, 'technical' => 0.80])->only(), times: 6);
+        $fake->reply(FakeAnswers::make()->choice('team', 'option_2', ['option_1' => 0.35, 'option_2' => 0.65])->only());
+
+        $probe = (new Probe($fake->client()))->run($this->choiceQuery(['billing' => 'Charges and invoices', 'technical' => 'Something is broken']), repeats: 5)['team'];
+
+        $this->assertEqualsWithDelta(-0.15, $probe->delta($this->reading($probe, 'keys-hidden')), 0.0001);
+        $this->assertSame(['option_1', 'option_2'], array_keys($fake->lastCall()->question('team')['criteria'] ?? []));
+    }
+
+    /** A label with no description is all that option means, so it is not hidden */
+    public function test_a_choice_with_an_undescribed_option_keeps_its_labels(): void
+    {
+        $fake = FakeTypeSafe::make();
+        $fake->reply(FakeAnswers::make()->choice('team', 'billing', ['billing' => 0.80, 'technical' => 0.20])->only(), times: 6);
+
+        $probe = (new Probe($fake->client()))->run($this->choiceQuery(['billing' => 'Charges and invoices', 'technical' => null]), repeats: 5)['team'];
+
+        self::assertSame(['options-reversed'], array_map(static fn (Reading $reading): string => $reading->variant, $probe->readings));
+    }
+
     private function reading(QuestionProbe $probe, string $variant): Reading
     {
         foreach ($probe->readings as $reading) {
@@ -190,6 +217,19 @@ final class ProbeTest extends TestCase
                     'instructions' => 'Does the customer ask for a refund?',
                     'criteria' => ['true' => 'They ask for money back.', 'false' => 'They do not.'],
                 ],
+            ],
+        ]);
+    }
+
+    /**
+     * @param array<string, string|null> $criteria
+     */
+    private function choiceQuery(array $criteria): Query
+    {
+        return Query::fromArray([
+            'state' => ['ticket' => 'I was charged twice. Please refund the duplicate.'],
+            'questions' => [
+                'team' => ['type' => 'choice', 'instructions' => 'Which team takes this ticket?', 'criteria' => $criteria],
             ],
         ]);
     }

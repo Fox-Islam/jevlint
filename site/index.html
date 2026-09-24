@@ -201,6 +201,10 @@ low on its broken one, which is the <code>inverted</code> verdict, and the run f
 <td><a href="https://docs.typesafe.ai/primitives#define-a-question">Defining a question</a></td>
 <td><code>question/answerable-in-code</code></td>
 </tr>
+<tr>
+<td><a href="evidence.html#labels-that-contradict-their-descriptions">Labels read as meaning</a>, measured here and not in the documentation</td>
+<td><code>choice/label-contradicts-description</code></td>
+</tr>
 </tbody>
 </table></div>
 <p>Some checks are asked more than one way. A catalogue entry with <code>questions</code> instead of
@@ -344,6 +348,10 @@ as movement. Then it sends rewrites:</p>
 <td>the same Choice options in the opposite order</td>
 </tr>
 <tr>
+<td><code>keys-hidden</code></td>
+<td>the same Choice options with each label replaced by <code>option_1</code>, <code>option_2</code> and on, read back by position</td>
+</tr>
+<tr>
 <td><code>levels-reversed</code></td>
 <td>the same Score levels in the opposite order, read back flipped</td>
 </tr>
@@ -353,6 +361,10 @@ as movement. Then it sends rewrites:</p>
 </tr>
 </tbody>
 </table></div>
+<p>Jev reads a Choice label as part of what its option means, so <code>keys-hidden</code> measures how much
+the labels, not the descriptions, decided this answer. It is asked only where every option has a
+description, since a bare label would be left meaning nothing. On a clear input it does not move;
+where it does, the input sits between options or fits none of them, and the labels chose.</p>
 <p>Every built-in variant is mechanical. Nothing generates a paraphrase, because a generated
 one moves the wording and whatever the generator decided the question meant at the same
 time, and the spread cannot then be attributed to either. That is what <code>--variants</code> is for:

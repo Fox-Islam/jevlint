@@ -13,6 +13,7 @@ import { Reading } from './reading.js';
 import type { Baseline, Variant } from './variant.js';
 import {
     CriteriaStripped,
+    KeysHidden,
     LevelsReversed,
     NoulAsChoice,
     OptionsReversed,
@@ -98,6 +99,7 @@ export class Probe {
             new CriteriaStripped(),
             new NoulAsChoice(),
             new OptionsReversed(),
+            new KeysHidden(),
             new LevelsReversed(),
         ];
     }

@@ -19,11 +19,15 @@ final class SelfTestFormatter
      */
     public function format(array $scores): string
     {
+        $name = static fn (CheckScore $score): string => $score->domain === '' ? $score->check->id : $score->check->id.' ('.$score->domain.')';
+        // Wide enough for the longest id with its domain, so a long one does not push its row out of line.
+        $width = max([44, ...array_map(static fn (CheckScore $score): int => strlen($name($score)), $scores)]);
+        $row = '%-'.$width.'s %7s %7s %7s %7s  %s';
         $lines = [
             $this->dim(Text::of('self_test.heading')),
             '',
             $this->paint(sprintf(
-                '%-44s %7s %7s %7s %7s  %s',
+                $row,
                 Text::of('self_test.column_check'),
                 Text::of('self_test.column_clean'),
                 Text::of('self_test.column_broken'),
@@ -35,8 +39,8 @@ final class SelfTestFormatter
 
         foreach ($scores as $score) {
             $lines[] = sprintf(
-                '%-44s %7s %7s %7s %7s  %s',
-                $score->domain === '' ? $score->check->id : $score->check->id.' ('.$score->domain.')',
+                $row,
+                $name($score),
                 $this->number($score->clean),
                 $this->number($score->broken),
                 $this->number($score->fixed),

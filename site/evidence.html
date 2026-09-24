@@ -33,9 +33,10 @@ rewritten the way the check's own suggestion says. All three differ, so the fixe
 measures the advice instead of re-reading the clean question. Each check carries two such sets,
 one in a support-desk domain and one in a parcel-delivery domain, so a wording that latches
 onto the subject instead of the defect shows up as a set it cannot separate. The table reports
-whichever set the check does worse on. It is one <code>jevlint self-test</code> run, on 2026-09-23, and
-<code>local/</code> is not committed, so the run behind it is not in the repository: <code>jevlint self-test</code>
-produces it again, at the cost of the calls.</p>
+whichever set the check does worse on. It is one <code>jevlint self-test</code> run, on 2026-09-23, except
+the <code>choice/label-contradicts-description</code> row, which comes from a whole-catalogue run on
+2026-09-24 in which every set came back <code>ok</code> again. <code>local/</code> is not committed, so the run behind
+it is not in the repository: <code>jevlint self-test</code> produces it again, at the cost of the calls.</p>
 <div class="scroll"><table>
 <thead>
 <tr>
@@ -88,6 +89,13 @@ produces it again, at the cost of the calls.</p>
 <td>0.92</td>
 <td>0.06</td>
 <td>0.87</td>
+</tr>
+<tr>
+<td><code>choice/label-contradicts-description</code></td>
+<td>0.10</td>
+<td>0.95</td>
+<td>0.10</td>
+<td>0.85</td>
 </tr>
 <tr>
 <td><code>question/undefined-boundary</code></td>
@@ -259,9 +267,9 @@ against: one over the whole file, and one over what the checks ask. <code>corpus
 the triggers from the catalogue on disk and compares the second, because rewording a hint leaves
 the answers untouched while rewording a check's own question does not. Where the two ask
 different things it prints the mismatch and names both, since a rate is then a threshold applied
-to answers nobody gave it. The table below was harvested by <code>corpus/harvest.py</code> over 959 calls, the
-last of them on 2026-09-23 folding in <code>choice/undetermined-outcome</code> and leaving every other
-reading where it was, from a catalogue asking <code>e2c57c15a55c</code>.</p>
+to answers nobody gave it. The table below was harvested by <code>corpus/harvest.py</code> over 1000 calls, the
+last of them on 2026-09-24 folding in <code>choice/label-contradicts-description</code> and leaving every
+other reading where it was, from a catalogue asking <code>62cb6190d529</code>.</p>
 <div class="scroll"><table>
 <thead>
 <tr>
@@ -273,6 +281,13 @@ reading where it was, from a catalogue asking <code>e2c57c15a55c</code>.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>choice/label-contradicts-description</code></td>
+<td>no gold example</td>
+<td>-</td>
+<td>0 of 14</td>
+<td>0 of 17</td>
+</tr>
 <tr>
 <td><code>choice/overlapping-options</code></td>
 <td>no gold example</td>
@@ -526,9 +541,9 @@ trial?&quot; is the shape the documentation tells you to decompose.</p>
 <p><code>question/type-mismatch</code> has no gold example to calibrate against, so its 0 of 50 and 4 of 56
 say how often it speaks, not how often it is right. Treat its advice as a prompt to look.</p>
 <p>The field tier carries no labels, so a rate on it is a rate and not an error rate.</p>
-<p>The corpus holds readings for all 24 model checks, and a labelled defect to catch for eleven
-of them; the other thirteen are measured only by how often they fire on material labelled clean. That
-is the shape of the evidence: every check has been asked about somebody else's material, and
+<p>The corpus holds readings for all 25 model checks, and a labelled defect to catch for eleven
+of them; the other fourteen are measured only by how often they fire on material labelled clean.
+That is the shape of the evidence: every check has been asked about somebody else's material, and
 fewer than half have been shown catching a defect somebody else named.</p>
 <h2 id="a-documented-failure-mode-that-cost-nothing-here">A documented failure mode that cost nothing here</h2>
 <p><code>question/criteria-contradiction</code> was <code>error</code> severity on the strength of TypeSafe's own
@@ -1167,8 +1182,10 @@ genuinely answerable in code, both already have a check of their own, and a run 
 one alongside. The <code>false</code> criteria name those defects as separate, which moved them down from
 0.74 and 0.70 without settling it.</p>
 <h2 id="the-checks-with-no-labelled-defect-to-catch">The checks with no labelled defect to catch</h2>
-<p>Thirteen model checks have no gold negative. Two of them have a public dataset that is the defect,
-and one can be labelled from the readings the corpus already holds.</p>
+<p>Fourteen model checks have no gold negative. Two of them have a public dataset that is the defect,
+and one can be labelled from the readings the corpus already holds.
+<code>choice/label-contradicts-description</code> is measured on labels planted to contradict, in
+<a href="#labels-that-contradict-their-descriptions">Labels that contradict their descriptions</a>.</p>
 <p><strong><code>question/unsettled-case</code>, on paragraphs with an edge planted in them.</strong> The check asks
 whether the state holds a case on the edge of the question that the question never settles.
 boolq passages are Wikipedia prose, so taking out the sentence that names a term and putting one
@@ -1554,6 +1571,136 @@ a JavaScript caller sends <code>10, 11, 06, 07, 08, 09, not_stated</code>. That 
 far option order moves a Choice answer is not settled here - reversing the options changed no pick
 over the 24 cases in <code>corpus/position.py</code> - so the defect the rule reports is that the query sent
 is not the query written, which holds whatever the order is worth.</p>
+<h2 id="labels-that-contradict-their-descriptions">Labels that contradict their descriptions</h2>
+<p>Jev reads an option's label as part of what the option means. <code>corpus/labels.py names</code> asks the
+query that raised this: a state saying &quot;I'm using Discord&quot;, options labelled <code>discord</code>, <code>jev</code> and
+<code>youtube</code>, and each description naming a different one of the three. The table spans two runs of
+three calls per arm.</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>the options</th>
+<th>what comes back</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>as reported</td>
+<td><code>youtube</code>, whose description is Discord, 0.77 to 0.85; <code>discord</code> 0.15 to 0.23</td>
+</tr>
+<tr>
+<td>the option describing Discord taken out</td>
+<td><code>discord</code> 0.99, on a description naming Jev</td>
+</tr>
+<tr>
+<td>the same, labels replaced by <code>option_1</code> and <code>option_2</code></td>
+<td>0.68 to 0.77 and 0.23 to 0.32</td>
+</tr>
+<tr>
+<td>the same, with &quot;None of the other options is true&quot; added</td>
+<td><code>discord</code> 0.80 to 0.84, the catch-all 0.16 to 0.20</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Where one description plainly fits, it wins; where none does, the label decides</strong>, confidently
+and over a catch-all that is the only true option. That is the defect
+<code>choice/label-contradicts-description</code> reports and the movement <code>keys-hidden</code> measures.</p>
+<p><strong>The check, on labels planted to contradict.</strong> <code>corpus/labels.py check</code> asks the check's two
+wordings, from the catalogue, the way the linter asks them. The clean sets are the 39 distinct,
+fully described Choice option sets somebody else wrote or this repository ships for other checks:
+decision-v7's, the corpus tiers', the other fixtures and examples, and two in
+<code>corpus/labels.json</code>. The planted arms are each of those with every label moved one along, or
+with the first two swapped. The written arm is nine contradictions <code>corpus/labels.json</code> holds, the
+reported query among them.</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>the labels</th>
+<th>fires at the 0.5 trigger</th>
+<th>readings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>as written</td>
+<td>1 of 39</td>
+<td>0.04 to 0.64</td>
+</tr>
+<tr>
+<td>every label moved one along</td>
+<td>32 of 39</td>
+<td>0.14 to 0.96</td>
+</tr>
+<tr>
+<td>the first two swapped</td>
+<td>29 of 39</td>
+<td>0.12 to 0.96</td>
+</tr>
+<tr>
+<td>written to contradict</td>
+<td>8 of 9</td>
+<td>0.48 to 0.96</td>
+</tr>
+</tbody>
+</table></div>
+<p>Four of the planted misses in each arm are sets whose labels say nothing - <code>band_a</code>, <code>tier_a</code>,
+<code>team_1</code>, <code>D1</code> - where moving a label contradicts nothing, and clearing is right. Leaving those
+out, it catches 32 of 35 moved and 29 of 35 swapped. Most of the rest are neighbours on one
+scale, such as <code>pay</code> and <code>pay_after_checks</code> or <code>within_limit</code> and <code>slightly_over</code>, where the
+swapped label names the next point along instead of something else. The other two are one triage
+set, in two fixtures, whose catch-all description lands under <code>billing</code>; they read 0.48 and 0.50.</p>
+<p><strong>Its one clean fire is another defect.</strong> The fixed example of <code>question/date-comparison</code> asks
+&quot;Does the incident record state the date the incident started?&quot; over options naming renewal
+months, and reads 0.54 and 0.64 in two runs. The labels agree with their descriptions; the
+instruction disagrees with both. <strong>Its one written miss sits on the trigger</strong>, 0.49 and 0.48, on a
+label <code>refunds</code> kept after its description was rewritten as &quot;The customer needs technical help
+with the app&quot;. A reading that close is reported as one that may not repeat.</p>
+<p><strong>A label that looks neutral can still pull, and the check does not see it.</strong> The <code>names</code> run
+also asks six questions over the state &quot;A is mentioned here&quot;. Over options keyed <code>option A</code> and
+<code>option B</code>, described as &quot;B is mentioned in the state&quot; and &quot;C is mentioned in the state&quot;, Jev
+answers <code>option A</code> at 0.95 to 0.96: the letter is enough. The check reads the same options at
+0.25, because its wordings count a terse or numbered label as agreeing with anything.
+<code>keys-hidden</code> names its options <code>option_1</code> and on, so on a state full of small numbers the
+replacement labels can pull as well; that is not measured here.</p>
+<p><strong>The locator names the option.</strong> On the nine written contradictions the locator, asked in the
+same call, picks a label carrying the contradiction on 9 of 9, so a finding on one wrong label
+among four points at that label: <code>/questions/&lt;id&gt;/criteria/&lt;label&gt;</code>.</p>
+<p><strong><code>keys-hidden</code>, on decision-v7.</strong> <code>corpus/labels.py probe</code> asks decision-v7 Choice questions
+whose options are all described five times as written and once with the labels hidden, and counts
+a move the way <code>jevlint probe</code> does. decision-v7 has five such option sets, so this is five query
+designs sampled many times, not many designs.</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>the labels</th>
+<th>counted as moved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>as written</td>
+<td>5 of 59</td>
+</tr>
+<tr>
+<td>every label moved one along</td>
+<td>21 of 30</td>
+</tr>
+<tr>
+<td>the first two swapped, the labelled answer among them</td>
+<td>15 of 17</td>
+</tr>
+<tr>
+<td>the first two swapped, the labelled answer not among them</td>
+<td>3 of 13</td>
+</tr>
+</tbody>
+</table></div>
+<p>The variant answers for the state it is given: a swap that leaves this input's answer alone
+leaves the answer alone. <strong>The five clean moves are real, not noise.</strong> Each question's five
+repeats span 0.02 to 0.08, and the moves are 0.05 to 0.25. They sit on inputs between two options,
+in the question-type, news-topic and entailment sets, whose labels such as <code>entity</code> and <code>scitech</code>
+carry meaning of their own, and on four of the five the answer as written is the labelled one. A
+move measures how much the labels decided the answer, not whether they decided it wrongly.</p>
 <h2 id="measured-against-a-corpus-nobody-here-wrote">Measured against a corpus nobody here wrote</h2>
 <p><code>decision-v7</code> and SQuAD 2.0 carry what this repository could not write for itself: material to
 judge, and the answer each question should get. FLORES-200 does the same for

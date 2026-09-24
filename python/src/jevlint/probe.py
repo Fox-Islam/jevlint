@@ -24,6 +24,7 @@ from .typesafe.errors import TypeSafeError
 from .variants import (
     Baseline,
     CriteriaStripped,
+    KeysHidden,
     LevelsReversed,
     NoulAsChoice,
     OptionsReversed,
@@ -235,7 +236,7 @@ class Probe:
 
     @staticmethod
     def variants() -> list[Variant]:
-        return [CriteriaStripped(), NoulAsChoice(), OptionsReversed(), LevelsReversed()]
+        return [CriteriaStripped(), NoulAsChoice(), OptionsReversed(), KeysHidden(), LevelsReversed()]
 
     @staticmethod
     def rewordings(rewordings: dict[str, Any]) -> list[Variant]:

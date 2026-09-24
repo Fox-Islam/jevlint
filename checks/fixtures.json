@@ -355,6 +355,39 @@
       }
     },
     {
+      "check": "choice/label-contradicts-description",
+      "clean": {
+        "type": "choice",
+        "instructions": "What is this support ticket about?",
+        "criteria": {
+          "billing": "Charges, invoices and refunds",
+          "technical": "Something is broken",
+          "account": "Logging in, passwords and profile settings",
+          "other": "Anything the other options do not cover"
+        }
+      },
+      "broken": {
+        "type": "choice",
+        "instructions": "What is this support ticket about?",
+        "criteria": {
+          "billing": "Something is broken",
+          "technical": "Charges, invoices and refunds",
+          "account": "Logging in, passwords and profile settings",
+          "other": "Anything the other options do not cover"
+        }
+      },
+      "fixed": {
+        "type": "choice",
+        "instructions": "What is this support ticket about?",
+        "criteria": {
+          "payments": "Charges, invoices and refunds",
+          "bugs": "Something is broken",
+          "account": "Logging in, passwords and profile settings",
+          "other": "Anything the other options do not cover"
+        }
+      }
+    },
+    {
       "check": "state/irrelevant-field",
       "clean": {
         "question": "Does the customer ask for a refund?",
@@ -783,6 +816,40 @@
         "criteria": {
           "damaged": "The parcel arrived damaged in any way",
           "lost": "The parcel never arrived",
+          "other": "Anything the other options do not cover"
+        }
+      }
+    },
+    {
+      "check": "choice/label-contradicts-description",
+      "domain": "parcels",
+      "clean": {
+        "type": "choice",
+        "instructions": "What went wrong with this delivery?",
+        "criteria": {
+          "damaged": "The parcel arrived damaged",
+          "lost": "The parcel never arrived",
+          "late": "The parcel arrived after the promised date",
+          "other": "Anything the other options do not cover"
+        }
+      },
+      "broken": {
+        "type": "choice",
+        "instructions": "What went wrong with this delivery?",
+        "criteria": {
+          "damaged": "The parcel never arrived",
+          "lost": "The parcel arrived damaged",
+          "late": "The parcel arrived after the promised date",
+          "other": "Anything the other options do not cover"
+        }
+      },
+      "fixed": {
+        "type": "choice",
+        "instructions": "What went wrong with this delivery?",
+        "criteria": {
+          "never_arrived": "The parcel never arrived",
+          "arrived_damaged": "The parcel arrived damaged",
+          "late": "The parcel arrived after the promised date",
           "other": "Anything the other options do not cover"
         }
       }

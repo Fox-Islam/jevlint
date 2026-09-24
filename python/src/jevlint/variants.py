@@ -168,6 +168,57 @@ class OptionsReversed(Variant):
         return question.with_criteria(dict(reversed(question.entries())))
 
 
+class KeysHidden(Variant):
+    """
+    The same Choice with each label replaced by its position, `option_1` and on.
+
+    Jev reads a label as part of what an option means, not as an id, so this
+    leaves the descriptions to carry the meaning alone. Where the answer moves,
+    the labels were deciding it, which on a clear input they do not. A label
+    with no description would be left meaning nothing, so a Choice with one is
+    left alone.
+    """
+
+    def name(self) -> str:
+        return 'keys-hidden'
+
+    def describe(self) -> str:
+        return 'the same options with each label replaced by option_1, option_2 and on, read back by position'
+
+    def applies(self, question: ReviewedQuestion) -> bool:
+        return (
+            question.type == 'choice'
+            and not question.criteria_is_list()
+            and len(question.entries()) > 1
+            and all(
+                value.strip() != '' if isinstance(value, str) else isinstance(value, (dict, list))
+                for _, value in question.entries()
+            )
+        )
+
+    def apply(self, question: ReviewedQuestion) -> ReviewedQuestion:
+        return question.with_criteria(
+            {f'option_{index + 1}': value for index, (_, value) in enumerate(question.entries())},
+        )
+
+    def read(
+        self,
+        response: SystemOneResponse,
+        question: ReviewedQuestion,
+        baseline: Baseline,
+    ) -> float | None:
+        answer = response.answer(question.id) if response.has(question.id) else None
+
+        if not isinstance(answer, ChoiceAnswer):
+            return None
+
+        # The question here is the rewritten one; `raw` still holds the labels as written.
+        labels = [label for label, _ in ReviewedQuestion.from_dict(question.id, question.raw).entries()]
+        winner = baseline.get('winner') or ''
+
+        return answer.probability_of(f'option_{labels.index(winner) + 1}') if winner in labels else None
+
+
 class LevelsReversed(Variant):
     """
     The same rubric with its levels in the opposite order, read back flipped.

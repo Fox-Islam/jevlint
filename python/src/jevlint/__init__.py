@@ -54,6 +54,7 @@ from .typesafe.errors import (
 )
 from .variants import (
     CriteriaStripped,
+    KeysHidden,
     LevelsReversed,
     NoulAsChoice,
     OptionsReversed,
@@ -91,6 +92,7 @@ __all__ = [
     'InternalServerError',
     'JevLintError',
     'Json',
+    'KeysHidden',
     'LevelsReversed',
     'Linter',
     'ModelLinter',

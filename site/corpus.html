@@ -38,7 +38,7 @@
 <tr>
 <td><code>scores.json</code></td>
 <td>what every check put on every one of them</td>
-<td>runs of <code>harvest.py</code>, 959 calls so far</td>
+<td>runs of <code>harvest.py</code>, 1000 calls so far</td>
 </tr>
 <tr>
 <td><code>build.py</code></td>
@@ -69,6 +69,16 @@
 <td><code>advice.py</code></td>
 <td>whether following <code>choice/no-fallback</code> improves the answer, not just the report</td>
 <td>by decision-v7</td>
+</tr>
+<tr>
+<td><code>labels.py</code></td>
+<td><code>choice/label-contradicts-description</code> on planted and written contradictions, and how far <code>keys-hidden</code> moves decision-v7's answers</td>
+<td>planted, the contradiction being known</td>
+</tr>
+<tr>
+<td><code>labels.json</code></td>
+<td>the option sets <code>labels.py</code> needs that no corpus file holds</td>
+<td>written here, each contradiction named</td>
 </tr>
 <tr>
 <td><code>position.py</code></td>
@@ -194,6 +204,9 @@ python3 corpus/states.py --write      # recover each docs example's state from i
 python3 corpus/decision.py --items=40 # the policy ablation, three calls per case
 python3 corpus/advice.py --items=30   # does the advice improve the answer, two calls per arm
 python3 corpus/position.py --items=24 # the catch-all where it was, listed first, listed last
+python3 corpus/labels.py check        # the label check on clean, planted and written option sets
+python3 corpus/labels.py names        # how far a label moves the answer, on the queries that raised it
+python3 corpus/labels.py probe        # keys-hidden against five repeats, over decision-v7
 python3 corpus/sibling.py --items=30  # the policy in the state, in a sibling question, and nowhere
 python3 corpus/rewrite.py             # the same for a wording check, five arms
 python3 corpus/wording.py --items=20  # three wording checks, seven arms

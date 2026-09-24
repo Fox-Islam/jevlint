@@ -7,13 +7,15 @@ What the checks are measured against, beyond the two examples each one ships.
 | `gold.json` | 22 questions the TypeSafe docs discuss in prose | by the docs, with the quotation and the defect named |
 | `docs-examples.json` | 76 entries, 52 distinct, from the docs' cookbooks, patterns and demos | correct by publication: TypeSafe wrote them as how to do it |
 | `field.json` | 62 questions from `jev-bias-bench` and the Atarim API | unlabelled |
-| `scores.json` | what every check put on every one of them | runs of `harvest.py`, 959 calls so far |
+| `scores.json` | what every check put on every one of them | runs of `harvest.py`, 1000 calls so far |
 | `build.py` | the three above, as query files jevlint can read | - |
 | `answers.py` | asking Jev one question and scoring the answer against its label, for the scripts that do both | - |
 | `dogfood.py` | the catalogue's own check wordings, as query files | - |
 | `squad.py` | `state/answer-absent` against SQuAD 2.0, fetched on demand | by the SQuAD annotators |
 | `decision.py` | `state/answer-absent` against decision-v7, whose states carry a policy that can be taken away | by decision-v7 |
 | `advice.py` | whether following `choice/no-fallback` improves the answer, not just the report | by decision-v7 |
+| `labels.py` | `choice/label-contradicts-description` on planted and written contradictions, and how far `keys-hidden` moves decision-v7's answers | planted, the contradiction being known |
+| `labels.json` | the option sets `labels.py` needs that no corpus file holds | written here, each contradiction named |
 | `position.py` | whether where the catch-all is listed changes the answer `advice.py` measures | by decision-v7 |
 | `locators.py` | whether the order of a question's levels changes which one a `locate_mode: pick` check names | none needed |
 | `sibling.py` | what it costs to put what a question needs into another question instead of the state | by decision-v7 |
@@ -54,6 +56,9 @@ python3 corpus/states.py --write      # recover each docs example's state from i
 python3 corpus/decision.py --items=40 # the policy ablation, three calls per case
 python3 corpus/advice.py --items=30   # does the advice improve the answer, two calls per arm
 python3 corpus/position.py --items=24 # the catch-all where it was, listed first, listed last
+python3 corpus/labels.py check        # the label check on clean, planted and written option sets
+python3 corpus/labels.py names        # how far a label moves the answer, on the queries that raised it
+python3 corpus/labels.py probe        # keys-hidden against five repeats, over decision-v7
 python3 corpus/sibling.py --items=30  # the policy in the state, in a sibling question, and nowhere
 python3 corpus/rewrite.py             # the same for a wording check, five arms
 python3 corpus/wording.py --items=20  # three wording checks, seven arms

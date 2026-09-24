@@ -156,6 +156,7 @@ low on its broken one, which is the `inverted` verdict, and the run fails.
 | [Ask multiple questions together](https://docs.typesafe.ai/primitives#ask-multiple-questions-together) | `query/overlapping-questions` |
 | [When one question depends on another](https://docs.typesafe.ai/primitives#when-one-question-depends-on-another) | `question/refers-to-sibling` |
 | [Defining a question](https://docs.typesafe.ai/primitives#define-a-question) | `question/answerable-in-code` |
+| [Labels read as meaning](docs/evidence.md#labels-that-contradict-their-descriptions), measured here and not in the documentation | `choice/label-contradicts-description` |
 
 Some checks are asked more than one way. A catalogue entry with `questions` instead of
 `question` carries several wordings that mean the same thing; they go in the same call, the
@@ -310,8 +311,14 @@ as movement. Then it sends rewrites:
 | `criteria-stripped` | the instructions alone, with the criteria removed |
 | `asked-as-choice` | the same yes/no question as a two-option Choice |
 | `options-reversed` | the same Choice options in the opposite order |
+| `keys-hidden` | the same Choice options with each label replaced by `option_1`, `option_2` and on, read back by position |
 | `levels-reversed` | the same Score levels in the opposite order, read back flipped |
 | your own | `--variants=file.json`, holding `{"name": {"question_id": "the rewording"}}` |
+
+Jev reads a Choice label as part of what its option means, so `keys-hidden` measures how much
+the labels, not the descriptions, decided this answer. It is asked only where every option has a
+description, since a bare label would be left meaning nothing. On a clear input it does not move;
+where it does, the input sits between options or fits none of them, and the labels chose.
 
 Every built-in variant is mechanical. Nothing generates a paraphrase, because a generated
 one moves the wording and whatever the generator decided the question meant at the same

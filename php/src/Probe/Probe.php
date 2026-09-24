@@ -7,6 +7,7 @@ namespace Phox\JevLint\Probe;
 use Phox\JevLint\Exceptions\JevLintException;
 use Phox\JevLint\I18n\Text;
 use Phox\JevLint\Probe\Variants\CriteriaStripped;
+use Phox\JevLint\Probe\Variants\KeysHidden;
 use Phox\JevLint\Probe\Variants\LevelsReversed;
 use Phox\JevLint\Probe\Variants\NoulAsChoice;
 use Phox\JevLint\Probe\Variants\OptionsReversed;
@@ -110,6 +111,7 @@ final class Probe
             new CriteriaStripped(),
             new NoulAsChoice(),
             new OptionsReversed(),
+            new KeysHidden(),
             new LevelsReversed(),
         ];
     }

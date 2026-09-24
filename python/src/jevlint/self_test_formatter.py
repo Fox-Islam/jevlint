@@ -11,10 +11,16 @@ class SelfTestFormatter:
         self._colour = colour
 
     def format(self, scores: list[CheckScore]) -> str:
+        def name(score: CheckScore) -> str:
+            return score.check.id if score.domain == '' else score.check.id + ' (' + score.domain + ')'
+
+        # Wide enough for the longest id with its domain, so a long one does not push its row out of line.
+        width = max([44, *(len(name(score)) for score in scores)])
         lines = [
             dim(self._colour, Text.of('self_test.heading')),
             '',
             paint(self._colour, _row(
+                width,
                 Text.of('self_test.column_check'),
                 Text.of('self_test.column_clean'),
                 Text.of('self_test.column_broken'),
@@ -26,7 +32,8 @@ class SelfTestFormatter:
 
         for score in scores:
             lines.append(_row(
-                score.check.id if score.domain == '' else score.check.id + ' (' + score.domain + ')',
+                width,
+                name(score),
                 _number(score.clean),
                 _number(score.broken),
                 _number(score.fixed),
@@ -59,9 +66,9 @@ class SelfTestFormatter:
         return paint(self._colour, verdict, '33' if verdict == 'weak' else '31')
 
 
-def _row(check: str, clean: str, broken: str, fix: str, span: str, verdict: str) -> str:
+def _row(width: int, check: str, clean: str, broken: str, fix: str, span: str, verdict: str) -> str:
     return (
-        pad(check, 44) + ' ' + pad_left(clean, 7) + ' ' + pad_left(broken, 7) + ' '
+        pad(check, width) + ' ' + pad_left(clean, 7) + ' ' + pad_left(broken, 7) + ' '
         + pad_left(fix, 7) + ' ' + pad_left(span, 7) + '  ' + verdict
     )
 

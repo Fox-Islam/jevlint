@@ -122,6 +122,52 @@ export class OptionsReversed extends Variant {
 }
 
 /**
+ * The same Choice with each label replaced by its position, `option_1` and on.
+ *
+ * Jev reads a label as part of what an option means, not as an id, so this
+ * leaves the descriptions to carry the meaning alone. Where the answer moves,
+ * the labels were deciding it, which on a clear input they do not. A label
+ * with no description would be left meaning nothing, so a Choice with one is
+ * left alone
+ */
+export class KeysHidden extends Variant {
+    name(): string {
+        return 'keys-hidden';
+    }
+
+    describe(): string {
+        return 'the same options with each label replaced by option_1, option_2 and on, read back by position';
+    }
+
+    override applies(question: ReviewedQuestion): boolean {
+        return question.type === 'choice'
+            && !question.criteriaIsList()
+            && question.entries().length > 1
+            && question.entries().every(([, value]) => (
+                typeof value === 'string' ? value.trim() !== '' : typeof value === 'object' && value !== null
+            ));
+    }
+
+    override apply(question: ReviewedQuestion): ReviewedQuestion {
+        return question.withCriteria(ordered(question.entries().map(([, value], index) => [`option_${index + 1}`, value])));
+    }
+
+    override read(response: SystemOneResponse, question: ReviewedQuestion, baseline: Baseline): number | null {
+        const answer = response.has(question.id) ? response.answer(question.id) : null;
+
+        if (!(answer instanceof ChoiceAnswer)) {
+            return null;
+        }
+
+        // The question here is the rewritten one; `raw` still holds the labels as written.
+        const labels = ReviewedQuestion.fromObject(question.id, question.raw).entries().map(([label]) => label);
+        const position = labels.indexOf(baseline.winner ?? '');
+
+        return position === -1 ? null : answer.probabilityOf(`option_${position + 1}`);
+    }
+}
+
+/**
  * The same rubric with its levels in the opposite order, read back flipped.
  *
  * The rubric describes the same situations either way, and each level is

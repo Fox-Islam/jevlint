@@ -59,11 +59,13 @@ API quote it exactly:</p>
 ran, which is what the self-test comparison against the pinned build inferred from readings.</p>
 <h2 id="the-catalogue-passes-its-own-checks">The catalogue passes its own checks</h2>
 <p>The checks are Jev questions, so the linter runs on them, every wording of every one:</p>
-<p>The 21 question-scoped wordings come back with one finding, over 46 calls. It is
-<code>question/type-mismatch</code> at 0.77, reading <code>question/arithmetic</code>'s own wording as better suited
-to another primitive, which is an artefact of putting a check in the position of a query instead
-of a defect in the catalogue. The run also notes that the checks comparing questions did not
-run, because 21 questions make more pairs than one call carries - a limitation of this file, not
+<p>The 23 question-scoped wordings come back with one finding, over 50 calls. It is
+<code>question/type-mismatch</code> at 0.77 to 0.80, reading <code>question/arithmetic</code>'s own wording as better
+suited to another primitive, which is an artefact of putting a check in the position of a query
+instead of a defect in the catalogue. Two of three runs on 2026-09-24 add a second:
+<code>question/generation</code> at 0.60 on its own first wording, against a 0.60 trigger, reported as a
+reading that may not repeat. The run also notes that the checks comparing questions did not
+run, because 23 questions make more pairs than one call carries - a limitation of this file, not
 of the catalogue.</p>
 <p>The seven wordings in the state file come back with two findings, over 19 calls. One is a
 distractor field planted so the state checks have something to read, which
@@ -163,9 +165,9 @@ using the product on one reading and not on another, and the question settles ne
 </tr>
 <tr>
 <td><code>self-test</code>, whole catalogue</td>
-<td>142</td>
+<td>148</td>
 <td>-</td>
-<td>24 checks, 48 example sets, all <code>ok</code></td>
+<td>25 checks, 50 example sets, all <code>ok</code></td>
 </tr>
 </tbody>
 </table></div>
