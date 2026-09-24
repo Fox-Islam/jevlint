@@ -1,6 +1,6 @@
 {
   "name": "@phox-js/jevlint",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A linting tool combining static analysis and Jev queries, to improve Jev queries",
   "type": "module",
   "license": "MIT",

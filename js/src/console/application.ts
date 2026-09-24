@@ -13,7 +13,7 @@ import { Flags } from './flags.js';
 import { Output } from './output.js';
 
 export class Application {
-    static readonly VERSION = '1.2.0';
+    static readonly VERSION = '1.2.1';
 
     async run(argv: string[]): Promise<number> {
         const args = Args.parse(argv.slice(1));
