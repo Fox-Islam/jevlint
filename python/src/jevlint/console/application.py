@@ -14,7 +14,7 @@ from .commands import CheckCommand, ChecksCommand, ProbeCommand, SelfTestCommand
 from .flags import Flags
 from .output import Output
 
-VERSION = '1.2.1'
+VERSION = '1.3.0'
 
 
 class Application:

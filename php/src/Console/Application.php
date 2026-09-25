@@ -17,7 +17,7 @@ use Phox\TypeSafe\Exceptions\TypeSafeException;
 
 final class Application
 {
-    public const VERSION = '1.2.1';
+    public const VERSION = '1.3.0';
 
     /**
      * @param list<string> $argv
