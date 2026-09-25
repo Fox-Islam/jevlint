@@ -7,7 +7,7 @@ What the checks are measured against, beyond the two examples each one ships.
 | `gold.json` | 22 questions the TypeSafe docs discuss in prose | by the docs, with the quotation and the defect named |
 | `docs-examples.json` | 76 entries, 52 distinct, from the docs' cookbooks, patterns and demos | correct by publication: TypeSafe wrote them as how to do it |
 | `field.json` | 62 questions from `jev-bias-bench` and the Atarim API | unlabelled |
-| `scores.json` | what every check put on every one of them | runs of `harvest.py`, 1000 calls so far |
+| `scores.json` | what every check put on every one of them | runs of `harvest.py`, 1173 calls so far |
 | `build.py` | the three above, as query files jevlint can read | - |
 | `answers.py` | asking Jev one question and scoring the answer against its label, for the scripts that do both | - |
 | `dogfood.py` | the catalogue's own check wordings, as query files | - |
@@ -20,6 +20,8 @@ What the checks are measured against, beyond the two examples each one ships.
 | `locators.py` | whether the order of a question's levels changes which one a `locate_mode: pick` check names | none needed |
 | `sibling.py` | what it costs to put what a question needs into another question instead of the state | by decision-v7 |
 | `mechanical.py` | whether Jev answers a question code could answer, over states generated here | computed, not judged |
+| `second.py` | the `cleared_by` and `fired_by` questions, against the checks they sit beside, over the jevlint-tests benchmark fetched on demand | by construction, the draw hidden or the calculation stated |
+| `sums.py` | where Jev's arithmetic fails by operation and size, and what `question/arithmetic`'s `cleared_by` reads on the same sums | computed, not judged |
 | `undetermined.py` | `choice/undetermined-outcome` and `state/answer-absent` over the hidden draws `jev-does-not-play-dice` recorded, fetched on demand | the draw is hidden by construction |
 | `rewrite.py` | the same for `question/double-negative`, with the rewriting done blind by a panel | by decision-v7 |
 | `wording.py` | three wording checks at once, on material the model does not already answer perfectly | by decision-v7 |
@@ -91,6 +93,8 @@ python3 corpus/mechanical.py          # eight rules over generated states, one c
 python3 corpus/dogfood.py             # the catalogue's own wordings, as queries jevlint can read
 python3 corpus/locators.py            # each pick locator over its own broken example, both ways round
 python3 corpus/undetermined.py        # a Choice over a hidden draw, against the Choice questions the corpus holds
+python3 corpus/second.py              # the cleared_by and fired_by questions, beside the checks they overrule
+python3 corpus/sums.py                # generated sums by operation and size, three ways each
 python3 corpus/borderline.py --items=12   # an edge planted in a paragraph, six arms over each
 python3 corpus/flores.py --items=12   # one spare field per arm, the same sentences in another language
 ```

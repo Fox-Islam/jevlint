@@ -61,6 +61,12 @@ final class Check
          */
         public readonly array $suppress,
         /**
+         * Reading above its own trigger, one sets a finding aside and the other
+         * raises one the check's own reading did not
+         */
+        public readonly ?SecondQuestion $clearedBy,
+        public readonly ?SecondQuestion $firedBy,
+        /**
          * Whether a reading under the trigger says nothing.
          *
          * A check whose clean and defective readings overlap is reported either
@@ -187,6 +193,8 @@ final class Check
                 ? array_values(array_filter($data['jaggedness'], 'is_string'))
                 : [],
             suppress: self::suppressions($data),
+            clearedBy: self::secondQuestion($data, 'cleared_by'),
+            firedBy: self::secondQuestion($data, 'fired_by'),
             inconclusive: ($data['inconclusive'] ?? false) === true,
             docs: is_string($data['docs'] ?? null) ? $data['docs'] : null,
             advice: is_string($data['advice'] ?? null) ? $data['advice'] : '',
@@ -264,6 +272,33 @@ final class Check
     public function isComposite(): bool
     {
         return count($this->wordings) > 1;
+    }
+
+    /** @param array<string, mixed> $data */
+    private static function secondQuestion(array $data, string $name): ?SecondQuestion
+    {
+        $declared = $data[$name] ?? null;
+
+        if ($declared === null) {
+            return null;
+        }
+
+        $question = is_array($declared) ? ($declared['question'] ?? null) : null;
+        $trigger = is_array($declared) ? ($declared['trigger'] ?? null) : null;
+
+        if (! is_array($question)
+            || ($question['type'] ?? 'noul') !== 'noul'
+            || ! is_string($question['instructions'] ?? null)
+            || ! (is_int($trigger) || is_float($trigger))
+            || $trigger <= 0
+            || $trigger >= 1) {
+            throw JevLintException::of(JevLintException::CATALOGUE, Text::of('check.bad_second_question', [
+                'id' => is_string($data['id'] ?? null) ? $data['id'] : '?',
+                'name' => $name,
+            ]));
+        }
+
+        return new SecondQuestion(Wording::fromArray($question), (float) $trigger);
     }
 
     /**

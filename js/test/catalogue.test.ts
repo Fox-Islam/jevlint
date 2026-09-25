@@ -149,6 +149,11 @@ describe('a catalogue with something wrong with it', () => {
         if (found) found['suppress'] = [{ answer: 'noul', when: 'the_moon_is_full' }];
     });
 
+    refuses('a clearing trigger outside 0 to 1', (data) => {
+        const found = checks(data).find((check) => check['cleared_by'] !== undefined);
+        if (found) (found['cleared_by'] as Record<string, unknown>)['trigger'] = 1.5;
+    });
+
     refuses('two model checks whose ids collapse onto one answer key', (data) => {
         const models = checks(data).filter((check) => check['mode'] === 'model');
         const first = models[0];

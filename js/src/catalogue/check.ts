@@ -37,6 +37,16 @@ export interface Suppression {
 }
 
 /**
+ * A question asked beside a check that overrules its verdict, and the reading it
+ * takes. It asks something different from the check, so it decides on its own
+ * instead of being averaged in with the check's wordings
+ */
+export interface SecondQuestion {
+    wording: Wording;
+    trigger: number;
+}
+
+/**
  * One entry from `checks/catalogue.json`.
  *
  * A static check names a rule implemented in code. A model check carries the
@@ -75,6 +85,12 @@ export class Check {
         /** The documented failure modes this check is written against */
         public readonly jaggedness: string[],
         public readonly suppress: Suppression[],
+        /**
+         * Reading above its own trigger, one sets a finding aside and the other
+         * raises one the check's own reading did not
+         */
+        public readonly clearedBy: SecondQuestion | null,
+        public readonly firedBy: SecondQuestion | null,
         /**
          * Whether a reading under the trigger says nothing.
          *
@@ -186,6 +202,8 @@ export class Check {
             strings(data['supersedes']),
             strings(data['jaggedness']),
             suppressions(data, id),
+            secondQuestion(data, 'cleared_by', id),
+            secondQuestion(data, 'fired_by', id),
             data['inconclusive'] === true,
             text(data['docs']),
             text(data['advice']) ?? '',
@@ -339,6 +357,28 @@ function readWordings(data: Record<string, unknown>): Wording[] {
     return typeof question === 'object' && question !== null
         ? [Wording.fromObject(question as Record<string, unknown>)]
         : [];
+}
+
+function secondQuestion(data: Record<string, unknown>, name: string, id: string): SecondQuestion | null {
+    const declared = data[name];
+
+    if (declared === undefined || declared === null) {
+        return null;
+    }
+
+    const row = typeof declared === 'object' ? declared as Record<string, unknown> : {};
+    const question = row['question'];
+    const trigger = row['trigger'];
+
+    if (typeof question !== 'object' || question === null
+        || ((question as Record<string, unknown>)['type'] ?? 'noul') !== 'noul'
+        || typeof (question as Record<string, unknown>)['instructions'] !== 'string'
+        || typeof trigger !== 'number'
+        || !(trigger > 0 && trigger < 1)) {
+        throw JevLintError.of(JevLintError.CATALOGUE, Text.of('check.bad_second_question', { id, name }));
+    }
+
+    return { wording: Wording.fromObject(question as Record<string, unknown>), trigger };
 }
 
 function suppressions(data: Record<string, unknown>, id: string): Suppression[] {

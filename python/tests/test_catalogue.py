@@ -123,6 +123,11 @@ def _unknown_suppression(data):
     found['suppress'] = [{'answer': 'noul', 'when': 'the_moon_is_full'}]
 
 
+def _clearing_trigger_outside_zero_to_one(data):
+    found = next(check for check in checks(data) if 'cleared_by' in check)
+    found['cleared_by']['trigger'] = 1.5
+
+
 def _colliding_answer_keys(data):
     models = [check for check in checks(data) if check['mode'] == 'model']
     models[0]['id'] = 'a/b-c'
@@ -147,6 +152,7 @@ def _colliding_answer_keys(data):
     _no_checks,
     _check_that_is_not_an_object,
     _unknown_suppression,
+    _clearing_trigger_outside_zero_to_one,
     _colliding_answer_keys,
 ], ids=lambda change: change.__name__.strip('_'))
 def test_refuses_a_catalogue_with_something_wrong_with_it(change):

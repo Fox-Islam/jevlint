@@ -514,9 +514,31 @@
           "false": "The question asks for a judgment about meaning, and no number has to be worked out to answer it. Comparing one figure with another, or with a threshold, is a reading and not a tally, and asking whether there is more than one of something is a judgment about presence."
         }
       },
+      "cleared_by": {
+        "trigger": 0.5,
+        "question": {
+          "type": "noul",
+          "instructions": "The question in `instructions` needs only a sum a child could do in their head: one step on single-digit whole numbers, all written in the question.",
+          "criteria": {
+            "true": "It is a times-table or counting-on sum, such as 4 + 5 or 6 × 7, and nothing else has to be worked out.",
+            "false": "It needs bigger numbers, fractions or percentages, a probability, a count of things to be found, a number from somewhere else, or several steps."
+          }
+        }
+      },
+      "fired_by": {
+        "trigger": 0.5,
+        "question": {
+          "type": "noul",
+          "instructions": "Answering the question in `instructions` needs a calculation: figures multiplied, divided or combined into a probability, rate or total, or a stated result of such a calculation checked.",
+          "criteria": {
+            "true": "A number has to be calculated before the question can be answered, whether the question asks for it or states it and asks whether it is right.",
+            "false": "No calculation is needed: the question asks for a judgement about meaning, or compares figures that are already written down with each other or with a threshold."
+          }
+        }
+      },
       "hint": "Jev recognises the shape of a count instead of tallying, and the error grows with the size of the thing counted. Comparing a figure with a threshold is not this defect: on decision-v7's policy cases Jev answered 30 of 30 threshold questions correctly. Accept it where the count is small, bounded and visible in one place, such as whether a list has more than one entry, and the answer is a judgement about presence rather than the number itself.",
       "docs": "https://docs.typesafe.ai/model-jaggedness/jev-1.13#math-and-numbers",
-      "message": "Answering this needs counting, adding or comparing numbers.",
+      "message": "Answering this needs a number worked out: items counted, figures added up, or a probability, rate or total calculated.",
       "suggest": "Do the arithmetic in code. Where the thing being counted is something only a reader can spot, ask one question per candidate and add the answers up yourself.",
       "reads": "instructions",
       "action": "remove",
@@ -1209,6 +1231,7 @@
       ],
       "severity": "error",
       "trigger": 0.6,
+      "requires": "siblings",
       "message": "This question is written to use something another question in the same request produces.",
       "hint": "Questions in one request are independent, so what this names is not there to be read and the question is answered as though the material were absent. Measured on decision-v7's contrastive rows: with the policy the question needs moved out of the state and into another question's instructions, the label is answered 20 of 30 against 27 of 30 with it in the state, at a Brier score of 0.237 against 0.064. Deleting the policy outright reads 20 of 30 and 0.242, so a sibling carries nothing. Accept it where the phrase points at the material rather than at an answer the request has to produce.",
       "suggest": "Put what the question needs into the state. Where the second question cannot be built until the first is answered, send it as a second request.",
@@ -1313,6 +1336,17 @@
         "criteria": {
           "true": "The options name results of something the material presents as still open, or as already settled and withheld from whoever reads it, so one option is as good a pick as another.",
           "false": "The material bears on the answer, so picking between the options is reading it. A question about what somebody wants, intends, means or is likely to do is such a case, however little the material says about it, and so is one whose answer the material states as a number or a forecast."
+        }
+      },
+      "cleared_by": {
+        "trigger": 0.5,
+        "question": {
+          "type": "noul",
+          "instructions": "The correct option in `question` is a fixed fact that a knowledgeable reader could work out, from the material in `state` or from general knowledge.",
+          "criteria": {
+            "true": "The answer is already settled and someone who knows the subject, or who reads the material, could say which option is right: a question of fact, definition or established knowledge.",
+            "false": "Nobody reading could say which option is right, because the result is hidden from whoever reads it, has not happened yet, or is left to chance."
+          }
         }
       },
       "docs": "https://docs.typesafe.ai/primitives/choice",

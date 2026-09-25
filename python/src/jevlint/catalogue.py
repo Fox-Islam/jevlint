@@ -49,6 +49,18 @@ def _version_key(version: str) -> list[int]:
     return [int(part) for part in version.split('.')]
 
 
+class SecondQuestion:
+    """
+    A question asked beside a check that overrules its verdict, and the reading it
+    takes. It asks something different from the check, so it decides on its own
+    instead of being averaged in with the check's wordings.
+    """
+
+    def __init__(self, wording: Wording, trigger: float) -> None:
+        self.wording = wording
+        self.trigger = trigger
+
+
 class Wording:
     """
     One way of asking a check.
@@ -119,6 +131,10 @@ class Check:
         # The documented failure modes this check is written against
         self.jaggedness: list[str] = fields['jaggedness']
         self.suppress: list[dict[str, str]] = fields['suppress']
+        # Reading above its own trigger, one sets a finding aside and the other
+        # raises one the check's own reading did not
+        self.cleared_by: SecondQuestion | None = fields['cleared_by']
+        self.fired_by: SecondQuestion | None = fields['fired_by']
         # Whether a reading under the trigger says nothing. A check whose clean
         # and defective readings overlap is reported either way, because silence
         # from it would read as a clean bill of health.
@@ -230,6 +246,8 @@ class Check:
             supersedes=_strings(data.get('supersedes')),
             jaggedness=_strings(data.get('jaggedness')),
             suppress=_suppressions(data, check_id),
+            cleared_by=_second_question(data, 'cleared_by', check_id),
+            fired_by=_second_question(data, 'fired_by', check_id),
             inconclusive=data.get('inconclusive') is True,
             docs=_text(data.get('docs')),
             advice=_text(data.get('advice')) or '',
@@ -360,6 +378,29 @@ def _read_wordings(data: dict[str, Any]) -> list[Wording]:
     question = data.get('question')
 
     return [Wording.from_dict(question)] if isinstance(question, dict) else []
+
+
+def _second_question(data: dict[str, Any], name: str, check_id: str) -> SecondQuestion | None:
+    declared = data.get(name)
+
+    if declared is None:
+        return None
+
+    question = declared.get('question') if isinstance(declared, dict) else None
+    trigger = declared.get('trigger') if isinstance(declared, dict) else None
+
+    if (not isinstance(question, dict)
+            or question.get('type', 'noul') != 'noul'
+            or not isinstance(question.get('instructions'), str)
+            or isinstance(trigger, bool)
+            or not isinstance(trigger, (int, float))
+            or not 0 < trigger < 1):
+        raise JevLintError.of(JevLintError.CATALOGUE, Text.of('check.bad_second_question', {
+            'id': check_id,
+            'name': name,
+        }))
+
+    return SecondQuestion(Wording.from_dict(question), float(trigger))
 
 
 def _suppressions(data: dict[str, Any], check_id: str) -> list[dict[str, str]]:
@@ -648,6 +689,8 @@ class Catalogue:
                 'trigger': check.get('trigger'),
                 'questions': check.get('questions', check.get('question')),
                 'requires': check.get('requires'),
+                'cleared_by': check.get('cleared_by'),
+                'fired_by': check.get('fired_by'),
                 'compare': check.get('compare'),
                 'locate': check.get('locate'),
                 'locate_mode': check.get('locate_mode'),

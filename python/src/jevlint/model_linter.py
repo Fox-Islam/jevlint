@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from dataclasses import field as _field
 from typing import Any
 
-from .catalogue import Catalogue, Check, Wording
+from .catalogue import Catalogue, Check, SecondQuestion, Wording
 from .query import Query, ReviewedQuestion
 from .report import Finding, Patch, Report, Severity
 from .support import Cause, Json
@@ -40,6 +40,10 @@ class Asked:
 
     # answer key to the element it is about
     locator: dict[str, str] = _field(default_factory=dict)
+
+    # the keys the check's `cleared_by` and `fired_by` questions come back under
+    clear_key: str | None = None
+    fire_key: str | None = None
 
 
 class ModelLinter:
@@ -84,6 +88,10 @@ class ModelLinter:
 
     def _wanted(self, check: Check) -> bool:
         return len(self._only) == 0 or check.id in self._only
+
+    def _has_siblings(self) -> bool:
+        # A narrowed query still has the questions it was narrowed from
+        return self._question_count > 1 or self._narrowed
 
     def run(self, query: Query, report: Report) -> None:
         self._fields = {}
@@ -431,6 +439,9 @@ class ModelLinter:
             if check.requires == 'criteria' and not question.has_criteria():
                 continue
 
+            if check.requires == 'siblings' and not self._has_siblings():
+                continue
+
             asked.append(self._ask(request, check, None, elements))
 
         report.asked(len(asked))
@@ -495,7 +506,18 @@ class ModelLinter:
                 locator[key] = ''
                 request.ask(key, Choice.ask(check.locate).options(dict(options)))
 
-        return Asked(check, field, keys, locator)
+        clear_key: str | None = None
+        fire_key: str | None = None
+
+        if check.cleared_by is not None:
+            clear_key = f'{check.answer_key()}{suffix}__clear'
+            request.ask(clear_key, self.build(check.cleared_by.wording, field or ''))
+
+        if check.fired_by is not None:
+            fire_key = f'{check.answer_key()}{suffix}__fire'
+            request.ask(fire_key, self.build(check.fired_by.wording, field or ''))
+
+        return Asked(check, field, keys, locator, clear_key, fire_key)
 
     def _elements(self, question: ReviewedQuestion) -> dict[str, str]:
         """The reviewed question's own levels or options, as something to choose from."""
@@ -595,6 +617,8 @@ class ModelLinter:
                 report,
                 question,
                 entry.locator,
+                entry.clear_key,
+                entry.fire_key,
             )
 
     def _settle(
@@ -676,6 +700,8 @@ class ModelLinter:
         report: Report,
         question: ReviewedQuestion | None = None,
         locator: dict[str, str] | None = None,
+        clear_key: str | None = None,
+        fire_key: str | None = None,
     ) -> None:
         locator = locator or {}
         probabilities: list[float] = []
@@ -720,6 +746,17 @@ class ModelLinter:
         # produces, which is the mean of its wordings. The spread over the
         # wordings is reported either way.
         unstable = len(per_call) > 1 and min(per_call) <= check.trigger < max(per_call)
+        raised = None if fired else _above(check.fired_by, fire_key, responses)
+
+        if raised is not None:
+            fired = True
+            unstable = False
+
+        cleared = _above(check.cleared_by, clear_key, responses) if fired or unstable else None
+
+        if cleared is not None:
+            fired = False
+            unstable = False
 
         # A cleared check within touching distance of its trigger is kept even
         # without `--all`, because the reading is already paid for and it is the
@@ -734,6 +771,14 @@ class ModelLinter:
 
         elements = _locate(locator, responses[0]) if fired and len(locator) > 0 else []
         element = elements[0] if len(elements) == 1 else None
+
+        # A finding the second question raised is reported at that question's
+        # reading and trigger. The check's own reading, under its trigger, goes in
+        # the evidence instead of being shown as the likelihood of the defect.
+        if raised is not None and check.fired_by is not None:
+            shown, shown_trigger, shown_readings = raised, check.fired_by.trigger, []
+        else:
+            shown, shown_trigger, shown_readings = average, check.trigger, probabilities
 
         if element is not None:
             title = Text.of('finding.title_with_detail', {
@@ -763,19 +808,29 @@ class ModelLinter:
             action=check.action,
             path=check.path(target, field) + ('' if element is None else f'/{_pointer_for(check, element)}'),
             paths=[f'{check.path(target, field)}/{_pointer_for(check, found)}' for found in elements],
-            trigger=check.trigger,
-            spread=max(probabilities) - min(probabilities) if len(probabilities) > 1 else None,
-            near_trigger=abs(average - check.trigger) <= ModelLinter.NEAR,
+            trigger=shown_trigger,
+            spread=max(shown_readings) - min(shown_readings) if len(shown_readings) > 1 else None,
+            near_trigger=abs(shown - shown_trigger) <= ModelLinter.NEAR,
             supersedes=check.supersedes,
             docs=check.docs,
-            probability=average,
+            probability=shown,
             fired=fired,
             unstable=unstable,
             patch=self._removal(check, target, field),
-            evidence=_evidence_for(field, check, question, element),
-            readings=probabilities if len(probabilities) > 1 else [],
+            cleared_because=Text.of('finding.cleared_by', {
+                'probability': cleared,
+                'trigger': check.cleared_by.trigger if check.cleared_by is not None else 0.0,
+            }) if cleared is not None else '',
+            evidence=_joined(
+                _evidence_for(field, check, question, element),
+                Text.of('finding.fired_by', {
+                    'probability': average,
+                    'trigger': check.trigger,
+                }) if raised is not None else None,
+            ),
+            readings=shown_readings if len(shown_readings) > 1 else [],
             readings_of=_readings_of(len(keys), len(responses), self._repeat_count)
-            if len(probabilities) > 1 else None,
+            if len(shown_readings) > 1 else None,
         ))
 
     def _removal(self, check: Check, target: str, field: str | None) -> Patch | None:
@@ -928,9 +983,31 @@ def _reading(response: SystemOneResponse, key: str) -> float | None:
     return value if 0.0 <= value <= 1.0 else None
 
 
+def _above(second: SecondQuestion | None, key: str | None, responses: list[SystemOneResponse]) -> float | None:
+    """A second question's reading, where it clears that question's trigger."""
+    if second is None or key is None:
+        return None
+
+    values = [value for response in responses if (value := _reading(response, key)) is not None]
+
+    if len(values) == 0 or _mean(values) <= second.trigger:
+        return None
+
+    return _mean(values)
+
+
+def _joined(*parts: str | None) -> str | None:
+    kept = [part for part in parts if part]
+
+    return ' '.join(kept) if len(kept) > 0 else None
+
+
 def _answer_keys(asked: list[Asked]) -> list[str]:
     """Every answer key a call carries, the locators among them."""
-    return [key for entry in asked for key in [*entry.keys, *entry.locator]]
+    return [
+        key for entry in asked
+        for key in [*entry.keys, *entry.locator, *(k for k in (entry.clear_key, entry.fire_key) if k)]
+    ]
 
 
 def _keys_for(asked: list[Asked], check_id: str) -> list[str]:

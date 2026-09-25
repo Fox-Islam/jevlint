@@ -233,6 +233,8 @@ final class Catalogue
                 'trigger' => $check['trigger'] ?? null,
                 'questions' => $check['questions'] ?? $check['question'] ?? null,
                 'requires' => $check['requires'] ?? null,
+                'cleared_by' => $check['cleared_by'] ?? null,
+                'fired_by' => $check['fired_by'] ?? null,
                 'compare' => $check['compare'] ?? null,
                 'locate' => $check['locate'] ?? null,
                 'locate_mode' => $check['locate_mode'] ?? null,

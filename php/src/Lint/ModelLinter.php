@@ -6,6 +6,7 @@ namespace Phox\JevLint\Lint;
 
 use Phox\JevLint\Catalogue\Catalogue;
 use Phox\JevLint\Catalogue\Check;
+use Phox\JevLint\Catalogue\SecondQuestion;
 use Phox\JevLint\Catalogue\Wording;
 use Phox\JevLint\I18n\Text;
 use Phox\JevLint\Query\Query;
@@ -73,6 +74,12 @@ final class ModelLinter
     private function wanted(Check $check): bool
     {
         return $this->only === [] || in_array($check->id, $this->only, true);
+    }
+
+    private function hasSiblings(): bool
+    {
+        // A narrowed query still has the questions it was narrowed from
+        return $this->questionCount > 1 || $this->narrowed;
     }
 
     /** @var array<string, array<string, array<string, float>>> check id to field to question id to probability */
@@ -529,6 +536,10 @@ final class ModelLinter
                 continue;
             }
 
+            if ($check->requires === 'siblings' && ! $this->hasSiblings()) {
+                continue;
+            }
+
             $asked[] = $this->ask($request, $check, null, $elements);
         }
 
@@ -577,7 +588,7 @@ final class ModelLinter
      * Put every wording of one check on the request
      *
      * @param  array<string, string>                                                              $options what the check's locator chooses between
-     * @return array{check: Check, field: ?string, keys: list<string>, locator: array<string, string>}
+     * @return array{check: Check, field: ?string, keys: list<string>, locator: array<string, string>, clearKey: ?string, fireKey: ?string}
      */
     private function ask(SystemOne $request, Check $check, ?string $field = null, array $options = []): array
     {
@@ -606,7 +617,20 @@ final class ModelLinter
             }
         }
 
-        return ['check' => $check, 'field' => $field, 'keys' => $keys, 'locator' => $locator];
+        $clearKey = null;
+        $fireKey = null;
+
+        if ($check->clearedBy !== null) {
+            $clearKey = $check->answerKey().$suffix.'__clear';
+            $request->ask($clearKey, $this->build($check->clearedBy->wording, $field ?? ''));
+        }
+
+        if ($check->firedBy !== null) {
+            $fireKey = $check->answerKey().$suffix.'__fire';
+            $request->ask($fireKey, $this->build($check->firedBy->wording, $field ?? ''));
+        }
+
+        return ['check' => $check, 'field' => $field, 'keys' => $keys, 'locator' => $locator, 'clearKey' => $clearKey, 'fireKey' => $fireKey];
     }
 
     /**
@@ -662,7 +686,7 @@ final class ModelLinter
     }
 
     /**
-     * @param list<array{check: Check, field: ?string, keys: list<string>, locator: array<string, string>}> $asked
+     * @param list<array{check: Check, field: ?string, keys: list<string>, locator: array<string, string>, clearKey: ?string, fireKey: ?string}> $asked
      * @param array<string, mixed>                                                                          $state the state the first call used
      */
     private function collect(array $asked, SystemOne $request, ReviewedQuestion $question, string $target, Report $report, array $state): void
@@ -710,29 +734,29 @@ final class ModelLinter
             }
         }
 
-        foreach ($asked as ['check' => $check, 'field' => $field, 'keys' => $keys, 'locator' => $locator]) {
+        foreach ($asked as ['check' => $check, 'field' => $field, 'keys' => $keys, 'locator' => $locator, 'clearKey' => $clearKey, 'fireKey' => $fireKey]) {
             if ($check->compare === 'type') {
                 $this->recordTypeComparison($check, $keys[0], $responses[0], $question, $target, $report);
 
                 continue;
             }
 
-            $this->record($check, $keys, $field, [...$responses, ...($extra[$check->id] ?? [])], $target, $report, $question, $locator);
+            $this->record($check, $keys, $field, [...$responses, ...($extra[$check->id] ?? [])], $target, $report, $question, $locator, $clearKey, $fireKey);
         }
     }
 
     /**
      * Every answer key a call carries, the locators among them.
      *
-     * @param  list<array{check: Check, field: ?string, keys: list<string>, locator: array<string, string>}> $asked
+     * @param  list<array{check: Check, field: ?string, keys: list<string>, locator: array<string, string>, clearKey: ?string, fireKey: ?string}> $asked
      * @return list<string>
      */
     private static function answerKeys(array $asked): array
     {
         $keys = [];
 
-        foreach ($asked as ['keys' => $theseKeys, 'locator' => $locator]) {
-            $keys = [...$keys, ...$theseKeys, ...array_keys($locator)];
+        foreach ($asked as ['keys' => $theseKeys, 'locator' => $locator, 'clearKey' => $clearKey, 'fireKey' => $fireKey]) {
+            $keys = [...$keys, ...$theseKeys, ...array_keys($locator), ...array_values(array_filter([$clearKey, $fireKey], 'is_string'))];
         }
 
         return $keys;
@@ -741,7 +765,7 @@ final class ModelLinter
     /**
      * The answer keys one check was asked under.
      *
-     * @param  list<array{check: Check, field: ?string, keys: list<string>, locator: array<string, string>}> $asked
+     * @param  list<array{check: Check, field: ?string, keys: list<string>, locator: array<string, string>, clearKey: ?string, fireKey: ?string}> $asked
      * @return list<string>
      */
     private function keysFor(array $asked, string $checkId): array
@@ -762,7 +786,7 @@ final class ModelLinter
      * so settling a borderline verdict costs one round trip however many are
      * borderline.
      *
-     * @param  list<array{check: Check, field: ?string, keys: list<string>, locator: array<string, string>}> $asked
+     * @param  list<array{check: Check, field: ?string, keys: list<string>, locator: array<string, string>, clearKey: ?string, fireKey: ?string}> $asked
      * @param  list<SystemOneResponse>                                                                       $responses
      * @param  array<string, mixed>                                                                          $state
      * @return array<string, list<SystemOneResponse>>
@@ -843,7 +867,7 @@ final class ModelLinter
      * @param list<SystemOneResponse> $responses
      * @param array<string, string>   $locator
      */
-    private function record(Check $check, array $keys, ?string $field, array $responses, string $target, Report $report, ?ReviewedQuestion $question = null, array $locator = []): void
+    private function record(Check $check, array $keys, ?string $field, array $responses, string $target, Report $report, ?ReviewedQuestion $question = null, array $locator = [], ?string $clearKey = null, ?string $fireKey = null): void
     {
         $probabilities = [];
         // Per call as well as pooled. Two wordings that disagree the same way
@@ -892,6 +916,19 @@ final class ModelLinter
         $unstable = count($perCall) > 1
             && min($perCall) <= $check->trigger
             && max($perCall) > $check->trigger;
+        $raised = $fired ? null : $this->above($check->firedBy, $fireKey, $responses);
+
+        if ($raised !== null) {
+            $fired = true;
+            $unstable = false;
+        }
+
+        $cleared = $fired || $unstable ? $this->above($check->clearedBy, $clearKey, $responses) : null;
+
+        if ($cleared !== null) {
+            $fired = false;
+            $unstable = false;
+        }
 
         // A cleared check within touching distance of its trigger is kept even
         // without `--all`, because the reading is already paid for and it is the
@@ -907,6 +944,13 @@ final class ModelLinter
 
         $elements = $fired && $locator !== [] ? $this->locate($locator, $responses[0]) : [];
         $element = count($elements) === 1 ? $elements[0] : null;
+
+        // A finding the second question raised is reported at that question's
+        // reading and trigger. The check's own reading, under its trigger, goes
+        // in the evidence instead of being shown as the likelihood of the defect.
+        [$shown, $shownTrigger, $shownReadings] = $raised !== null && $check->firedBy !== null
+            ? [$raised, $check->firedBy->trigger, []]
+            : [$mean, $check->trigger, $probabilities];
 
         $report->add(new Finding(
             checkId: $check->id,
@@ -932,18 +976,28 @@ final class ModelLinter
                 fn (string $e): string => $check->path($target, $field).'/'.$this->pointer($check, $e),
                 $elements,
             ),
-            trigger: $check->trigger,
-            spread: count($probabilities) > 1 ? max($probabilities) - min($probabilities) : null,
-            nearTrigger: abs($mean - $check->trigger) <= self::NEAR,
+            trigger: $shownTrigger,
+            spread: count($shownReadings) > 1 ? max($shownReadings) - min($shownReadings) : null,
+            nearTrigger: abs($shown - $shownTrigger) <= self::NEAR,
             supersedes: $check->supersedes,
             docs: $check->docs,
-            probability: $mean,
+            probability: $shown,
             fired: $fired,
             unstable: $unstable,
             patch: $this->removal($check, $target, $field),
-            evidence: $this->evidence($probabilities, $field, $check, $question, $element),
-            readings: count($probabilities) > 1 ? $probabilities : [],
-            readingsOf: count($probabilities) > 1
+            clearedBecause: $cleared !== null ? Text::of('finding.cleared_by', [
+                'probability' => $cleared,
+                'trigger' => $check->clearedBy->trigger ?? 0.0,
+            ]) : '',
+            evidence: $this->joined(
+                $this->evidence($probabilities, $field, $check, $question, $element),
+                $raised !== null ? Text::of('finding.fired_by', [
+                    'probability' => $mean,
+                    'trigger' => $check->trigger,
+                ]) : null,
+            ),
+            readings: count($shownReadings) > 1 ? $shownReadings : [],
+            readingsOf: count($shownReadings) > 1
                 ? $this->readingsOf(count($keys), count($responses), $this->repeats)
                 : null,
         ));
@@ -992,6 +1046,41 @@ final class ModelLinter
             $wordings > 1 => Text::of('readings.wordings', ['wordings' => $wordings]),
             default => Text::of('readings.repeats', ['repeats' => $calls]),
         };
+    }
+
+    /**
+     * A second question's reading, where it clears that question's trigger
+     *
+     * @param list<SystemOneResponse> $responses
+     */
+    private function above(?SecondQuestion $second, ?string $key, array $responses): ?float
+    {
+        if ($second === null || $key === null) {
+            return null;
+        }
+
+        $values = [];
+
+        foreach ($responses as $response) {
+            $value = $this->reading($response, $key);
+
+            if ($value !== null) {
+                $values[] = $value;
+            }
+        }
+
+        if ($values === [] || array_sum($values) / count($values) <= $second->trigger) {
+            return null;
+        }
+
+        return array_sum($values) / count($values);
+    }
+
+    private function joined(?string ...$parts): ?string
+    {
+        $kept = array_values(array_filter($parts, static fn (?string $part): bool => $part !== null && $part !== ''));
+
+        return $kept === [] ? null : implode(' ', $kept);
     }
 
     /**

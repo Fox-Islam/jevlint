@@ -1,5 +1,5 @@
 import type { Catalogue } from '../catalogue/catalogue.js';
-import { Check } from '../catalogue/check.js';
+import { Check, type SecondQuestion } from '../catalogue/check.js';
 import type { Wording } from '../catalogue/wording.js';
 import { Text } from '../i18n/text.js';
 import { Query } from '../query/query.js';
@@ -23,6 +23,9 @@ interface Asked {
     keys: string[];
     /** answer key to the element it is about */
     locator: Map<string, string>;
+    /** the keys the check's `cleared_by` and `fired_by` questions come back under */
+    clearKey: string | null;
+    fireKey: string | null;
 }
 
 /**
@@ -82,6 +85,11 @@ export class ModelLinter {
 
     private wanted(check: Check): boolean {
         return this.only.length === 0 || this.only.includes(check.id);
+    }
+
+    private hasSiblings(): boolean {
+        // A narrowed query still has the questions it was narrowed from
+        return this.questionCount > 1 || this.narrowed;
     }
 
     async run(query: Query, report: Report): Promise<void> {
@@ -464,6 +472,10 @@ export class ModelLinter {
                 continue;
             }
 
+            if (check.requires === 'siblings' && !this.hasSiblings()) {
+                continue;
+            }
+
             asked.push(this.ask(request, check, null, elements));
         }
 
@@ -534,7 +546,20 @@ export class ModelLinter {
             }
         }
 
-        return { check, field, keys, locator };
+        let clearKey: string | null = null;
+        let fireKey: string | null = null;
+
+        if (check.clearedBy !== null) {
+            clearKey = `${check.answerKey()}${suffix}__clear`;
+            request.ask(clearKey, this.build(check.clearedBy.wording, field ?? ''));
+        }
+
+        if (check.firedBy !== null) {
+            fireKey = `${check.answerKey()}${suffix}__fire`;
+            request.ask(fireKey, this.build(check.firedBy.wording, field ?? ''));
+        }
+
+        return { check, field, keys, locator, clearKey, fireKey };
     }
 
     /** The reviewed question's own levels or options, as something to choose from */
@@ -632,7 +657,7 @@ export class ModelLinter {
             }
         }
 
-        for (const { check, field, keys: theseKeys, locator } of asked) {
+        for (const { check, field, keys: theseKeys, locator, clearKey, fireKey } of asked) {
             if (check.compare === 'type') {
                 this.recordTypeComparison(check, theseKeys[0] ?? '', responses[0] as SystemOneResponse, question, target, report);
 
@@ -648,6 +673,8 @@ export class ModelLinter {
                 report,
                 question,
                 locator,
+                clearKey,
+                fireKey,
             );
         }
     }
@@ -753,6 +780,8 @@ export class ModelLinter {
         report: Report,
         question: ReviewedQuestion | null = null,
         locator = new Map<string, string>(),
+        clearKey: string | null = null,
+        fireKey: string | null = null,
     ): void {
         const probabilities: number[] = [];
         // Per call as well as pooled. Two wordings that disagree the same way
@@ -797,14 +826,27 @@ export class ModelLinter {
             return;
         }
 
-        const fired = average > check.trigger;
+        let fired = average > check.trigger;
         // Across calls, not across wordings: `undecided` says another run might
         // answer differently, so what has to straddle the trigger is what a run
         // produces, which is the mean of its wordings. The spread over the
         // wordings is reported either way.
-        const unstable = perCall.length > 1
+        let unstable = perCall.length > 1
             && Math.min(...perCall) <= check.trigger
             && Math.max(...perCall) > check.trigger;
+        const raised = fired ? null : above(check.firedBy, fireKey, responses);
+
+        if (raised !== null) {
+            fired = true;
+            unstable = false;
+        }
+
+        const cleared = fired || unstable ? above(check.clearedBy, clearKey, responses) : null;
+
+        if (cleared !== null) {
+            fired = false;
+            unstable = false;
+        }
 
         // A cleared check within touching distance of its trigger is kept even
         // without `--all`, because the reading is already paid for and it is the
@@ -819,6 +861,13 @@ export class ModelLinter {
         }
 
         const elements = fired && locator.size > 0 ? locate(locator, responses[0] as SystemOneResponse) : [];
+
+        // A finding the second question raised is reported at that question's
+        // reading and trigger. The check's own reading, under its trigger, goes
+        // in the evidence instead of being shown as the likelihood of the defect.
+        const [shown, shownTrigger, shownReadings] = raised !== null && check.firedBy !== null
+            ? [raised, check.firedBy.trigger, [] as number[]]
+            : [average, check.trigger, probabilities];
         const element = elements.length === 1 ? elements[0] ?? null : null;
 
         report.add(new Finding({
@@ -843,18 +892,28 @@ export class ModelLinter {
             action: check.action,
             path: check.path(target, field) + (element === null ? '' : `/${pointerFor(check, element)}`),
             paths: elements.map((found) => `${check.path(target, field)}/${pointerFor(check, found)}`),
-            trigger: check.trigger,
-            spread: probabilities.length > 1 ? Math.max(...probabilities) - Math.min(...probabilities) : null,
-            nearTrigger: Math.abs(average - check.trigger) <= ModelLinter.NEAR,
+            trigger: shownTrigger,
+            spread: shownReadings.length > 1 ? Math.max(...shownReadings) - Math.min(...shownReadings) : null,
+            nearTrigger: Math.abs(shown - shownTrigger) <= ModelLinter.NEAR,
             supersedes: check.supersedes,
             docs: check.docs,
-            probability: average,
+            probability: shown,
             fired,
             unstable,
             patch: this.removal(check, target, field),
-            evidence: evidenceFor(field, check, question, element),
-            readings: probabilities.length > 1 ? probabilities : [],
-            readingsOf: probabilities.length > 1
+            clearedBecause: cleared !== null ? Text.of('finding.cleared_by', {
+                probability: cleared,
+                trigger: check.clearedBy?.trigger ?? 0,
+            }) : '',
+            evidence: joined(
+                evidenceFor(field, check, question, element),
+                raised !== null ? Text.of('finding.fired_by', {
+                    probability: average,
+                    trigger: check.trigger,
+                }) : null,
+            ),
+            readings: shownReadings.length > 1 ? shownReadings : [],
+            readingsOf: shownReadings.length > 1
                 ? readingsOf(keys.length, responses.length, this.repeatCount)
                 : null,
         }));
@@ -1022,9 +1081,34 @@ function reading(response: SystemOneResponse, key: string): number | null {
     return value >= 0.0 && value <= 1.0 ? value : null;
 }
 
+/** A second question's reading, where it clears that question's trigger */
+function above(second: SecondQuestion | null, key: string | null, responses: SystemOneResponse[]): number | null {
+    if (second === null || key === null) {
+        return null;
+    }
+
+    const values = responses.map((response) => reading(response, key)).filter((value): value is number => value !== null);
+
+    if (values.length === 0 || mean(values) <= second.trigger) {
+        return null;
+    }
+
+    return mean(values);
+}
+
+function joined(...parts: (string | null)[]): string | null {
+    const kept = parts.filter((part): part is string => part !== null && part !== '');
+
+    return kept.length > 0 ? kept.join(' ') : null;
+}
+
 /** Every answer key a call carries, the locators among them */
 function answerKeys(asked: Asked[]): string[] {
-    return asked.flatMap(({ keys, locator }) => [...keys, ...locator.keys()]);
+    return asked.flatMap(({ keys, locator, clearKey, fireKey }) => [
+        ...keys,
+        ...locator.keys(),
+        ...[clearKey, fireKey].filter((key): key is string => key !== null),
+    ]);
 }
 
 /** The answer keys one check was asked under */

@@ -23,7 +23,7 @@ final class LostCallsAreNotAPassTest extends TestCase
     public function test_a_repeat_that_answers_nothing_makes_the_run_incomplete(): void
     {
         $fake = FakeTypeSafe::make();
-        $answered = FakeAnswers::make()->noul('question_arithmetic', 0.05)->only();
+        $answered = FakeAnswers::make()->noul('question_arithmetic', 0.05)->noul('question_arithmetic__fire', 0.05)->noul('question_arithmetic__clear', 0.05)->only();
 
         // The first call answers; the repeats come back with nothing in them.
         $fake->reply($answered);
@@ -39,7 +39,7 @@ final class LostCallsAreNotAPassTest extends TestCase
     public function test_a_run_whose_calls_all_answer_is_complete(): void
     {
         $fake = FakeTypeSafe::make();
-        $fake->alwaysReply(FakeAnswers::make()->noul('question_arithmetic', 0.05)->only());
+        $fake->alwaysReply(FakeAnswers::make()->noul('question_arithmetic', 0.05)->noul('question_arithmetic__fire', 0.05)->noul('question_arithmetic__clear', 0.05)->only());
 
         self::assertTrue($this->lint($fake, 3)->isComplete());
     }

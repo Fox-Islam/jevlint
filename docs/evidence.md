@@ -110,9 +110,10 @@ against: one over the whole file, and one over what the checks ask. `corpus/meas
 the triggers from the catalogue on disk and compares the second, because rewording a hint leaves
 the answers untouched while rewording a check's own question does not. Where the two ask
 different things it prints the mismatch and names both, since a rate is then a threshold applied
-to answers nobody gave it. The table below was harvested by `corpus/harvest.py` over 1000 calls, the
-last of them on 2026-09-24 folding in `choice/label-contradicts-description` and leaving every
-other reading where it was, from a catalogue asking `62cb6190d529`.
+to answers nobody gave it. The table below was harvested by `corpus/harvest.py` over 1173 calls, the
+last of them on 2026-09-25 re-reading `question/refers-to-sibling`, `choice/undetermined-outcome` and
+`question/arithmetic` with their new gate and second questions, and leaving every other reading
+where it was, from a catalogue asking `73a5078da1e5`.
 
 | check | catches the docs' own example | of those, quoted | fires on a question labelled clean | fires on a field query |
 | --- | --- | --- | --- | --- |
@@ -321,6 +322,51 @@ figure is larger than, near to, or inside a range of another" as arithmetic fire
 that deletes the question, on questions the model gets right every time. Narrowing it to a tally
 or a total took it to 0 of 6 on every family while its own examples still separate by 0.82 and
 0.77. The measurement named the clause at fault, which is what a corpus with labels is for.
+
+**The narrowing missed a calculation the question states instead of asks for.** The
+[jevlint-tests](https://github.com/nunezb/jevlint-tests) benchmark sends pairs of Nouls such as
+"Given a positive test result, the probability of disease is 9/47", over a state giving the
+prevalence, sensitivity and specificity. Checking that figure is a Bayes calculation, and the
+check read the ten of them at 0.24 to 0.43. Widening the wording again would bring back the
+threshold comparisons, so the check carries a `fired_by` question instead: whether answering needs
+figures multiplied, divided or combined, or a stated result of that checked. It is asked beside the
+check and raises a finding on its own reading, against a 0.50 trigger. `corpus/second.py` puts both
+over the same cases:
+
+| | cases | the check fires | `fired_by` reads | a finding with it |
+| --- | --- | --- | --- | --- |
+| the benchmark's Bayes claims and "Is the value of 3 + 2 different from 5?" | 18 | 5 | 0.67 to 0.91 | 18 |
+| the docs and field tiers, `mechanical.py`'s rule questions, and four stated comparisons | 98 | 0 | 0.02 to 0.33 | 0 |
+
+The highest quiet reading, 0.33, is "Should this loan be approved?". "Is the invoice total of £420 higher than
+the quoted £400?" reads 0.08, so the threshold exemption holds. A finding the second question
+raised reports that question's reading and trigger, and says in its evidence what the check's own
+question read.
+
+**The error is about sums that grow, and "What is 3 + 3?" does not.** `corpus/sums.py` generates
+sums and asks each three ways: as a Choice over the answer and two near misses, as a true claim,
+and as a claim off in its second digit. Six items a cell:
+
+| | choice | true claim | false claim | yes on the false claim |
+| --- | --- | --- | --- | --- |
+| + − × ÷, single digits | 24 of 24 | 24 of 24 | 24 of 24 | 0.01 |
+| + − × ÷, two digits | 24 of 24 | 24 of 24 | 24 of 24 | 0.01 to 0.11 |
+| +, three and four digits | 12 of 12 | 12 of 12 | **7 of 12** | 0.49 to 0.54 |
+| ×, three and four digits | 12 of 12 | 12 of 12 | **8 of 12** | 0.41 to 0.48 |
+| fractions, single and two-digit parts | 8 of 12 | 12 of 12 | **7 of 12** | 0.28 to 0.77 |
+| a + b × c, two digits | 5 of 6 | 6 of 6 | **3 of 6** | 0.50 |
+
+What fails first is a wrong figure put to Jev as a claim: it agrees with it more often as the
+numbers grow, which is the Bayes items' failure in small. The check carries a `cleared_by` for the
+sums below that: one step on single-digit whole numbers, written in the question. It reads 0.79 to
+0.97 on the single-digit cells and 0.09 or lower on every other, including two-digit sums Jev also
+answered correctly, so it clears less than the table would allow. Six items a cell cannot tell a
+clean cell from one with a few percent of misses, and the two-digit false claims already read up
+to 0.11. Single-digit claims in the negated form the benchmark sends, "Is the value of 3 + 2
+different from 5?", were answered 40 of 40, so the four such questions in the benchmark are
+cleared and the 18 findings in the table above become 14. A question that names a number it does not write
+down - "What is 1 + the number in the state?" - is not cleared, because the check is shown the
+question and not the state.
 
 `choice/no-fallback` is a `warning` on the opposite grounds: it is the only check measured to
 change an answer.
@@ -761,6 +807,23 @@ this check comes closest to reporting wrongly, and it is why a finding near the 
 read rather than act on. The wider corpus agrees: over 13 Choice questions harvested with every
 other check, none fires.
 
+**A question of general knowledge reads as guessing.** On the jevlint-tests benchmark the check
+fired on two of six MMLU items Jev answered correctly, and with "What is the capital of
+Australia?" the three read 0.79 to 0.83: the material does not settle the answer, but the reader's knowledge
+does. The check carries a `cleared_by` question for it, asking whether the correct option is a
+fixed fact a knowledgeable reader could work out, and sets a finding aside where that reads above
+0.50. `corpus/second.py` asks both over the same cases:
+
+| | cases | the check fires | `cleared_by` reads | a finding with it |
+| --- | --- | --- | --- | --- |
+| questions of fact: the six MMLU items and two written here | 8 | 3 | 0.80 to 0.98 | 0 |
+| the four draws, two outcomes still to happen, three settled and withheld | 9 | 9 | 0.03 to 0.11 | 9 |
+| Choice questions in the docs tier | 13 | 0 | 0.19 to 0.93 | 0 |
+
+A result that has happened but is withheld - a match score not included, a name in a sealed
+envelope, a blood type recorded elsewhere - reads as hidden and not as a fact, so the second
+question does not clear the case the check's own criteria name as undetermined.
+
 **It overlaps `state/answer-absent` enough for the catalogue's own rule to say so.** On the
 dogfood state file `query/overlapping-questions` reads 0.63 against a 0.60 trigger for the pair.
 The two separate the material that matters by half a point - 0.42 against 0.91 on the die - so
@@ -900,6 +963,11 @@ alone. `corpus/sibling.py` runs the three arms over thirty cases.
 as deleting it, and the two Brier scores differ by 0.005. That is what makes
 `question/refers-to-sibling` an error and not a warning: the question is not answered less well,
 it is answered without the material it names.
+
+The check is asked only where the question has a sibling, in the query or in the part a
+`--question` narrowing left out. On the jevlint-tests benchmark it fired as an error on five of
+six single-question MMLU items, reading "the question above", which points at the state, as
+naming another question. A question alone in its request has nothing to depend on.
 
 The check itself fires on no question in the docs tier or the field tier. Its `fixed` example
 reads 0.40, the highest in the self-test table, on a repaired question pointing at a decision

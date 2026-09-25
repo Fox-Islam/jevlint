@@ -267,9 +267,10 @@ against: one over the whole file, and one over what the checks ask. <code>corpus
 the triggers from the catalogue on disk and compares the second, because rewording a hint leaves
 the answers untouched while rewording a check's own question does not. Where the two ask
 different things it prints the mismatch and names both, since a rate is then a threshold applied
-to answers nobody gave it. The table below was harvested by <code>corpus/harvest.py</code> over 1000 calls, the
-last of them on 2026-09-24 folding in <code>choice/label-contradicts-description</code> and leaving every
-other reading where it was, from a catalogue asking <code>62cb6190d529</code>.</p>
+to answers nobody gave it. The table below was harvested by <code>corpus/harvest.py</code> over 1173 calls, the
+last of them on 2026-09-25 re-reading <code>question/refers-to-sibling</code>, <code>choice/undetermined-outcome</code> and
+<code>question/arithmetic</code> with their new gate and second questions, and leaving every other reading
+where it was, from a catalogue asking <code>73a5078da1e5</code>.</p>
 <div class="scroll"><table>
 <thead>
 <tr>
@@ -769,6 +770,115 @@ figure is larger than, near to, or inside a range of another&quot; as arithmetic
 that deletes the question, on questions the model gets right every time. Narrowing it to a tally
 or a total took it to 0 of 6 on every family while its own examples still separate by 0.82 and
 0.77. The measurement named the clause at fault, which is what a corpus with labels is for.</p>
+<p><strong>The narrowing missed a calculation the question states instead of asks for.</strong> The
+<a href="https://github.com/nunezb/jevlint-tests">jevlint-tests</a> benchmark sends pairs of Nouls such as
+&quot;Given a positive test result, the probability of disease is 9/47&quot;, over a state giving the
+prevalence, sensitivity and specificity. Checking that figure is a Bayes calculation, and the
+check read the ten of them at 0.24 to 0.43. Widening the wording again would bring back the
+threshold comparisons, so the check carries a <code>fired_by</code> question instead: whether answering needs
+figures multiplied, divided or combined, or a stated result of that checked. It is asked beside the
+check and raises a finding on its own reading, against a 0.50 trigger. <code>corpus/second.py</code> puts both
+over the same cases:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th>cases</th>
+<th>the check fires</th>
+<th><code>fired_by</code> reads</th>
+<th>a finding with it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>the benchmark's Bayes claims and &quot;Is the value of 3 + 2 different from 5?&quot;</td>
+<td>18</td>
+<td>5</td>
+<td>0.67 to 0.91</td>
+<td>18</td>
+</tr>
+<tr>
+<td>the docs and field tiers, <code>mechanical.py</code>'s rule questions, and four stated comparisons</td>
+<td>98</td>
+<td>0</td>
+<td>0.02 to 0.33</td>
+<td>0</td>
+</tr>
+</tbody>
+</table></div>
+<p>The highest quiet reading, 0.33, is &quot;Should this loan be approved?&quot;. &quot;Is the invoice total of £420 higher than
+the quoted £400?&quot; reads 0.08, so the threshold exemption holds. A finding the second question
+raised reports that question's reading and trigger, and says in its evidence what the check's own
+question read.</p>
+<p><strong>The error is about sums that grow, and &quot;What is 3 + 3?&quot; does not.</strong> <code>corpus/sums.py</code> generates
+sums and asks each three ways: as a Choice over the answer and two near misses, as a true claim,
+and as a claim off in its second digit. Six items a cell:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th>choice</th>
+<th>true claim</th>
+<th>false claim</th>
+<th>yes on the false claim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>+ − × ÷, single digits</td>
+<td>24 of 24</td>
+<td>24 of 24</td>
+<td>24 of 24</td>
+<td>0.01</td>
+</tr>
+<tr>
+<td>+ − × ÷, two digits</td>
+<td>24 of 24</td>
+<td>24 of 24</td>
+<td>24 of 24</td>
+<td>0.01 to 0.11</td>
+</tr>
+<tr>
+<td>+, three and four digits</td>
+<td>12 of 12</td>
+<td>12 of 12</td>
+<td><strong>7 of 12</strong></td>
+<td>0.49 to 0.54</td>
+</tr>
+<tr>
+<td>×, three and four digits</td>
+<td>12 of 12</td>
+<td>12 of 12</td>
+<td><strong>8 of 12</strong></td>
+<td>0.41 to 0.48</td>
+</tr>
+<tr>
+<td>fractions, single and two-digit parts</td>
+<td>8 of 12</td>
+<td>12 of 12</td>
+<td><strong>7 of 12</strong></td>
+<td>0.28 to 0.77</td>
+</tr>
+<tr>
+<td>a + b × c, two digits</td>
+<td>5 of 6</td>
+<td>6 of 6</td>
+<td><strong>3 of 6</strong></td>
+<td>0.50</td>
+</tr>
+</tbody>
+</table></div>
+<p>What fails first is a wrong figure put to Jev as a claim: it agrees with it more often as the
+numbers grow, which is the Bayes items' failure in small. The check carries a <code>cleared_by</code> for the
+sums below that: one step on single-digit whole numbers, written in the question. It reads 0.79 to
+0.97 on the single-digit cells and 0.09 or lower on every other, including two-digit sums Jev also
+answered correctly, so it clears less than the table would allow. Six items a cell cannot tell a
+clean cell from one with a few percent of misses, and the two-digit false claims already read up
+to 0.11. Single-digit claims in the negated form the benchmark sends, &quot;Is the value of 3 + 2
+different from 5?&quot;, were answered 40 of 40, so the four such questions in the benchmark are
+cleared and the 18 findings in the table above become 14. A question that names a number it does not write
+down - &quot;What is 1 + the number in the state?&quot; - is not cleared, because the check is shown the
+question and not the state.</p>
 <p><code>choice/no-fallback</code> is a <code>warning</code> on the opposite grounds: it is the only check measured to
 change an answer.</p>
 <h2 id="does-acting-on-a-finding-improve-the-answer">Does acting on a finding improve the answer?</h2>
@@ -1555,6 +1665,49 @@ as the material goes. Its highest reading on material that settles its own quest
 this check comes closest to reporting wrongly, and it is why a finding near the trigger is one to
 read rather than act on. The wider corpus agrees: over 13 Choice questions harvested with every
 other check, none fires.</p>
+<p><strong>A question of general knowledge reads as guessing.</strong> On the jevlint-tests benchmark the check
+fired on two of six MMLU items Jev answered correctly, and with &quot;What is the capital of
+Australia?&quot; the three read 0.79 to 0.83: the material does not settle the answer, but the reader's knowledge
+does. The check carries a <code>cleared_by</code> question for it, asking whether the correct option is a
+fixed fact a knowledgeable reader could work out, and sets a finding aside where that reads above
+0.50. <code>corpus/second.py</code> asks both over the same cases:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th>cases</th>
+<th>the check fires</th>
+<th><code>cleared_by</code> reads</th>
+<th>a finding with it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>questions of fact: the six MMLU items and two written here</td>
+<td>8</td>
+<td>3</td>
+<td>0.80 to 0.98</td>
+<td>0</td>
+</tr>
+<tr>
+<td>the four draws, two outcomes still to happen, three settled and withheld</td>
+<td>9</td>
+<td>9</td>
+<td>0.03 to 0.11</td>
+<td>9</td>
+</tr>
+<tr>
+<td>Choice questions in the docs tier</td>
+<td>13</td>
+<td>0</td>
+<td>0.19 to 0.93</td>
+<td>0</td>
+</tr>
+</tbody>
+</table></div>
+<p>A result that has happened but is withheld - a match score not included, a name in a sealed
+envelope, a blood type recorded elsewhere - reads as hidden and not as a fact, so the second
+question does not clear the case the check's own criteria name as undetermined.</p>
 <p><strong>It overlaps <code>state/answer-absent</code> enough for the catalogue's own rule to say so.</strong> On the
 dogfood state file <code>query/overlapping-questions</code> reads 0.63 against a 0.60 trigger for the pair.
 The two separate the material that matters by half a point - 0.42 against 0.91 on the die - so
@@ -1774,6 +1927,10 @@ alone. <code>corpus/sibling.py</code> runs the three arms over thirty cases.</p>
 as deleting it, and the two Brier scores differ by 0.005. That is what makes
 <code>question/refers-to-sibling</code> an error and not a warning: the question is not answered less well,
 it is answered without the material it names.</p>
+<p>The check is asked only where the question has a sibling, in the query or in the part a
+<code>--question</code> narrowing left out. On the jevlint-tests benchmark it fired as an error on five of
+six single-question MMLU items, reading &quot;the question above&quot;, which points at the state, as
+naming another question. A question alone in its request has nothing to depend on.</p>
 <p>The check itself fires on no question in the docs tier or the field tier. Its <code>fixed</code> example
 reads 0.40, the highest in the self-test table, on a repaired question pointing at a decision
 recorded in the state: a named earlier decision reads as close to a named earlier question even

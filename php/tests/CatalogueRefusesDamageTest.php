@@ -116,6 +116,21 @@ final class CatalogueRefusesDamageTest extends TestCase
             'which nothing tests',
         ];
 
+        yield 'a clearing trigger outside 0 to 1' => [
+            static function (array $data): array {
+                foreach ($data['checks'] as $at => $check) {
+                    if (isset($check['cleared_by'])) {
+                        $data['checks'][$at]['cleared_by']['trigger'] = 1.5;
+
+                        return $data;
+                    }
+                }
+
+                self::fail('No check carries a clearing question, so this case tests nothing.');
+            },
+            'has a `cleared_by`',
+        ];
+
         yield 'superseding a check that is not there' => [
             static function (array $data): array {
                 $data['checks'][0]['supersedes'] = ['no/such-check'];

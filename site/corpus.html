@@ -38,7 +38,7 @@
 <tr>
 <td><code>scores.json</code></td>
 <td>what every check put on every one of them</td>
-<td>runs of <code>harvest.py</code>, 1000 calls so far</td>
+<td>runs of <code>harvest.py</code>, 1173 calls so far</td>
 </tr>
 <tr>
 <td><code>build.py</code></td>
@@ -98,6 +98,16 @@
 <tr>
 <td><code>mechanical.py</code></td>
 <td>whether Jev answers a question code could answer, over states generated here</td>
+<td>computed, not judged</td>
+</tr>
+<tr>
+<td><code>second.py</code></td>
+<td>the <code>cleared_by</code> and <code>fired_by</code> questions, against the checks they sit beside, over the jevlint-tests benchmark fetched on demand</td>
+<td>by construction, the draw hidden or the calculation stated</td>
+</tr>
+<tr>
+<td><code>sums.py</code></td>
+<td>where Jev's arithmetic fails by operation and size, and what <code>question/arithmetic</code>'s <code>cleared_by</code> reads on the same sums</td>
 <td>computed, not judged</td>
 </tr>
 <tr>
@@ -235,6 +245,8 @@ python3 corpus/mechanical.py          # eight rules over generated states, one c
 python3 corpus/dogfood.py             # the catalogue's own wordings, as queries jevlint can read
 python3 corpus/locators.py            # each pick locator over its own broken example, both ways round
 python3 corpus/undetermined.py        # a Choice over a hidden draw, against the Choice questions the corpus holds
+python3 corpus/second.py              # the cleared_by and fired_by questions, beside the checks they overrule
+python3 corpus/sums.py                # generated sums by operation and size, three ways each
 python3 corpus/borderline.py --items=12   # an edge planted in a paragraph, six arms over each
 python3 corpus/flores.py --items=12   # one spare field per arm, the same sentences in another language
 </code></pre>

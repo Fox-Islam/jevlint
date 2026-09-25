@@ -151,3 +151,71 @@ def test_sets_a_finding_aside_where_the_config_accepts_it_and_still_counts_nothi
     assert len(report.accepted()) == 1
     assert not any(finding.check_id == 'choice/no-fallback' for finding in report.findings())
     assert report.accepted()[0].accepted == 'The router falls back in code.'
+
+
+def test_does_not_ask_whether_a_lone_question_depends_on_a_sibling():
+    fake = FakeClient({'question_refers_to_sibling': 0.95}, 0.02)
+    report = Linter.make(fake.client).only(['question/refers-to-sibling']).check(clean())
+
+    assert report.findings() == []
+    assert fake.calls == []
+
+
+def test_asks_whether_a_question_depends_on_a_sibling_the_narrowing_left_out():
+    whole = Query.from_dict({
+        'state': {'ticket': 'I was charged twice for order A-104.'},
+        'questions': {
+            'refund': {'type': 'noul', 'instructions': 'Does the customer ask for a refund?'},
+            'urgent': {'type': 'noul', 'instructions': 'Given the refund answer, is this urgent?'},
+        },
+    }, 'test')
+    fake = FakeClient({'question_refers_to_sibling': 0.95}, 0.02)
+    report = Linter.make(fake.client).only(['question/refers-to-sibling']).check(whole.only(['urgent']), whole)
+
+    assert [finding.check_id for finding in report.findings()] == ['question/refers-to-sibling']
+
+
+def draw():
+    return Query.from_dict({
+        'state': 'A die was rolled inside a closed box and nobody has looked.',
+        'questions': {
+            'face': {
+                'type': 'choice',
+                'instructions': 'Which face came up?',
+                'criteria': {'low': 'One to three', 'high': 'Four to six'},
+            },
+        },
+    }, 'test')
+
+
+def test_reports_a_finding_its_clearing_question_does_not_set_aside():
+    fake = FakeClient({'choice_undetermined_outcome': 0.95, 'choice_undetermined_outcome__clear': 0.05}, 0.02)
+    report = Linter.make(fake.client).only(['choice/undetermined-outcome']).check(draw())
+
+    assert [finding.check_id for finding in report.findings()] == ['choice/undetermined-outcome']
+
+
+def test_sets_a_finding_aside_where_its_clearing_question_reads_above_its_trigger():
+    fake = FakeClient({'choice_undetermined_outcome': 0.95, 'choice_undetermined_outcome__clear': 0.9}, 0.02)
+    report = Linter.make(fake.client).only(['choice/undetermined-outcome']).reporting_cleared().check(draw())
+
+    assert report.findings() == []
+    assert [finding.check_id for finding in report.cleared()] == ['choice/undetermined-outcome']
+    assert 'clearing question read 0.90' in report.cleared()[0].cleared_because
+
+
+def test_raises_a_finding_its_second_question_reads_above_its_trigger():
+    fake = FakeClient({'question_arithmetic': 0.1, 'question_arithmetic__fire': 0.9}, 0.02)
+    report = Linter.make(fake.client).only(['question/arithmetic']).check(clean())
+
+    assert [finding.check_id for finding in report.findings()] == ['question/arithmetic']
+    assert report.findings()[0].probability == 0.9
+    assert report.findings()[0].trigger == 0.5
+    assert 'own question read 0.10 against its 0.60 trigger' in report.findings()[0].evidence
+
+
+def test_raises_nothing_where_neither_question_reads_above_its_trigger():
+    fake = FakeClient({'question_arithmetic': 0.1, 'question_arithmetic__fire': 0.3}, 0.02)
+    report = Linter.make(fake.client).only(['question/arithmetic']).check(clean())
+
+    assert report.findings() == []

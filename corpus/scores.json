@@ -1,12 +1,12 @@
 {
   "catalogue": {
     "version": "1",
-    "fingerprint": "e758766803ad",
-    "asked": "62cb6190d529",
+    "fingerprint": "a2b1ed9ea0cd",
+    "asked": "73a5078da1e5",
     "model": "jev-1.13"
   },
-  "measured": "2026-09-24",
-  "calls": 1000,
+  "measured": "2026-09-25",
+  "calls": 1173,
   "scores": {
     "atarim-passages/candidate_2": {
       "query/overlapping-questions": 0.63,
@@ -15,14 +15,14 @@
       "question/indirection": 0.13,
       "question/double-negative": 0.08,
       "noul/negated-phrasing": 0.14,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.05,
       "question/date-comparison": 0.04,
       "question/numeric-representation": 0.1,
       "question/generation": 0.105,
       "question/criteria-contradiction": 0.12,
       "question/criteria-off-topic": 0.16,
       "question/type-mismatch": 0.07,
-      "question/refers-to-sibling": 0.17,
+      "question/refers-to-sibling": 0.18,
       "question/answerable-in-code": 0.355
     },
     "atarim-passages/candidate_0": {
@@ -38,7 +38,7 @@
       "question/criteria-contradiction": 0.1,
       "question/criteria-off-topic": 0.17,
       "question/type-mismatch": 0.07,
-      "question/refers-to-sibling": 0.23,
+      "question/refers-to-sibling": 0.22,
       "question/answerable-in-code": 0.415
     },
     "atarim-passages/candidate_1": {
@@ -55,7 +55,7 @@
       "question/criteria-off-topic": 0.17,
       "question/type-mismatch": 0.09,
       "query/overlapping-questions": 0.53,
-      "question/refers-to-sibling": 0.19,
+      "question/refers-to-sibling": 0.18,
       "question/answerable-in-code": 0.315
     },
     "atarim-passages/best": {
@@ -105,7 +105,7 @@
       "question/criteria-off-topic": 0.13,
       "question/type-mismatch": 0.0,
       "query/overlapping-questions": 0.14,
-      "question/refers-to-sibling": 0.15,
+      "question/refers-to-sibling": 0.18,
       "question/answerable-in-code": 0.385
     },
     "atarim-site-match/candidate_2": {
@@ -122,7 +122,7 @@
       "question/criteria-off-topic": 0.11,
       "question/type-mismatch": 0.0,
       "query/overlapping-questions": 0.13,
-      "question/refers-to-sibling": 0.16,
+      "question/refers-to-sibling": 0.18,
       "question/answerable-in-code": 0.44
     },
     "atarim-site-match/best": {
@@ -189,7 +189,7 @@
       "question/criteria-off-topic": 0.22,
       "question/type-mismatch": 0.01,
       "query/overlapping-questions": 0.14,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.13,
       "question/answerable-in-code": 0.545
     },
     "atarim-skills/best": {
@@ -239,7 +239,7 @@
       "question/criteria-off-topic": 0.16,
       "question/type-mismatch": 0.01,
       "query/overlapping-questions": 0.21,
-      "question/refers-to-sibling": 0.2,
+      "question/refers-to-sibling": 0.21,
       "question/answerable-in-code": 0.525
     },
     "atarim-tasks/candidate_2": {
@@ -248,7 +248,7 @@
       "question/indirection": 0.28,
       "question/double-negative": 0.18,
       "noul/negated-phrasing": 0.04,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.03,
       "question/date-comparison": 0.03,
       "question/numeric-representation": 0.06,
       "question/generation": 0.13,
@@ -256,7 +256,7 @@
       "question/criteria-off-topic": 0.17,
       "question/type-mismatch": 0.02,
       "query/overlapping-questions": 0.21,
-      "question/refers-to-sibling": 0.15,
+      "question/refers-to-sibling": 0.16,
       "question/answerable-in-code": 0.565
     },
     "atarim-tasks/best": {
@@ -272,7 +272,7 @@
       "question/type-mismatch": 0.03,
       "choice/overlapping-options": 0.145,
       "query/overlapping-questions": 0.13,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.12,
       "question/answerable-in-code": 0.225,
       "choice/label-contradicts-description": 0.18
     },
@@ -289,7 +289,7 @@
       "question/criteria-contradiction": 0.1,
       "question/criteria-off-topic": 0.18,
       "question/type-mismatch": 0.02,
-      "question/refers-to-sibling": 0.13,
+      "question/refers-to-sibling": 0.12,
       "question/answerable-in-code": 0.605
     },
     "atarim-wp-tools/candidate_1": {
@@ -298,7 +298,7 @@
       "question/indirection": 0.29,
       "question/double-negative": 0.1,
       "noul/negated-phrasing": 0.04,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.03,
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.12,
       "question/generation": 0.125,
@@ -306,7 +306,7 @@
       "question/criteria-off-topic": 0.18,
       "question/type-mismatch": 0.01,
       "query/overlapping-questions": 0.15,
-      "question/refers-to-sibling": 0.17,
+      "question/refers-to-sibling": 0.16,
       "question/answerable-in-code": 0.58
     },
     "atarim-wp-tools/candidate_2": {
@@ -330,7 +330,7 @@
       "question/compound-judgment": 0.37,
       "question/indirection": 0.23,
       "question/double-negative": 0.04,
-      "question/arithmetic": 0.07,
+      "question/arithmetic": 0.06,
       "question/date-comparison": 0.03,
       "question/numeric-representation": 0.1,
       "question/generation": 0.215,
@@ -363,7 +363,7 @@
       "question/compound-judgment": 0.81,
       "question/indirection": 0.2,
       "question/double-negative": 0.02,
-      "question/arithmetic": 0.05,
+      "question/arithmetic": 0.06,
       "question/date-comparison": 0.03,
       "question/numeric-representation": 0.04,
       "question/generation": 0.17,
@@ -374,7 +374,7 @@
       "score/multi-dimension": 0.16,
       "score/overlapping-levels": 0.24,
       "query/overlapping-questions": 0.16,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.09,
       "question/answerable-in-code": 0.135
     },
     "bench-admissions/scholarship": {
@@ -415,7 +415,7 @@
       "question/compound-judgment": 0.78,
       "question/indirection": 0.34,
       "question/double-negative": 0.02,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.05,
       "question/date-comparison": 0.05,
       "question/numeric-representation": 0.06,
       "question/generation": 0.13,
@@ -452,7 +452,7 @@
       "question/indirection": 0.34,
       "question/double-negative": 0.1,
       "noul/negated-phrasing": 0.13,
-      "question/arithmetic": 0.05,
+      "question/arithmetic": 0.06,
       "question/date-comparison": 0.03,
       "question/numeric-representation": 0.04,
       "question/generation": 0.11,
@@ -460,7 +460,7 @@
       "question/criteria-off-topic": 0.24,
       "question/type-mismatch": 0.01,
       "query/overlapping-questions": 0.17,
-      "question/refers-to-sibling": 0.12,
+      "question/refers-to-sibling": 0.13,
       "question/answerable-in-code": 0.19
     },
     "bench-clinical_triage/pain_recorded": {
@@ -474,7 +474,7 @@
       "question/criteria-contradiction": 0.15,
       "question/criteria-off-topic": 0.2,
       "choice/overlapping-options": 0.35,
-      "question/refers-to-sibling": 0.17,
+      "question/refers-to-sibling": 0.15,
       "question/answerable-in-code": 0.36,
       "choice/label-contradicts-description": 0.16
     },
@@ -484,7 +484,7 @@
       "question/indirection": 0.15,
       "question/double-negative": 0.03,
       "noul/negated-phrasing": 0.09,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.03,
       "question/date-comparison": 0.14,
       "question/numeric-representation": 0.07,
       "question/generation": 0.105,
@@ -515,7 +515,7 @@
       "question/compound-judgment": 0.645,
       "question/indirection": 0.17,
       "question/double-negative": 0.04,
-      "question/arithmetic": 0.03,
+      "question/arithmetic": 0.04,
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.11,
       "question/generation": 0.18,
@@ -542,7 +542,7 @@
       "question/type-mismatch": 0.94,
       "choice/overlapping-options": 0.475,
       "query/overlapping-questions": 0.15,
-      "question/refers-to-sibling": 0.13,
+      "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.31,
       "choice/label-contradicts-description": 0.115
     },
@@ -560,7 +560,7 @@
       "question/criteria-off-topic": 0.18,
       "question/type-mismatch": 0.01,
       "query/overlapping-questions": 0.11,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.12,
       "question/answerable-in-code": 0.165
     },
     "bench-credibility/credibility": {
@@ -578,14 +578,14 @@
       "score/multi-dimension": 0.17,
       "score/overlapping-levels": 0.22,
       "query/overlapping-questions": 0.28,
-      "question/refers-to-sibling": 0.09,
+      "question/refers-to-sibling": 0.11,
       "question/answerable-in-code": 0.1
     },
     "bench-credibility/handling": {
       "question/compound-judgment": 0.76,
       "question/indirection": 0.19,
       "question/double-negative": 0.02,
-      "question/arithmetic": 0.05,
+      "question/arithmetic": 0.04,
       "question/date-comparison": 0.1,
       "question/numeric-representation": 0.1,
       "question/generation": 0.175,
@@ -603,7 +603,7 @@
       "question/indirection": 0.18,
       "question/double-negative": 0.03,
       "noul/negated-phrasing": 0.17,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.05,
       "question/date-comparison": 0.04,
       "question/numeric-representation": 0.08,
       "question/generation": 0.125,
@@ -643,7 +643,7 @@
       "question/criteria-contradiction": 0.08,
       "question/criteria-off-topic": 0.06,
       "question/type-mismatch": 0.0,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.09,
       "question/answerable-in-code": 0.4
     },
     "bench-fraud_risk/risk": {
@@ -651,7 +651,7 @@
       "score/degree-levels": 0.88,
       "question/indirection": 0.12,
       "question/double-negative": 0.03,
-      "question/arithmetic": 0.05,
+      "question/arithmetic": 0.06,
       "question/date-comparison": 0.08,
       "question/numeric-representation": 0.09,
       "question/generation": 0.16,
@@ -661,7 +661,7 @@
       "score/multi-dimension": 0.13,
       "score/overlapping-levels": 0.21,
       "query/overlapping-questions": 0.28,
-      "question/refers-to-sibling": 0.12,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.165
     },
     "bench-fraud_risk/step_up": {
@@ -687,14 +687,14 @@
       "question/indirection": 0.21,
       "question/double-negative": 0.03,
       "noul/negated-phrasing": 0.04,
-      "question/arithmetic": 0.07,
+      "question/arithmetic": 0.08,
       "question/date-comparison": 0.09,
       "question/numeric-representation": 0.07,
       "question/generation": 0.115,
       "question/criteria-contradiction": 0.05,
       "question/criteria-off-topic": 0.07,
       "question/type-mismatch": 0.0,
-      "question/refers-to-sibling": 0.09,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.195
     },
     "bench-hiring_screen/trust_unsupervised": {
@@ -711,7 +711,7 @@
       "question/criteria-off-topic": 0.09,
       "question/type-mismatch": 0.01,
       "query/overlapping-questions": 0.1,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.11,
       "question/answerable-in-code": 0.19
     },
     "bench-hiring_screen/competence": {
@@ -803,7 +803,7 @@
       "question/compound-judgment": 0.76,
       "question/indirection": 0.14,
       "question/double-negative": 0.02,
-      "question/arithmetic": 0.08,
+      "question/arithmetic": 0.07,
       "question/date-comparison": 0.03,
       "question/numeric-representation": 0.08,
       "question/generation": 0.225,
@@ -812,7 +812,7 @@
       "question/type-mismatch": 0.44,
       "choice/overlapping-options": 0.46,
       "query/overlapping-questions": 0.16,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.08,
       "question/answerable-in-code": 0.245,
       "choice/label-contradicts-description": 0.115
     },
@@ -822,7 +822,7 @@
       "question/indirection": 0.21,
       "question/double-negative": 0.09,
       "noul/negated-phrasing": 0.67,
-      "question/arithmetic": 0.08,
+      "question/arithmetic": 0.07,
       "question/date-comparison": 0.09,
       "question/numeric-representation": 0.07,
       "question/generation": 0.095,
@@ -830,7 +830,7 @@
       "question/criteria-off-topic": 0.05,
       "question/type-mismatch": 0.0,
       "query/overlapping-questions": 0.15,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.09,
       "question/answerable-in-code": 0.19
     },
     "bench-lending/approve": {
@@ -839,7 +839,7 @@
       "question/indirection": 0.18,
       "question/double-negative": 0.03,
       "noul/negated-phrasing": 0.04,
-      "question/arithmetic": 0.13,
+      "question/arithmetic": 0.14,
       "question/date-comparison": 0.12,
       "question/numeric-representation": 0.07,
       "question/generation": 0.11,
@@ -871,7 +871,7 @@
       "question/compound-judgment": 0.86,
       "question/indirection": 0.31,
       "question/double-negative": 0.02,
-      "question/arithmetic": 0.11,
+      "question/arithmetic": 0.1,
       "question/date-comparison": 0.05,
       "question/numeric-representation": 0.1,
       "question/generation": 0.155,
@@ -879,7 +879,7 @@
       "question/criteria-off-topic": 0.08,
       "choice/overlapping-options": 0.27,
       "query/overlapping-questions": 0.27,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.12,
       "question/answerable-in-code": 0.35,
       "choice/label-contradicts-description": 0.115
     },
@@ -906,7 +906,7 @@
       "question/indirection": 0.21,
       "question/double-negative": 0.08,
       "noul/negated-phrasing": 0.06,
-      "question/arithmetic": 0.07,
+      "question/arithmetic": 0.06,
       "question/date-comparison": 0.1,
       "question/numeric-representation": 0.1,
       "question/generation": 0.1,
@@ -914,7 +914,7 @@
       "question/criteria-off-topic": 0.07,
       "question/type-mismatch": 0.0,
       "query/overlapping-questions": 0.12,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.11,
       "question/answerable-in-code": 0.315
     },
     "bench-support_triage/goodwill_refund": {
@@ -946,7 +946,7 @@
       "question/criteria-contradiction": 0.16,
       "question/criteria-off-topic": 0.22,
       "query/overlapping-questions": 0.13,
-      "question/refers-to-sibling": 0.19,
+      "question/refers-to-sibling": 0.21,
       "question/answerable-in-code": 0.265,
       "choice/label-contradicts-description": 0.155
     },
@@ -981,7 +981,7 @@
       "question/criteria-off-topic": 0.15,
       "question/type-mismatch": 0.01,
       "query/overlapping-questions": 0.18,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.225
     },
     "bench-tenancy/offer": {
@@ -1015,7 +1015,7 @@
       "score/multi-dimension": 0.76,
       "score/overlapping-levels": 0.23,
       "query/overlapping-questions": 0.29,
-      "question/refers-to-sibling": 0.09,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.19
     },
     "bench-tenancy/guarantor": {
@@ -1032,7 +1032,7 @@
       "question/criteria-off-topic": 0.09,
       "question/type-mismatch": 0.0,
       "query/overlapping-questions": 0.13,
-      "question/refers-to-sibling": 0.09,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.355
     },
     "bench-tenancy/deposit": {
@@ -1047,7 +1047,7 @@
       "question/criteria-off-topic": 0.07,
       "choice/overlapping-options": 0.45,
       "query/overlapping-questions": 0.21,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.33,
       "choice/label-contradicts-description": 0.285
     },
@@ -1094,7 +1094,7 @@
       "score/degree-levels": 0.15,
       "score/multi-dimension": 0.76,
       "score/overlapping-levels": 0.3,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.09,
       "question/answerable-in-code": 0.2
     },
     "docs_ex/cookbooks_pre_parsed_value_extraction_cookbook_3": {
@@ -1106,7 +1106,7 @@
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.06,
       "choice/overlapping-options": 0.435,
-      "question/refers-to-sibling": 0.09,
+      "question/refers-to-sibling": 0.08,
       "question/answerable-in-code": 0.36,
       "choice/label-contradicts-description": 0.34
     },
@@ -1116,12 +1116,12 @@
       "question/indirection": 0.61,
       "question/double-negative": 0.19,
       "noul/negated-phrasing": 0.14,
-      "question/arithmetic": 0.05,
+      "question/arithmetic": 0.04,
       "question/date-comparison": 0.05,
       "question/numeric-representation": 0.07,
       "question/generation": 0.29,
       "question/type-mismatch": 0.14,
-      "question/refers-to-sibling": 0.12,
+      "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.1
     },
     "docs_ex/sdk_python_usage_2": {
@@ -1138,7 +1138,7 @@
       "question/type-mismatch": 0.0,
       "score/multi-dimension": 0.1,
       "score/overlapping-levels": 0.14,
-      "question/refers-to-sibling": 0.14,
+      "question/refers-to-sibling": 0.16,
       "question/answerable-in-code": 0.3
     },
     "docs_ex/sdk_python_usage_5": {
@@ -1155,7 +1155,7 @@
       "question/type-mismatch": 0.0,
       "score/multi-dimension": 0.1,
       "score/overlapping-levels": 0.13,
-      "question/refers-to-sibling": 0.15,
+      "question/refers-to-sibling": 0.16,
       "question/answerable-in-code": 0.31
     },
     "docs_ex/confidence_0": {
@@ -1186,7 +1186,7 @@
       "question/criteria-off-topic": 0.09,
       "question/type-mismatch": 0.07,
       "choice/overlapping-options": 0.175,
-      "question/refers-to-sibling": 0.19,
+      "question/refers-to-sibling": 0.18,
       "question/answerable-in-code": 0.14,
       "choice/label-contradicts-description": 0.075
     },
@@ -1201,7 +1201,7 @@
       "question/numeric-representation": 0.2,
       "question/generation": 0.17,
       "question/type-mismatch": 0.12,
-      "question/refers-to-sibling": 0.2,
+      "question/refers-to-sibling": 0.21,
       "question/answerable-in-code": 0.2
     },
     "docs_ex/cookbooks_classifying_rag_passages_1": {
@@ -1210,12 +1210,12 @@
       "question/indirection": 0.19,
       "question/double-negative": 0.07,
       "noul/negated-phrasing": 0.09,
-      "question/arithmetic": 0.06,
+      "question/arithmetic": 0.07,
       "question/date-comparison": 0.11,
       "question/numeric-representation": 0.16,
       "question/generation": 0.17,
       "question/type-mismatch": 0.11,
-      "question/refers-to-sibling": 0.15,
+      "question/refers-to-sibling": 0.17,
       "question/answerable-in-code": 0.335
     },
     "docs_ex/cookbooks_classifying_rag_passages_2": {
@@ -1229,7 +1229,7 @@
       "question/numeric-representation": 0.12,
       "question/generation": 0.16,
       "question/type-mismatch": 0.03,
-      "question/refers-to-sibling": 0.17,
+      "question/refers-to-sibling": 0.18,
       "question/answerable-in-code": 0.25
     },
     "docs_ex/cookbooks_classifying_rag_passages_3": {
@@ -1252,7 +1252,7 @@
       "question/indirection": 0.26,
       "question/double-negative": 0.03,
       "noul/negated-phrasing": 0.15,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.05,
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.13,
       "question/generation": 0.26,
@@ -1271,7 +1271,7 @@
       "question/numeric-representation": 0.13,
       "question/generation": 0.3,
       "question/type-mismatch": 0.07,
-      "question/refers-to-sibling": 0.15,
+      "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.53
     },
     "docs_ex/cookbooks_entity_alignment_3": {
@@ -1280,7 +1280,7 @@
       "question/indirection": 0.25,
       "question/double-negative": 0.04,
       "noul/negated-phrasing": 0.12,
-      "question/arithmetic": 0.06,
+      "question/arithmetic": 0.05,
       "question/date-comparison": 0.03,
       "question/numeric-representation": 0.18,
       "question/generation": 0.25,
@@ -1358,7 +1358,7 @@
       "question/numeric-representation": 0.02,
       "question/generation": 0.27,
       "question/type-mismatch": 0.06,
-      "question/refers-to-sibling": 0.05,
+      "question/refers-to-sibling": 0.06,
       "question/answerable-in-code": 0.205
     },
     "docs_ex/cookbooks_parallel_questions_3": {
@@ -1367,7 +1367,7 @@
       "question/indirection": 0.14,
       "question/double-negative": 0.06,
       "noul/negated-phrasing": 0.28,
-      "question/arithmetic": 0.03,
+      "question/arithmetic": 0.02,
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.03,
       "question/generation": 0.415,
@@ -1400,7 +1400,7 @@
       "question/numeric-representation": 0.05,
       "question/generation": 0.29,
       "question/type-mismatch": 0.08,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.09,
       "question/answerable-in-code": 0.46
     },
     "docs_ex/cookbooks_parallel_questions_6": {
@@ -1428,7 +1428,7 @@
       "question/numeric-representation": 0.03,
       "question/generation": 0.34,
       "question/type-mismatch": 0.11,
-      "question/refers-to-sibling": 0.08,
+      "question/refers-to-sibling": 0.07,
       "question/answerable-in-code": 0.22
     },
     "docs_ex/cookbooks_parallel_questions_8": {
@@ -1484,7 +1484,7 @@
       "question/compound-judgment": 0.695,
       "question/indirection": 0.18,
       "question/double-negative": 0.02,
-      "question/arithmetic": 0.05,
+      "question/arithmetic": 0.06,
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.04,
       "question/generation": 0.23,
@@ -1494,7 +1494,7 @@
       "score/degree-levels": 0.22,
       "score/multi-dimension": 0.41,
       "score/overlapping-levels": 0.31,
-      "question/refers-to-sibling": 0.08,
+      "question/refers-to-sibling": 0.07,
       "question/answerable-in-code": 0.135
     },
     "docs_ex/cookbooks_rerank_typesafe_0": {
@@ -1508,7 +1508,7 @@
       "question/numeric-representation": 0.26,
       "question/generation": 0.2,
       "question/type-mismatch": 0.18,
-      "question/refers-to-sibling": 0.18,
+      "question/refers-to-sibling": 0.19,
       "question/answerable-in-code": 0.48
     },
     "docs_ex/primitives_0": {
@@ -1522,7 +1522,7 @@
       "question/numeric-representation": 0.06,
       "question/generation": 0.17,
       "question/type-mismatch": 0.05,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.11,
       "question/answerable-in-code": 0.42
     },
     "docs_ex/primitives_1": {
@@ -1536,7 +1536,7 @@
       "question/numeric-representation": 0.11,
       "question/generation": 0.22,
       "question/type-mismatch": 0.09,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.12,
       "question/answerable-in-code": 0.315
     },
     "docs_ex/primitives_2": {
@@ -1551,7 +1551,7 @@
       "question/criteria-off-topic": 0.11,
       "question/type-mismatch": 0.0,
       "choice/overlapping-options": 0.345,
-      "question/refers-to-sibling": 0.15,
+      "question/refers-to-sibling": 0.16,
       "question/answerable-in-code": 0.165,
       "choice/label-contradicts-description": 0.07
     },
@@ -1569,7 +1569,7 @@
       "score/degree-levels": 0.6,
       "score/multi-dimension": 0.67,
       "score/overlapping-levels": 0.18,
-      "question/refers-to-sibling": 0.08,
+      "question/refers-to-sibling": 0.09,
       "question/answerable-in-code": 0.135
     },
     "docs_ex/sdk_python_usage_0": {
@@ -1578,7 +1578,7 @@
       "question/indirection": 0.1,
       "question/double-negative": 0.03,
       "noul/negated-phrasing": 0.07,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.03,
       "question/date-comparison": 0.03,
       "question/numeric-representation": 0.13,
       "question/generation": 0.265,
@@ -1598,7 +1598,7 @@
       "question/criteria-off-topic": 0.07,
       "question/type-mismatch": 0.51,
       "choice/overlapping-options": 0.175,
-      "question/refers-to-sibling": 0.13,
+      "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.26,
       "choice/label-contradicts-description": 0.27
     },
@@ -1613,14 +1613,14 @@
       "question/numeric-representation": 0.14,
       "question/generation": 0.255,
       "question/type-mismatch": 0.12,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.255
     },
     "docs_ex/sdk_python_usage_4": {
       "question/compound-judgment": 0.24,
       "question/indirection": 0.1,
       "question/double-negative": 0.03,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.03,
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.1,
       "question/generation": 0.24,
@@ -1643,7 +1643,7 @@
       "question/numeric-representation": 0.12,
       "question/generation": 0.235,
       "question/type-mismatch": 0.12,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.26
     },
     "docs_ex/sdk_python_usage_7": {
@@ -1657,7 +1657,7 @@
       "question/numeric-representation": 0.12,
       "question/generation": 0.265,
       "question/type-mismatch": 0.1,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.255
     },
     "docs_ex/sdk_python_usage_8": {
@@ -1671,7 +1671,7 @@
       "question/numeric-representation": 0.14,
       "question/generation": 0.265,
       "question/type-mismatch": 0.1,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.255
     },
     "docs_ex/sdk_python_usage_9": {
@@ -1685,7 +1685,7 @@
       "question/numeric-representation": 0.12,
       "question/generation": 0.26,
       "question/type-mismatch": 0.1,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.265
     },
     "docs_ex/sdk_python_usage_11": {
@@ -1726,7 +1726,7 @@
       "question/compound-judgment": 0.46,
       "question/indirection": 0.11,
       "question/double-negative": 0.04,
-      "question/arithmetic": 0.03,
+      "question/arithmetic": 0.04,
       "question/date-comparison": 0.03,
       "question/numeric-representation": 0.05,
       "question/generation": 0.185,
@@ -1738,7 +1738,7 @@
       "score/overlapping-levels": 0.15,
       "state/answer-absent": 0.11,
       "question/unsettled-case": 0.59,
-      "question/refers-to-sibling": 0.13,
+      "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.195
     },
     "docs_ex_state_00/state": {
@@ -1775,16 +1775,16 @@
       "choice/overlapping-options": 0.49,
       "state/answer-absent": 0.49,
       "question/unsettled-case": 0.17,
-      "question/refers-to-sibling": 0.14,
+      "question/refers-to-sibling": 0.13,
       "question/answerable-in-code": 0.36,
-      "choice/undetermined-outcome": 0.06,
+      "choice/undetermined-outcome": 0.07,
       "choice/label-contradicts-description": 0.065
     },
     "docs_ex_state_01/introduction_quickstart_1": {
       "question/compound-judgment": 0.35,
       "question/indirection": 0.14,
       "question/double-negative": 0.03,
-      "question/arithmetic": 0.03,
+      "question/arithmetic": 0.04,
       "question/date-comparison": 0.03,
       "question/numeric-representation": 0.05,
       "question/generation": 0.16,
@@ -1797,7 +1797,7 @@
       "state/answer-absent": 0.13,
       "query/overlapping-questions": 0.05,
       "question/unsettled-case": 0.52,
-      "question/refers-to-sibling": 0.14,
+      "question/refers-to-sibling": 0.12,
       "question/answerable-in-code": 0.16
     },
     "docs_ex_state_01/state": {
@@ -1810,7 +1810,7 @@
       "question/indirection": 0.14,
       "question/double-negative": 0.05,
       "noul/negated-phrasing": 0.06,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.03,
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.08,
       "question/generation": 0.23,
@@ -1827,14 +1827,14 @@
       "question/indirection": 0.35,
       "question/double-negative": 0.03,
       "noul/negated-phrasing": 0.05,
-      "question/arithmetic": 0.1,
+      "question/arithmetic": 0.11,
       "question/date-comparison": 0.21,
       "question/numeric-representation": 0.04,
       "question/generation": 0.175,
       "question/type-mismatch": 0.03,
       "state/answer-absent": 0.305,
       "question/unsettled-case": 0.41,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.09,
       "question/answerable-in-code": 0.475
     },
     "docs_ex_state_02/primitives_noul_0": {
@@ -1850,7 +1850,7 @@
       "question/type-mismatch": 0.03,
       "state/answer-absent": 0.06,
       "question/unsettled-case": 0.09,
-      "question/refers-to-sibling": 0.14,
+      "question/refers-to-sibling": 0.16,
       "question/answerable-in-code": 0.36
     },
     "docs_ex_state_02/primitives_noul_1": {
@@ -1859,7 +1859,7 @@
       "question/indirection": 0.37,
       "question/double-negative": 0.03,
       "noul/negated-phrasing": 0.05,
-      "question/arithmetic": 0.11,
+      "question/arithmetic": 0.1,
       "question/date-comparison": 0.15,
       "question/numeric-representation": 0.05,
       "question/generation": 0.19,
@@ -1867,7 +1867,7 @@
       "state/answer-absent": 0.325,
       "query/overlapping-questions": 0.03,
       "question/unsettled-case": 0.34,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.09,
       "question/answerable-in-code": 0.49
     },
     "docs_ex_state_02/state": {
@@ -1942,7 +1942,7 @@
       "question/type-mismatch": 0.11,
       "state/answer-absent": 0.09,
       "question/unsettled-case": 0.08,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.25
     },
     "docs_ex_state_04/sdk_python_api_clients_sync_1": {
@@ -1950,7 +1950,7 @@
       "question/compound-judgment": 0.23,
       "question/indirection": 0.09,
       "question/double-negative": 0.03,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.03,
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.1,
       "question/generation": 0.25,
@@ -1960,9 +1960,9 @@
       "choice/overlapping-options": 0.185,
       "state/answer-absent": 0.11,
       "question/unsettled-case": 0.33,
-      "question/refers-to-sibling": 0.16,
+      "question/refers-to-sibling": 0.15,
       "question/answerable-in-code": 0.25,
-      "choice/undetermined-outcome": 0.2,
+      "choice/undetermined-outcome": 0.21,
       "choice/label-contradicts-description": 0.27
     },
     "docs_ex_state_04/sdk_python_api_clients_sync_2": {
@@ -1987,7 +1987,7 @@
       "question/compound-judgment": 0.23,
       "question/indirection": 0.1,
       "question/double-negative": 0.03,
-      "question/arithmetic": 0.03,
+      "question/arithmetic": 0.04,
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.1,
       "question/generation": 0.24,
@@ -1997,9 +1997,9 @@
       "choice/overlapping-options": 0.185,
       "state/answer-absent": 0.105,
       "question/unsettled-case": 0.33,
-      "question/refers-to-sibling": 0.15,
+      "question/refers-to-sibling": 0.13,
       "question/answerable-in-code": 0.255,
-      "choice/undetermined-outcome": 0.24,
+      "choice/undetermined-outcome": 0.22,
       "choice/label-contradicts-description": 0.235
     },
     "docs_ex_state_04/sdk_python_api_clients_async_0": {
@@ -2015,14 +2015,14 @@
       "question/type-mismatch": 0.08,
       "state/answer-absent": 0.09,
       "question/unsettled-case": 0.08,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.11,
       "question/answerable-in-code": 0.255
     },
     "docs_ex_state_04/sdk_python_api_clients_async_1": {
       "question/compound-judgment": 0.23,
       "question/indirection": 0.11,
       "question/double-negative": 0.03,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.03,
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.1,
       "question/generation": 0.24,
@@ -2035,7 +2035,7 @@
       "question/unsettled-case": 0.35,
       "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.25,
-      "choice/undetermined-outcome": 0.21,
+      "choice/undetermined-outcome": 0.22,
       "choice/label-contradicts-description": 0.245
     },
     "docs_ex_state_04/state": {
@@ -2075,7 +2075,7 @@
       "choice/overlapping-options": 0.57,
       "state/answer-absent": 0.455,
       "question/unsettled-case": 0.07,
-      "question/refers-to-sibling": 0.13,
+      "question/refers-to-sibling": 0.12,
       "question/answerable-in-code": 0.405,
       "choice/undetermined-outcome": 0.05,
       "choice/label-contradicts-description": 0.095
@@ -2087,7 +2087,7 @@
       "question/compound-judgment": 0.14,
       "question/indirection": 0.21,
       "question/double-negative": 0.03,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.03,
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.06,
       "question/generation": 0.275,
@@ -2097,9 +2097,9 @@
       "choice/overlapping-options": 0.415,
       "state/answer-absent": 0.15,
       "question/unsettled-case": 0.44,
-      "question/refers-to-sibling": 0.11,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.33,
-      "choice/undetermined-outcome": 0.18,
+      "choice/undetermined-outcome": 0.17,
       "choice/label-contradicts-description": 0.075
     },
     "docs_ex_state_06/primitives_choice_3": {
@@ -2117,7 +2117,7 @@
       "state/answer-absent": 0.34,
       "query/overlapping-questions": 0.11,
       "question/unsettled-case": 0.76,
-      "question/refers-to-sibling": 0.15,
+      "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.355,
       "choice/undetermined-outcome": 0.11,
       "choice/label-contradicts-description": 0.065
@@ -2126,7 +2126,7 @@
       "question/compound-judgment": 0.19,
       "question/indirection": 0.14,
       "question/double-negative": 0.02,
-      "question/arithmetic": 0.05,
+      "question/arithmetic": 0.04,
       "question/date-comparison": 0.05,
       "question/numeric-representation": 0.07,
       "question/generation": 0.29,
@@ -2137,9 +2137,9 @@
       "state/answer-absent": 0.245,
       "query/overlapping-questions": 0.09,
       "question/unsettled-case": 0.67,
-      "question/refers-to-sibling": 0.16,
+      "question/refers-to-sibling": 0.17,
       "question/answerable-in-code": 0.205,
-      "choice/undetermined-outcome": 0.57,
+      "choice/undetermined-outcome": 0.56,
       "choice/label-contradicts-description": 0.08
     },
     "docs_ex_state_06/primitives_choice_5": {
@@ -2156,7 +2156,7 @@
       "state/answer-absent": 0.095,
       "query/overlapping-questions": 0.05,
       "question/unsettled-case": 0.39,
-      "question/refers-to-sibling": 0.15,
+      "question/refers-to-sibling": 0.16,
       "question/answerable-in-code": 0.165,
       "choice/undetermined-outcome": 0.11,
       "choice/label-contradicts-description": 0.165
@@ -2200,7 +2200,7 @@
       "score/overlapping-levels": 0.15,
       "state/answer-absent": 0.26,
       "question/unsettled-case": 0.54,
-      "question/refers-to-sibling": 0.14,
+      "question/refers-to-sibling": 0.13,
       "question/answerable-in-code": 0.27
     },
     "docs_ex_state_07/state": {
@@ -2238,9 +2238,9 @@
       "choice/overlapping-options": 0.5,
       "state/answer-absent": 0.08,
       "question/unsettled-case": 0.34,
-      "question/refers-to-sibling": 0.15,
+      "question/refers-to-sibling": 0.13,
       "question/answerable-in-code": 0.16,
-      "choice/undetermined-outcome": 0.15,
+      "choice/undetermined-outcome": 0.14,
       "choice/label-contradicts-description": 0.185
     },
     "docs_ex_state_08/sdk_python_5": {
@@ -2294,9 +2294,9 @@
       "state/answer-absent": 0.09,
       "query/overlapping-questions": 0.03,
       "question/unsettled-case": 0.36,
-      "question/refers-to-sibling": 0.14,
+      "question/refers-to-sibling": 0.15,
       "question/answerable-in-code": 0.165,
-      "choice/undetermined-outcome": 0.13,
+      "choice/undetermined-outcome": 0.14,
       "choice/label-contradicts-description": 0.18
     },
     "docs_ex_state_08/sdk_python_2": {
@@ -2316,7 +2316,7 @@
       "state/answer-absent": 0.225,
       "query/overlapping-questions": 0.07,
       "question/unsettled-case": 0.445,
-      "question/refers-to-sibling": 0.12,
+      "question/refers-to-sibling": 0.13,
       "question/answerable-in-code": 0.31
     },
     "docs_ex_state_08/state": {
@@ -2330,10 +2330,10 @@
       "question/indirection": 0.16,
       "question/double-negative": 0.02,
       "noul/negated-phrasing": 0.18,
-      "question/arithmetic": 0.07,
+      "question/arithmetic": 0.06,
       "question/date-comparison": 0.08,
       "question/numeric-representation": 0.13,
-      "question/refers-to-sibling": 0.12,
+      "question/refers-to-sibling": 0.13,
       "question/answerable-in-code": 0.135
     },
     "gold/gold_rate_this_pitch": {
@@ -2350,7 +2350,7 @@
       "question/type-mismatch": 0.0,
       "score/multi-dimension": 0.18,
       "score/overlapping-levels": 0.12,
-      "question/refers-to-sibling": 0.13,
+      "question/refers-to-sibling": 0.14,
       "question/answerable-in-code": 0.13
     },
     "gold/gold_angry_and_refund": {
@@ -2373,12 +2373,12 @@
       "question/undefined-boundary": 0.26,
       "question/indirection": 0.16,
       "question/double-negative": 0.05,
-      "question/arithmetic": 0.08,
+      "question/arithmetic": 0.07,
       "question/date-comparison": 0.03,
       "question/numeric-representation": 0.22,
       "question/generation": 0.21,
       "question/type-mismatch": 0.03,
-      "question/refers-to-sibling": 0.12,
+      "question/refers-to-sibling": 0.11,
       "question/answerable-in-code": 0.355
     },
     "gold/gold_numeric_levels": {
@@ -2395,7 +2395,7 @@
       "question/type-mismatch": 0.01,
       "score/multi-dimension": 0.12,
       "score/overlapping-levels": 0.2,
-      "question/refers-to-sibling": 0.12,
+      "question/refers-to-sibling": 0.13,
       "question/answerable-in-code": 0.39
     },
     "gold/gold_punctual_smart_experienced": {
@@ -2403,7 +2403,7 @@
       "question/compound-judgment": 0.9,
       "question/indirection": 0.11,
       "question/double-negative": 0.09,
-      "question/arithmetic": 0.1,
+      "question/arithmetic": 0.09,
       "question/date-comparison": 0.04,
       "question/numeric-representation": 0.08,
       "question/generation": 0.285,
@@ -2425,7 +2425,7 @@
       "question/numeric-representation": 0.08,
       "question/generation": 0.25,
       "question/type-mismatch": 0.3,
-      "question/refers-to-sibling": 0.08,
+      "question/refers-to-sibling": 0.09,
       "question/answerable-in-code": 0.265
     },
     "gold/gold_hex_near": {
@@ -2443,7 +2443,7 @@
       "question/answerable-in-code": 0.69
     },
     "gold/gold_count_fruit": {
-      "question/arithmetic": 0.92,
+      "question/arithmetic": 0.91,
       "question/compound-judgment": 0.14,
       "question/undefined-boundary": 0.1,
       "question/indirection": 0.3,
@@ -2452,7 +2452,7 @@
       "question/date-comparison": 0.02,
       "question/numeric-representation": 0.12,
       "question/generation": 0.425,
-      "question/refers-to-sibling": 0.09,
+      "question/refers-to-sibling": 0.1,
       "question/answerable-in-code": 0.45
     },
     "gold/gold_date_window": {
@@ -2466,7 +2466,7 @@
       "question/numeric-representation": 0.07,
       "question/generation": 0.19,
       "question/type-mismatch": 0.05,
-      "question/refers-to-sibling": 0.08,
+      "question/refers-to-sibling": 0.09,
       "question/answerable-in-code": 0.6425
     },
     "gold/gold_convey_urgency": {
@@ -2475,12 +2475,12 @@
       "question/indirection": 0.13,
       "question/double-negative": 0.04,
       "noul/negated-phrasing": 0.07,
-      "question/arithmetic": 0.04,
+      "question/arithmetic": 0.03,
       "question/date-comparison": 0.06,
       "question/numeric-representation": 0.15,
       "question/generation": 0.235,
       "question/type-mismatch": 0.07,
-      "question/refers-to-sibling": 0.1,
+      "question/refers-to-sibling": 0.12,
       "question/answerable-in-code": 0.155
     },
     "gold/gold_skill_levels": {
@@ -2506,12 +2506,12 @@
       "question/undefined-boundary": 0.15,
       "question/double-negative": 0.03,
       "noul/negated-phrasing": 0.12,
-      "question/arithmetic": 0.05,
+      "question/arithmetic": 0.06,
       "question/date-comparison": 0.03,
       "question/numeric-representation": 0.08,
       "question/generation": 0.265,
       "question/type-mismatch": 0.08,
-      "question/refers-to-sibling": 0.12,
+      "question/refers-to-sibling": 0.11,
       "question/answerable-in-code": 0.545
     },
     "gold/gold_double_negative": {
@@ -2565,7 +2565,7 @@
       "question/numeric-representation": 0.14,
       "question/generation": 0.225,
       "question/type-mismatch": 0.05,
-      "question/refers-to-sibling": 0.12,
+      "question/refers-to-sibling": 0.13,
       "question/answerable-in-code": 0.325
     },
     "gold/gold_any_python": {
@@ -2579,7 +2579,7 @@
       "question/numeric-representation": 0.05,
       "question/generation": 0.225,
       "question/type-mismatch": 0.05,
-      "question/refers-to-sibling": 0.07,
+      "question/refers-to-sibling": 0.06,
       "question/answerable-in-code": 0.49
     },
     "gold/gold_used_python_at_work": {

@@ -19,6 +19,17 @@ const clean = (): Query => Query.fromObject({
     },
 }, 'test');
 
+const draw = (): Query => Query.fromObject({
+    state: 'A die was rolled inside a closed box and nobody has looked.',
+    questions: {
+        face: {
+            type: 'choice',
+            instructions: 'Which face came up?',
+            criteria: { low: 'One to three', high: 'Four to six' },
+        },
+    },
+}, 'test');
+
 describe('the linter facade', () => {
     it('runs the rules and makes no calls', async () => {
         const report = await Linter.rulesOnly().check(clean());
@@ -44,6 +55,61 @@ describe('the linter facade', () => {
 
         assert.deepEqual(report.findings().map((finding) => finding.checkId), ['question/compound-judgment']);
         assert.equal(report.findings()[0]?.probability, 0.95);
+    });
+
+    it('does not ask whether a lone question depends on a sibling', async () => {
+        const { client, calls } = fakeClient({ question_refers_to_sibling: 0.95 }, 0.02);
+        const report = await Linter.make(client).only(['question/refers-to-sibling']).check(clean());
+
+        assert.deepEqual(report.findings(), []);
+        assert.equal(calls.length, 0);
+    });
+
+    it('asks whether a question depends on a sibling the narrowing left out', async () => {
+        const whole = Query.fromObject({
+            state: { ticket: 'I was charged twice for order A-104.' },
+            questions: {
+                refund: { type: 'noul', instructions: 'Does the customer ask for a refund?' },
+                urgent: { type: 'noul', instructions: 'Given the refund answer, is this urgent?' },
+            },
+        }, 'test');
+        const { client } = fakeClient({ question_refers_to_sibling: 0.95 }, 0.02);
+        const report = await Linter.make(client).only(['question/refers-to-sibling']).check(whole.only(['urgent']), whole);
+
+        assert.deepEqual(report.findings().map((finding) => finding.checkId), ['question/refers-to-sibling']);
+    });
+
+    it('reports a finding its clearing question does not set aside', async () => {
+        const { client } = fakeClient({ choice_undetermined_outcome: 0.95, choice_undetermined_outcome__clear: 0.05 }, 0.02);
+        const report = await Linter.make(client).only(['choice/undetermined-outcome']).check(draw());
+
+        assert.deepEqual(report.findings().map((finding) => finding.checkId), ['choice/undetermined-outcome']);
+    });
+
+    it('sets a finding aside where its clearing question reads above its trigger', async () => {
+        const { client } = fakeClient({ choice_undetermined_outcome: 0.95, choice_undetermined_outcome__clear: 0.9 }, 0.02);
+        const report = await Linter.make(client).only(['choice/undetermined-outcome']).reportingCleared().check(draw());
+
+        assert.deepEqual(report.findings(), []);
+        assert.deepEqual(report.cleared().map((finding) => finding.checkId), ['choice/undetermined-outcome']);
+        assert.ok(report.cleared()[0]?.clearedBecause.includes('clearing question read 0.90'));
+    });
+
+    it('raises a finding its second question reads above its trigger', async () => {
+        const { client } = fakeClient({ question_arithmetic: 0.1, question_arithmetic__fire: 0.9 }, 0.02);
+        const report = await Linter.make(client).only(['question/arithmetic']).check(clean());
+
+        assert.deepEqual(report.findings().map((finding) => finding.checkId), ['question/arithmetic']);
+        assert.equal(report.findings()[0]?.probability, 0.9);
+        assert.equal(report.findings()[0]?.trigger, 0.5);
+        assert.ok(report.findings()[0]?.evidence?.includes('own question read 0.10 against its 0.60 trigger'));
+    });
+
+    it('raises nothing where neither question reads above its trigger', async () => {
+        const { client } = fakeClient({ question_arithmetic: 0.1, question_arithmetic__fire: 0.3 }, 0.02);
+        const report = await Linter.make(client).only(['question/arithmetic']).check(clean());
+
+        assert.deepEqual(report.findings(), []);
     });
 
     it('refuses a narrowing the catalogue does not hold', () => {

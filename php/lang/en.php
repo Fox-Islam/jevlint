@@ -98,6 +98,7 @@ return [
     'check.empty_version_span' => 'Check "{id}" runs from Jev {since} until Jev {until}, which is no versions at all.',
     'check.bad_version' => 'Check "{id}" has a "{field}" of {given}. A Jev version is written as digits and dots, such as 1.13.',
     'check.bad_suppress_entry' => 'Check "{id}" has a `suppress` entry that is not \'{\'answer, when\'}\'.',
+    'check.bad_second_question' => 'Check "{id}" has a `{name}` that is not a Noul `question` with a `trigger` between 0 and 1.',
     'check.unknown_suppression' => 'Check "{id}" suppresses on "{given}", which nothing tests. The conditions are: {allowed}.',
     'check.unknown_reads' => 'Check "{id}" reads "{given}", which is not a part of a query. It is one of: {allowed}.',
     'narrow.withheld_for_version' => '{ids} {count, plural, one {is} other {are}} not written for Jev {jev}. `jevlint checks --jev={jev}` lists the ones that are.',
@@ -150,6 +151,8 @@ return [
     'finding.pair_title' => '{title}: `{first}` and `{second}`',
     'finding.title_with_detail' => '{title}: {detail}',
     'finding.title_with_field' => '{title}: `{field}`',
+    'finding.cleared_by' => 'the catalogue\'s clearing question read {probability, number, ::.00}, above its {trigger, number, ::.00} trigger',
+    'finding.fired_by' => 'Raised by the catalogue\'s second question; the check\'s own question read {probability, number, ::.00} against its {trigger, number, ::.00} trigger.',
 
     'evidence.both_ask' => 'Both ask: "{first}" / "{second}"',
     'evidence.question_count' => '{count, plural, one {# question} other {# questions}}',

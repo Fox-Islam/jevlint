@@ -95,6 +95,98 @@ final class LinterFacadeTest extends TestCase
         ));
     }
 
+    public function test_a_lone_question_is_not_asked_whether_it_depends_on_a_sibling(): void
+    {
+        $report = $this->linter(FakeAnswers::make()->noul('question_refers_to_sibling', 0.95))
+            ->only(['question/refers-to-sibling'])
+            ->check($this->query());
+
+        $this->assertSame([], $this->ids($report));
+        $this->assertSame(0, $report->calls());
+    }
+
+    public function test_a_question_is_asked_about_a_sibling_the_narrowing_left_out(): void
+    {
+        $body = $this->body();
+        $body['questions']['urgent'] = ['type' => 'noul', 'instructions' => 'Given the refund answer, is this urgent?'];
+        $whole = Query::fromArray($body);
+        $report = $this->linter(FakeAnswers::make()->noul('question_refers_to_sibling', 0.95))
+            ->only(['question/refers-to-sibling'])
+            ->check($whole->only(['urgent']), $whole);
+
+        $this->assertSame(['question/refers-to-sibling'], $this->ids($report));
+    }
+
+    public function test_a_finding_its_clearing_question_does_not_set_aside_is_reported(): void
+    {
+        $report = $this->linter(FakeAnswers::make()
+            ->noul('choice_undetermined_outcome', 0.95)
+            ->noul('choice_undetermined_outcome__clear', 0.05)
+            ->only())
+            ->only(['choice/undetermined-outcome'])
+            ->check($this->draw());
+
+        $this->assertSame(['choice/undetermined-outcome'], $this->ids($report));
+    }
+
+    public function test_a_finding_is_set_aside_where_its_clearing_question_reads_above_its_trigger(): void
+    {
+        $report = $this->linter(FakeAnswers::make()
+            ->noul('choice_undetermined_outcome', 0.95)
+            ->noul('choice_undetermined_outcome__clear', 0.9)
+            ->only())
+            ->only(['choice/undetermined-outcome'])
+            ->reportingCleared()
+            ->check($this->draw());
+
+        $this->assertSame([], $this->ids($report));
+        $this->assertSame(['choice/undetermined-outcome'], array_map(static fn ($f): string => $f->checkId, $report->cleared()));
+        $this->assertStringContainsString('clearing question read 0.90', $report->cleared()[0]->clearedBecause);
+    }
+
+    public function test_a_finding_is_raised_where_its_second_question_reads_above_its_trigger(): void
+    {
+        $report = $this->linter(FakeAnswers::make()
+            ->noul('question_arithmetic', 0.1)
+            ->noul('question_arithmetic__fire', 0.9)
+            ->noul('question_arithmetic__clear', 0.05)
+            ->only())
+            ->only(['question/arithmetic'])
+            ->check($this->query());
+
+        $this->assertSame(['question/arithmetic'], $this->ids($report));
+        $this->assertSame(0.9, $report->findings()[0]->probability);
+        $this->assertSame(0.5, $report->findings()[0]->trigger);
+        $this->assertStringContainsString('own question read 0.10 against its 0.60 trigger', (string) $report->findings()[0]->evidence);
+    }
+
+    public function test_nothing_is_raised_where_neither_question_reads_above_its_trigger(): void
+    {
+        $report = $this->linter(FakeAnswers::make()
+            ->noul('question_arithmetic', 0.1)
+            ->noul('question_arithmetic__fire', 0.3)
+            ->noul('question_arithmetic__clear', 0.05)
+            ->only())
+            ->only(['question/arithmetic'])
+            ->check($this->query());
+
+        $this->assertSame([], $this->ids($report));
+    }
+
+    private function draw(): Query
+    {
+        return Query::fromArray([
+            'state' => 'A die was rolled inside a closed box and nobody has looked.',
+            'questions' => [
+                'face' => [
+                    'type' => 'choice',
+                    'instructions' => 'Which face came up?',
+                    'criteria' => ['low' => 'One to three', 'high' => 'Four to six'],
+                ],
+            ],
+        ]);
+    }
+
     /** @return list<string> */
     private function ids(Report $report): array
     {
